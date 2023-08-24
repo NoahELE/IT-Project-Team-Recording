@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useReactMediaRecorder } from 'react-media-recorder';
 
-export default function Record() {
+export default function RecordingView() {
   const { status, startRecording, stopRecording, mediaBlobUrl } =
     useReactMediaRecorder({ audio: true });
 

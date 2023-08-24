@@ -1,9 +1,9 @@
-import Record from './RecordingView.tsx';
+import RecordingView from './RecordingView.tsx';
 
 export default function SigninView() {
-    return (
-        <>
-            <Record/>
-        </>
-    );
+  return (
+    <>
+      <RecordingView />
+    </>
+  );
 }

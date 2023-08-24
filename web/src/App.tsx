@@ -1,21 +1,32 @@
-import {BrowserRouter as Router, Route, Routes} from 'react-router-dom';
-import HeaderView from './views/HeaderView.tsx';
-import Home from './views/HomeView';
-import SigninView from "./views/SigninView.tsx";
+import { CssBaseline } from '@mui/material';
+import {
+  Route,
+  RouterProvider,
+  createBrowserRouter,
+  createRoutesFromElements,
+} from 'react-router-dom';
+import HomeView from './views/HomeView';
+import RecordingView from './views/RecordingView';
+import RootView from './views/RootView';
+import SigninView from './views/SigninView';
+
+const router = createBrowserRouter(
+  createRoutesFromElements(
+    <Route element={<RootView />}>
+      <Route index element={<HomeView />} />
+      <Route path="/recording" element={<RecordingView />} />
+      {/* TODO */}
+      <Route path="/public" element={<>NOT IMPLEMENTED YET!!!</>} />
+      <Route path="/signin" element={<SigninView />} />
+    </Route>
+  )
+);
 
 export default function App() {
-    return (
-        <Router>
-            <div>
-                <HeaderView/>
-
-                <div style={{marginTop: '50px'}}>
-                    <Routes>
-                        <Route path="/" element={<Home/>}/>
-                        <Route path="/user" element={<SigninView/>}/>
-                    </Routes>
-                </div>
-            </div>
-        </Router>
-    );
+  return (
+    <>
+      <CssBaseline />
+      <RouterProvider router={router} />
+    </>
+  );
 }
