@@ -10,9 +10,11 @@ module.exports = {
   ignorePatterns: ['dist', '.eslintrc.cjs', 'vite.config.ts'],
   parser: '@typescript-eslint/parser',
   parserOptions: {
-    project: './tsconfig.json',
+    project: true,
+    tsconfigRootDir: __dirname,
   },
   plugins: ['@typescript-eslint', 'react-refresh'],
+  root: true,
   rules: {
     'react-refresh/only-export-components': [
       'warn',
