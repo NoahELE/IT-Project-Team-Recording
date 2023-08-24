@@ -1,3 +1,4 @@
+import { Button, Container, Stack, Typography } from '@mui/material';
 import { useEffect, useState } from 'react';
 import { useReactMediaRecorder } from 'react-media-recorder';
 
@@ -5,34 +6,48 @@ export default function RecordingView() {
   const { status, startRecording, stopRecording, mediaBlobUrl } =
     useReactMediaRecorder({ audio: true });
 
-  const [recordedTime, setRecordedTime] = useState(0);
+  const [recordedTime, setRecordedTime] = useState(0.0);
 
-  const recording = status === 'recording';
+  const isRecording = status === 'recording';
 
   useEffect(() => {
-    let interval: number | null = null;
-    if (recording) {
-      interval = setInterval(() => {
-        setRecordedTime((prev) => prev + 1);
-      }, 1000);
+    let intervalId: number | null = null;
+    if (isRecording) {
+      intervalId = setInterval(() => {
+        setRecordedTime((prev) => prev + 0.1);
+      }, 100);
     }
     return () => {
-      if (interval !== null) {
-        clearInterval(interval);
+      if (intervalId !== null) {
+        clearInterval(intervalId);
       }
     };
-  }, [recording]);
+  }, [isRecording]);
 
   return (
-    <div className="audio">
-      <button onClick={startRecording} disabled={recording}>
-        Start Recording
-      </button>
-      <button onClick={stopRecording} disabled={!recording}>
-        Stop Recording
-      </button>
-      <div>Recorded Time: {recordedTime} seconds</div>
-      {mediaBlobUrl && <audio src={mediaBlobUrl} controls />}
-    </div>
+    <Container>
+      <Stack spacing={3}>
+        <Stack direction="row" spacing={3}>
+          <Button
+            variant="contained"
+            disabled={isRecording}
+            onClick={startRecording}
+          >
+            Start Recording
+          </Button>
+          <Button
+            variant="contained"
+            disabled={!isRecording}
+            onClick={stopRecording}
+          >
+            Stop Recording
+          </Button>
+        </Stack>
+        <Typography variant="h5">
+          Recorded Time: {recordedTime.toFixed(1)} seconds.
+        </Typography>
+        {mediaBlobUrl !== undefined && <audio src={mediaBlobUrl} controls />}
+      </Stack>
+    </Container>
   );
 }
