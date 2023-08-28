@@ -1,9 +1,15 @@
 import { Box } from '@mui/material';
-import { DataGrid, GridColDef, GridRenderCellParams } from '@mui/x-data-grid';
+import {
+  DataGrid,
+  GridColDef,
+  GridRenderCellParams,
+  useGridApiRef,
+} from '@mui/x-data-grid';
 import { Recording } from '../entity';
 
 interface Props {
   recordings: Recording[];
+  apiRef?: ReturnType<typeof useGridApiRef>;
 }
 
 const columns: GridColDef[] = [
@@ -28,9 +34,10 @@ const columns: GridColDef[] = [
   },
 ];
 
-export default function RecordingList({ recordings }: Props) {
+export default function RecordingList({ recordings, apiRef }: Props) {
   return (
     <DataGrid
+      apiRef={apiRef}
       rows={recordings}
       columns={columns}
       initialState={{
