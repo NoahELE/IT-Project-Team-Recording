@@ -6,7 +6,7 @@ export default function Header() {
   return (
     <AppBar position="static" color="primary">
       <Toolbar>
-        <Box sx={{ flexGrow: 1 }}>
+        <Box flexGrow={1}>
           <img src="/react.svg" alt="LOGO" />
         </Box>
         <Stack direction="row" spacing={1}>

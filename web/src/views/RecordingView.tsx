@@ -1,6 +1,22 @@
-import { Button, Container, Stack, Typography } from '@mui/material';
+import { Button, Container, Divider, Stack, Typography } from '@mui/material';
 import { useEffect, useState } from 'react';
 import { useReactMediaRecorder } from 'react-media-recorder';
+import RecordingList from '../components/RecordingList';
+import { Recording } from '../entity';
+
+// HACK: mock data of the recordings
+const recordings: Recording[] = [
+  {
+    id: '1',
+    name: 'Recording 1',
+    audioUrl: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3',
+  },
+  {
+    id: '2',
+    name: 'Recording 2',
+    audioUrl: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3',
+  },
+];
 
 export default function RecordingView() {
   const { status, startRecording, stopRecording, mediaBlobUrl } =
@@ -31,7 +47,10 @@ export default function RecordingView() {
           <Button
             variant="contained"
             disabled={isRecording}
-            onClick={startRecording}
+            onClick={() => {
+              startRecording();
+              setRecordedTime(0.0);
+            }}
           >
             Start Recording
           </Button>
@@ -47,6 +66,8 @@ export default function RecordingView() {
           Recorded Time: {recordedTime.toFixed(1)} seconds.
         </Typography>
         {mediaBlobUrl !== undefined && <audio src={mediaBlobUrl} controls />}
+        <Divider variant="middle" />
+        <RecordingList recordings={recordings} />
       </Stack>
     </Container>
   );
