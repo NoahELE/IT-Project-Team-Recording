@@ -42,31 +42,37 @@ export default function RecordingView() {
 
   return (
     <Container>
-      <Stack spacing={3}>
-        <Stack direction="row" spacing={3}>
-          <Button
-            variant="contained"
-            disabled={isRecording}
-            onClick={() => {
-              startRecording();
-              setRecordedTime(0.0);
-            }}
-          >
-            Start Recording
-          </Button>
-          <Button
-            variant="contained"
-            disabled={!isRecording}
-            onClick={stopRecording}
-          >
-            Stop Recording
-          </Button>
+      <Stack spacing={5}>
+        <Stack direction="row" spacing={10}>
+          <Stack spacing={3}>
+            <Stack direction="row" spacing={3}>
+              <Button
+                variant="contained"
+                disabled={isRecording}
+                onClick={() => {
+                  startRecording();
+                  setRecordedTime(0.0);
+                }}
+              >
+                Start Recording
+              </Button>
+              <Button
+                variant="contained"
+                disabled={!isRecording}
+                onClick={stopRecording}
+              >
+                Stop Recording
+              </Button>
+            </Stack>
+            <Typography variant="h5">
+              Recorded Time: {recordedTime.toFixed(1)} seconds.
+            </Typography>
+          </Stack>
+          {mediaBlobUrl !== undefined && <audio src={mediaBlobUrl} controls />}
         </Stack>
-        <Typography variant="h5">
-          Recorded Time: {recordedTime.toFixed(1)} seconds.
-        </Typography>
-        {mediaBlobUrl !== undefined && <audio src={mediaBlobUrl} controls />}
+
         <Divider variant="middle" />
+
         <RecordingList recordings={recordings} />
       </Stack>
     </Container>
