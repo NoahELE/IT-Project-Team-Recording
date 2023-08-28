@@ -9,6 +9,7 @@ import HomeView from './views/HomeView';
 import RecordingView from './views/RecordingView';
 import RootView from './views/RootView';
 import SigninView from './views/SigninView';
+import SignupView from './views/SignupView';
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -18,6 +19,7 @@ const router = createBrowserRouter(
       {/* TODO */}
       <Route path="/public" element={<>NOT IMPLEMENTED YET!!!</>} />
       <Route path="/signin" element={<SigninView />} />
+      <Route path="/signup" element={<SignupView />} />
     </Route>
   )
 );
