@@ -3,11 +3,12 @@ import { useNavigate } from 'react-router-dom';
 
 export default function Header() {
   const navigate = useNavigate();
+  // TODO: find a better icon for header
   return (
     <AppBar position="static" color="primary">
       <Toolbar>
         <Box flexGrow={1}>
-          <img src="/react.svg" alt="LOGO" />
+          <img src="/vite.svg" alt="LOGO" />
         </Box>
         <Stack direction="row" spacing={1}>
           <Button color="inherit" onClick={() => navigate('/')}>
