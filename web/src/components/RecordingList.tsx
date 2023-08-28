@@ -27,7 +27,12 @@ const columns: GridColDef[] = [
       }
       return (
         <Box m={1}>
-          <audio src={params.value} controls />
+          <audio
+            src={params.value}
+            controls
+            preload="metadata"
+            style={{ width: 400 }}
+          />
         </Box>
       );
     },
