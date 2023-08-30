@@ -12,7 +12,7 @@ export default function HomeView() {
           your own voice by selecting text in a language you are familiar with.
         </Typography>
         <Box mt={2}>
-          <Button variant="contained" color="primary">
+          <Button variant="contained" color="primary" href="/public">
             Get Started
           </Button>
         </Box>
