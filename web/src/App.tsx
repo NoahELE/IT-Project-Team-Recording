@@ -20,8 +20,8 @@ const router = createBrowserRouter(
       <Route path="/public" element={<>NOT IMPLEMENTED YET!!!</>} />
       <Route path="/signin" element={<SigninView />} />
       <Route path="/signup" element={<SignupView />} />
-    </Route>
-  )
+    </Route>,
+  ),
 );
 
 export default function App() {

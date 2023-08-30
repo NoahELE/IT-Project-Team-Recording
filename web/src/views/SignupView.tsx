@@ -1,6 +1,17 @@
-import { Button, CssBaseline, TextField, FormControlLabel,
-  Checkbox, Link, Grid, Box, Typography, Container,
-  createTheme, ThemeProvider} from '@mui/material';
+import {
+  Button,
+  CssBaseline,
+  TextField,
+  FormControlLabel,
+  Checkbox,
+  Link,
+  Grid,
+  Box,
+  Typography,
+  Container,
+  createTheme,
+  ThemeProvider,
+} from '@mui/material';
 import { useState } from 'react';
 
 const defaultTheme = createTheme();
@@ -22,7 +33,9 @@ export default function SignUp() {
     const password = event.target.value;
     setIsPasswordValid(passwordValidation.test(password));
   };
-  const handleTerm = (event: { target: { checked: boolean | ((prevState: boolean) => boolean); }; }) => {
+  const handleTerm = (event: {
+    target: { checked: boolean | ((prevState: boolean) => boolean) };
+  }) => {
     setIsChecked(event.target.checked);
   };
 
@@ -48,9 +61,11 @@ export default function SignUp() {
 
     // Check is password format correct
     if (!passwordValidation.test(password as string)) {
-      alert('Password must contain at least one uppercase letter,' +
-        ' one lowercase letter, one number,' +
-        ' and be at least 6 characters long.');
+      alert(
+        'Password must contain at least one uppercase letter,' +
+          ' one lowercase letter, one number,' +
+          ' and be at least 6 characters long.',
+      );
       return;
     }
 
@@ -66,7 +81,7 @@ export default function SignUp() {
       email: data.get('email'),
       password: data.get('password'),
       registrationdate: registrationdate.toLocaleDateString(),
-      isAdmin : false
+      isAdmin: false,
     };
     console.log(JSON.stringify(jsonData, null, 2));
 
@@ -75,92 +90,110 @@ export default function SignUp() {
 
   return (
     <ThemeProvider theme={defaultTheme}>
-      <Container component='main' maxWidth='xs'>
+      <Container component="main" maxWidth="xs">
         <CssBaseline />
         <Box
           sx={{
             marginTop: 8,
             display: 'flex',
             flexDirection: 'column',
-            alignItems: 'center'
+            alignItems: 'center',
           }}
         >
-          <Typography component='h1' variant='h5'>
+          <Typography component="h1" variant="h5">
             Sign up
           </Typography>
-          <Box component='form' noValidate onSubmit={handleSubmit} sx={{ mt: 3 }}>
+          <Box
+            component="form"
+            noValidate
+            onSubmit={handleSubmit}
+            sx={{ mt: 3 }}
+          >
             <Grid container spacing={2}>
               <Grid item xs={12}>
                 <TextField
                   required
                   fullWidth
-                  id='username'
-                  label='User Name'
-                  name='username'
-                  autoComplete='username'
+                  id="username"
+                  label="User Name"
+                  name="username"
+                  autoComplete="username"
                 />
               </Grid>
               <Grid item xs={12}>
                 <TextField
                   required
                   fullWidth
-                  id='email'
-                  label='Email Address'
-                  name='email'
-                  autoComplete='email'
+                  id="email"
+                  label="Email Address"
+                  name="email"
+                  autoComplete="email"
                   onChange={handleEmailFormat}
                   error={isEmailValid === false}
-                  helperText={isEmailValid === false ? 'Invalid email address.' : ''}
+                  helperText={
+                    isEmailValid === false ? 'Invalid email address.' : ''
+                  }
                 />
               </Grid>
               <Grid item xs={12}>
                 <TextField
                   required
                   fullWidth
-                  name='password'
-                  label='Password'
-                  type='password'
-                  id='password'
-                  autoComplete='new-password'
+                  name="password"
+                  label="Password"
+                  type="password"
+                  id="password"
+                  autoComplete="new-password"
                   onChange={handlePasswordFormat}
                   error={isPasswordValid === false}
-                  helperText={isPasswordValid === false ? 'Password must contain at' +
-                    ' least one uppercase letter, one lowercase letter, one number,' +
-                    ' and be at least 6 characters long.' : ''}
+                  helperText={
+                    isPasswordValid === false
+                      ? 'Password must contain at' +
+                        ' least one uppercase letter, one lowercase letter, one number,' +
+                        ' and be at least 6 characters long.'
+                      : ''
+                  }
                 />
               </Grid>
               <Grid item xs={12}>
                 <TextField
                   required
                   fullWidth
-                  name='confirmPassword'
-                  label='Confirm Password'
-                  type='password'
-                  id='confirmPassword'
-                  autoComplete='new-password'
+                  name="confirmPassword"
+                  label="Confirm Password"
+                  type="password"
+                  id="confirmPassword"
+                  autoComplete="new-password"
                   value={confirmPassword}
                   onChange={(e) => setConfirmPassword(e.target.value)}
                 />
               </Grid>
               <Grid item xs={12}>
                 <FormControlLabel
-                  required control={<Checkbox value='allowExtraEmails' color='primary' onChange={handleTerm} />}
-                  label='Accept Terms & Conditions'
+                  required
+                  control={
+                    <Checkbox
+                      value="allowExtraEmails"
+                      color="primary"
+                      onChange={handleTerm}
+                    />
+                  }
+                  label="Accept Terms & Conditions"
                 />
               </Grid>
             </Grid>
             <Button
-              type='submit'
+              type="submit"
               fullWidth
-              variant='contained'
+              variant="contained"
               sx={{ mt: 3, mb: 2 }}
               disabled={!isChecked}
             >
               Sign Up
             </Button>
-            <Grid container justifyContent='flex-end'>
+            <Grid container justifyContent="flex-end">
               <Grid item>
-                <Link href={'/signin'} variant='body2'>
+                <Link href={'/signin'} variant="body2">
                   Already have an account? Sign in
                 </Link>
               </Grid>
