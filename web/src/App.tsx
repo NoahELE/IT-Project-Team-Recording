@@ -8,6 +8,7 @@ import {
 import HomeView from './views/HomeView';
 import RecordingView from './views/RecordingView';
 import RootView from './views/RootView';
+import PublicRecordsView from './views/PublicRecordsView.tsx';
 import SigninView from './views/SigninView';
 import SignupView from './views/SignupView';
 
@@ -17,7 +18,7 @@ const router = createBrowserRouter(
       <Route index element={<HomeView />} />
       <Route path="/recording" element={<RecordingView />} />
       {/* TODO */}
-      <Route path="/public" element={<>NOT IMPLEMENTED YET!!!</>} />
+      <Route path="/public" element={<PublicRecordsView />} />
       <Route path="/signin" element={<SigninView />} />
       <Route path="/signup" element={<SignupView />} />
     </Route>,

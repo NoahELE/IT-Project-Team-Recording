@@ -6,7 +6,7 @@ export default function RootView() {
   return (
     <>
       <Header />
-      <Box mt={10}>
+      <Box>
         <Outlet />
       </Box>
     </>
