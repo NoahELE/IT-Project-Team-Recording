@@ -1,5 +1,5 @@
 import { Typography, Button, Box, Grid, Container, Stack } from '@mui/material';
-import Image from '/home2.svg';
+import Image from '/home.svg';
 import RecordVoiceOverIcon from '@mui/icons-material/RecordVoiceOver';
 import DashboardIcon from '@mui/icons-material/Dashboard';
 import VerifiedUserIcon from '@mui/icons-material/VerifiedUser';
