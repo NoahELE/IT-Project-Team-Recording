@@ -1,4 +1,5 @@
 import { Button, Container, Divider, Stack, Typography } from '@mui/material';
+import { GridRowSelectionModel } from '@mui/x-data-grid';
 import { useEffect, useState } from 'react';
 import { useReactMediaRecorder } from 'react-media-recorder';
 import RecordingList from '../components/RecordingList';
@@ -19,13 +20,11 @@ const recordings: Recording[] = [
 ];
 
 export default function RecordingView() {
-  const { status, startRecording, stopRecording, mediaBlobUrl } =
+  const { mediaBlobUrl, status, startRecording, stopRecording } =
     useReactMediaRecorder({ audio: true });
 
   const [recordedTime, setRecordedTime] = useState(0.0);
-
   const isRecording = status === 'recording';
-
   useEffect(() => {
     let intervalId: number | null = null;
     if (isRecording) {
@@ -39,6 +38,9 @@ export default function RecordingView() {
       }
     };
   }, [isRecording]);
+
+  const [rowSelectionModel, setRowSelectionModel] =
+    useState<GridRowSelectionModel>([]);
 
   return (
     <Container>
@@ -73,7 +75,24 @@ export default function RecordingView() {
 
         <Divider variant="middle" />
 
-        <RecordingList recordings={recordings} />
+        <RecordingList
+          recordings={recordings}
+          rowSelectionModel={rowSelectionModel}
+          setRowSelectionModel={setRowSelectionModel}
+        />
+
+        <Stack direction="row-reverse" spacing={3}>
+          <Button
+            onClick={() => {
+              rowSelectionModel.forEach((id) => {
+                // TODO: delete the selected recordings
+                console.log(id);
+              });
+            }}
+          >
+            Delete Selected
+          </Button>
+        </Stack>
       </Stack>
     </Container>
   );
