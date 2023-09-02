@@ -3,13 +3,14 @@ import {
   DataGrid,
   GridColDef,
   GridRenderCellParams,
-  useGridApiRef,
+  GridRowSelectionModel,
 } from '@mui/x-data-grid';
 import { Recording } from '../entity';
 
 interface Props {
   recordings: Recording[];
-  apiRef?: ReturnType<typeof useGridApiRef>;
+  rowSelectionModel?: GridRowSelectionModel;
+  setRowSelectionModel?: (rowSelectionModel: GridRowSelectionModel) => void;
 }
 
 const columns: GridColDef[] = [
@@ -39,10 +40,13 @@ const columns: GridColDef[] = [
   },
 ];
 
-export default function RecordingList({ recordings, apiRef }: Props) {
+export default function RecordingList({
+  recordings,
+  rowSelectionModel,
+  setRowSelectionModel,
+}: Props) {
   return (
     <DataGrid
-      apiRef={apiRef}
       rows={recordings}
       columns={columns}
       initialState={{
@@ -53,6 +57,12 @@ export default function RecordingList({ recordings, apiRef }: Props) {
       pageSizeOptions={[10, 20, 50]}
       checkboxSelection
       getRowHeight={() => 'auto'}
+      rowSelectionModel={rowSelectionModel}
+      onRowSelectionModelChange={(newRowSelectionModel) => {
+        if (setRowSelectionModel !== undefined) {
+          setRowSelectionModel(newRowSelectionModel);
+        }
+      }}
     />
   );
 }
