@@ -38,6 +38,7 @@ const columns: GridColDef[] = [
       );
     },
   },
+  { field: 'text', headerName: 'Text', width: 200 },
 ];
 
 export default function RecordingList({

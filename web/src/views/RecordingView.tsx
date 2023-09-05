@@ -18,11 +18,13 @@ const recordings: Recording[] = [
     id: '1',
     name: 'Recording 1',
     audioUrl: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3',
+    text: 'They lived with their mother in a sand-bank, underneath the root of a very big fir-tree.',
   },
   {
     id: '2',
     name: 'Recording 2',
     audioUrl: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3',
+    text: 'Once upon a time there were four little rabbits, and their names were Flopsy, Mopsy, Cottontail and Peter.',
   },
 ];
 
