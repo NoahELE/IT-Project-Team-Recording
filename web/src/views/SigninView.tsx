@@ -1,6 +1,5 @@
 import * as React from 'react';
 import {
-  Snackbar,
   Button,
   CssBaseline,
   TextField,
@@ -11,13 +10,12 @@ import {
   Container,
   createTheme,
   ThemeProvider,
-  Alert,
 } from '@mui/material';
+import { useShowError } from '../utils.tsx';
 
 const defaultTheme = createTheme();
 
 export default function SigninView() {
-  const [openSnackbar, setOpenSnackbar] = React.useState(false);
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
@@ -26,7 +24,7 @@ export default function SigninView() {
 
     // Check if all the text is filled
     if (!username || !password) {
-      setOpenSnackbar(true);
+      showError(new Error('Please fill all the text field!'));
       return;
     }
 
@@ -36,9 +34,7 @@ export default function SigninView() {
     };
     console.log(JSON.stringify(jsonData, null, 2));
   };
-  const handleCloseSnackbar = () => {
-    setOpenSnackbar(false);
-  };
+  const [snackbar, showError] = useShowError();
 
   return (
     <ThemeProvider theme={defaultTheme}>
@@ -99,21 +95,7 @@ export default function SigninView() {
               </Grid>
             </Box>
           </Box>
-          <Snackbar
-            open={openSnackbar}
-            autoHideDuration={6000}
-            onClose={handleCloseSnackbar}
-          >
-            <Alert
-              severity="error"
-              sx={{
-                fontSize: '1.2em',
-                padding: '20px',
-              }}
-            >
-              Please fill all the text field!
-            </Alert>
-          </Snackbar>
+          {snackbar}
         </Container>
       </Box>
     </ThemeProvider>

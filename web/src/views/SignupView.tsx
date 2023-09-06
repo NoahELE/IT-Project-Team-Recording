@@ -13,6 +13,8 @@ import {
   ThemeProvider,
 } from '@mui/material';
 import { useState } from 'react';
+import * as React from 'react';
+import { useShowError } from '../utils.tsx';
 
 const defaultTheme = createTheme();
 
@@ -25,6 +27,7 @@ export default function SignUp() {
   const emailValidation = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   const passwordValidation = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{6,}$/;
 
+  const [snackbar, showError] = useShowError();
   const handleEmailFormat = (event: React.ChangeEvent<HTMLInputElement>) => {
     const email = event.target.value;
     setIsEmailValid(emailValidation.test(email));
@@ -49,29 +52,31 @@ export default function SignUp() {
 
     // Check is all the text filled
     if (!username || !email || !password || !confirmPassword) {
-      alert('Please fill all the text field!');
+      showError(new Error('Please fill all the text field!'));
       return;
     }
 
     // Check is password format correct
     if (!emailValidation.test(email as string)) {
-      alert('Invalid email address.');
+      showError(new Error('Invalid email address.'));
       return;
     }
 
     // Check is password format correct
     if (!passwordValidation.test(password as string)) {
-      alert(
-        'Password must contain at least one uppercase letter,' +
-          ' one lowercase letter, one number,' +
-          ' and be at least 6 characters long.',
+      showError(
+        new Error(
+          'Password must contain at least one uppercase letter,' +
+            ' one lowercase letter, one number,' +
+            ' and be at least 6 characters long.',
+        ),
       );
       return;
     }
 
     // Check is password equal to confirm password
     if (password !== confirmPassword) {
-      alert('Password does not match.');
+      showError(new Error('Password does not match.'));
       return;
     }
 
@@ -202,6 +207,7 @@ export default function SignUp() {
             </Box>
           </Box>
         </Container>
+        {snackbar}
       </Box>
     </ThemeProvider>
   );
