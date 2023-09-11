@@ -80,13 +80,10 @@ export default function SignUp() {
       return;
     }
 
-    const registrationdate = new Date();
     const jsonData = {
       username: data.get('username'),
       email: data.get('email'),
       password: data.get('password'),
-      registrationdate: registrationdate.toLocaleDateString(),
-      isAdmin: false,
     };
     console.log(JSON.stringify(jsonData, null, 2));
 
