@@ -5,11 +5,12 @@ export interface Recording {
   text: string;
 }
 
-export interface existingUser {
+export interface User {
   username: string;
   password: string;
 }
 
-export interface UserLoginResponse {
-  token: string;
+export interface Token {
+  access: string;
+  refresh: string;
 }

@@ -1,22 +1,24 @@
-import * as React from 'react';
 import {
-  Button,
-  CssBaseline,
-  TextField,
-  Link,
-  Grid,
   Box,
-  Typography,
+  Button,
   Container,
-  createTheme,
+  CssBaseline,
+  Grid,
+  Link,
+  TextField,
   ThemeProvider,
+  Typography,
+  createTheme,
 } from '@mui/material';
-import { useShowError, signInPOST } from '../utils.tsx';
+import { FormEvent } from 'react';
+import { signIn } from '../api.ts';
+import { useShowError } from '../utils.tsx';
 
 const defaultTheme = createTheme();
 
-export default function SigninView() {
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+export default function SignInView() {
+  const [snackbar, showError] = useShowError();
+  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
     const username = data.get('username');
@@ -39,17 +41,11 @@ export default function SigninView() {
     };
     console.log(JSON.stringify(userData, null, 2));
 
-    signInPOST(userData)
-      .then((data) => {
-        console.log(data);
-        showError(new Error('Sign in success!'), 'success');
-      })
-      .catch((error) => {
-        showError(new Error('User Name or Password is not correct!'));
-        console.error('SignIn ERROR:', error);
-      });
+    signIn(userData).catch((error) => {
+      showError(error as Error);
+      console.error('Sign In ERROR:', error);
+    });
   };
-  const [snackbar, showError] = useShowError();
 
   return (
     <ThemeProvider theme={defaultTheme}>

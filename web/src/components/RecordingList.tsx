@@ -8,11 +8,6 @@ import {
 import { memo, useEffect, useRef, useState } from 'react';
 import { Recording } from '../entity';
 
-interface GridCellExpandProps {
-  value: string;
-  width: number;
-}
-
 function isOverflown(element: Element): boolean {
   return (
     element.scrollHeight > element.clientHeight ||
@@ -20,14 +15,16 @@ function isOverflown(element: Element): boolean {
   );
 }
 
-const GridCellExpand = memo(function GridCellExpand(
-  props: GridCellExpandProps,
-) {
-  const { width, value } = props;
-  const wrapper = useRef<HTMLDivElement | null>(null);
-  const cellDiv = useRef(null);
-  const cellValue = useRef(null);
-  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+interface GridCellExpandProps {
+  value: string;
+  width: number;
+}
+
+const GridCellExpand = memo(({ width, value }: GridCellExpandProps) => {
+  const wrapper = useRef<HTMLDivElement>(null);
+  const cellDiv = useRef<HTMLElement>(null);
+  const cellValue = useRef<HTMLElement>(null);
+  const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
   const [showFullCell, setShowFullCell] = useState(false);
   const [showPopper, setShowPopper] = useState(false);
 

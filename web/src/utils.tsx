@@ -1,8 +1,6 @@
 import CloseIcon from '@mui/icons-material/Close';
 import { Alert, IconButton, Snackbar } from '@mui/material';
 import { ReactElement, useCallback, useState } from 'react';
-import { existingUser, UserLoginResponse } from './entity.ts';
-import axios from 'axios';
 
 export function useShowError(): [
   ReactElement,
@@ -51,13 +49,3 @@ export function useShowError(): [
 
   return [snackbar, errorCallback];
 }
-
-export const signInPOST = async (
-  data: existingUser,
-): Promise<UserLoginResponse> => {
-  const response = await axios.post<UserLoginResponse>(
-    'https://reqres.in/api/login', // Simulate URL userName: eve.holt@reqres.in password: cityslicka
-    data,
-  );
-  return response.data;
-};

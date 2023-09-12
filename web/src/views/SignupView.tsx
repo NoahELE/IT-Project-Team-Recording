@@ -1,24 +1,24 @@
 import {
-  Button,
-  CssBaseline,
-  TextField,
-  FormControlLabel,
-  Checkbox,
-  Link,
-  Grid,
   Box,
-  Typography,
+  Button,
+  Checkbox,
   Container,
-  createTheme,
+  CssBaseline,
+  FormControlLabel,
+  Grid,
+  Link,
+  TextField,
   ThemeProvider,
+  Typography,
+  createTheme,
 } from '@mui/material';
-import { useState } from 'react';
 import * as React from 'react';
+import { useState } from 'react';
 import { useShowError } from '../utils.tsx';
 
 const defaultTheme = createTheme();
 
-export default function SignUp() {
+export default function SignUpView() {
   const [isChecked, setIsChecked] = useState(false);
   const [isPasswordValid, setIsPasswordValid] = useState<boolean | null>(null);
   const [isEmailValid, setIsEmailValid] = useState<boolean | null>(null);

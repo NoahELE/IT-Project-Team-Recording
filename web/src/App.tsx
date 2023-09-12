@@ -6,11 +6,11 @@ import {
   createRoutesFromElements,
 } from 'react-router-dom';
 import HomeView from './views/HomeView';
+import PublicRecordsView from './views/PublicRecordsView.tsx';
 import RecordingView from './views/RecordingView';
 import RootView from './views/RootView';
-import PublicRecordsView from './views/PublicRecordsView.tsx';
-import SigninView from './views/SigninView';
-import SignupView from './views/SignupView';
+import SignInView from './views/SignInView.tsx';
+import SignUpView from './views/SignUpView.tsx';
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -19,8 +19,8 @@ const router = createBrowserRouter(
       <Route path="/recording" element={<RecordingView />} />
       {/* TODO */}
       <Route path="/public" element={<PublicRecordsView />} />
-      <Route path="/signin" element={<SigninView />} />
-      <Route path="/signup" element={<SignupView />} />
+      <Route path="/signin" element={<SignInView />} />
+      <Route path="/signup" element={<SignUpView />} />
     </Route>,
   ),
 );
