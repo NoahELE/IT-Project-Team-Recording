@@ -2,10 +2,9 @@ import CloseIcon from '@mui/icons-material/Close';
 import { Alert, IconButton, Snackbar } from '@mui/material';
 import { ReactElement, useCallback, useState } from 'react';
 
-export function useShowError(): [
-  ReactElement,
-  (error: Error, severity?: 'error' | 'warning' | 'info' | 'success') => void,
-] {
+type Severity = 'error' | 'warning' | 'info' | 'success';
+type ErrorCallback = (error: Error, severity?: Severity) => void;
+export function useShowError(): [ReactElement, ErrorCallback] {
   const [open, setOpen] = useState(false);
   const [error, setError] = useState<Error | null>(null);
   const [severity, setSeverity] = useState<
@@ -35,11 +34,8 @@ export function useShowError(): [
     </Snackbar>
   );
 
-  const errorCallback = useCallback(
-    (
-      error: Error,
-      severity: 'error' | 'warning' | 'info' | 'success' = 'error',
-    ) => {
+  const errorCallback: ErrorCallback = useCallback(
+    (error: Error, severity = 'error') => {
       setError(error);
       setSeverity(severity);
       setOpen(true);
