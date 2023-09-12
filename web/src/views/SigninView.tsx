@@ -11,7 +11,7 @@ import {
   createTheme,
   ThemeProvider,
 } from '@mui/material';
-import { useShowError } from '../utils.tsx';
+import { useShowError, signInPOST } from '../utils.tsx';
 
 const defaultTheme = createTheme();
 
@@ -28,11 +28,26 @@ export default function SigninView() {
       return;
     }
 
-    const jsonData = {
-      username: data.get('username'),
-      password: data.get('password'),
+    if (typeof username !== 'string' || typeof password !== 'string') {
+      console.error('Username or password is not a string.');
+      return;
+    }
+
+    const userData = {
+      username,
+      password,
     };
-    console.log(JSON.stringify(jsonData, null, 2));
+    console.log(JSON.stringify(userData, null, 2));
+
+    signInPOST(userData)
+      .then((data) => {
+        console.log(data);
+        showError(new Error('Sign in success!'), 'success');
+      })
+      .catch((error) => {
+        showError(new Error('User Name or Password is not correct!'));
+        console.error('SignIn ERROR:', error);
+      });
   };
   const [snackbar, showError] = useShowError();
 

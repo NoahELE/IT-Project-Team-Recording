@@ -4,3 +4,12 @@ export interface Recording {
   audioUrl: string;
   text: string;
 }
+
+export interface existingUser {
+  username: string;
+  password: string;
+}
+
+export interface UserLoginResponse {
+  token: string;
+}
