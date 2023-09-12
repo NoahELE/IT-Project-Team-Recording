@@ -3,7 +3,6 @@ import {
   Button,
   Checkbox,
   Container,
-  CssBaseline,
   FormControlLabel,
   Grid,
   Link,
@@ -86,7 +85,6 @@ export default function SignUpView() {
   return (
     <Box mt={10}>
       <Container component="main" maxWidth="xs">
-        <CssBaseline />
         <Box
           sx={{
             marginTop: 8,

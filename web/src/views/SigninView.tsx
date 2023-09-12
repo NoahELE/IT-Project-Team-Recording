@@ -2,18 +2,19 @@ import {
   Box,
   Button,
   Container,
-  CssBaseline,
   Grid,
   Link,
   TextField,
   Typography,
 } from '@mui/material';
 import { FormEvent } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { signIn } from '../api.ts';
 import { useShowError } from '../utils.tsx';
 
 export default function SignInView() {
   const [snackbar, showError] = useShowError();
+  const navigate = useNavigate();
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
@@ -27,7 +28,7 @@ export default function SignInView() {
     }
 
     if (typeof username !== 'string' || typeof password !== 'string') {
-      console.error('Username or password is not a string.');
+      showError(new Error('Username or password is not a string.'));
       return;
     }
 
@@ -37,16 +38,18 @@ export default function SignInView() {
     };
     console.log(JSON.stringify(userData, null, 2));
 
-    signIn(userData).catch((error) => {
-      showError(error as Error);
-      console.error('Sign In ERROR:', error);
-    });
+    signIn(userData)
+      .then(() => {
+        navigate('/');
+      })
+      .catch((error) => {
+        showError(error as Error);
+      });
   };
 
   return (
     <Box mt={10}>
       <Container component="main" maxWidth="xs">
-        <CssBaseline />
         <Box
           sx={{
             marginTop: 8,
@@ -95,7 +98,7 @@ export default function SignInView() {
             <Grid container>
               <Grid item>
                 <Link href={'/signup'} variant="body2">
-                  {"Don't have an account? Sign Up"}
+                  Don't have an account? Sign Up
                 </Link>
               </Grid>
             </Grid>
