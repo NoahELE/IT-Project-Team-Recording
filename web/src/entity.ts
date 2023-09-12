@@ -7,8 +7,11 @@ export interface Recording {
 
 export interface User {
   username: string;
+  email: string;
   password: string;
 }
+
+export type UserSignIn = Omit<User, 'email'> | Omit<User, 'username'>;
 
 export interface Token {
   access: string;

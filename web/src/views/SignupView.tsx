@@ -12,11 +12,13 @@ import {
   Typography,
   createTheme,
 } from '@mui/material';
-import * as React from 'react';
-import { useState } from 'react';
+import { ChangeEvent, FormEvent, useState } from 'react';
 import { useShowError } from '../utils.tsx';
 
 const defaultTheme = createTheme();
+
+const emailValidation = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+const passwordValidation = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{6,}$/;
 
 export default function SignUpView() {
   const [isChecked, setIsChecked] = useState(false);
@@ -24,25 +26,20 @@ export default function SignUpView() {
   const [isEmailValid, setIsEmailValid] = useState<boolean | null>(null);
   const [confirmPassword, setConfirmPassword] = useState('');
 
-  const emailValidation = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  const passwordValidation = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{6,}$/;
-
-  const [snackbar, showError] = useShowError();
-  const handleEmailFormat = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleEmailFormat = (event: ChangeEvent<HTMLInputElement>) => {
     const email = event.target.value;
     setIsEmailValid(emailValidation.test(email));
   };
-  const handlePasswordFormat = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handlePasswordFormat = (event: ChangeEvent<HTMLInputElement>) => {
     const password = event.target.value;
     setIsPasswordValid(passwordValidation.test(password));
   };
-  const handleTerm = (event: {
-    target: { checked: boolean | ((prevState: boolean) => boolean) };
-  }) => {
+  const handleTerm = (event: ChangeEvent<HTMLInputElement>) => {
     setIsChecked(event.target.checked);
   };
 
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  const [snackbar, showError] = useShowError();
+  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
     const username = data.get('username');
