@@ -1,4 +1,6 @@
-# IT Project Team 030
+# IT Project Team Recording
+
+The project is a web application that allows users to create and manage their recordings.
 
 Frontend is located in the `web` folder.
 
