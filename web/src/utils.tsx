@@ -2,20 +2,14 @@ import CloseIcon from '@mui/icons-material/Close';
 import { Alert, IconButton, Snackbar } from '@mui/material';
 import { ReactElement, useCallback, useState } from 'react';
 
-type Severity = 'error' | 'warning' | 'info' | 'success';
-type ErrorCallback = (error: Error, severity?: Severity) => void;
-export function useShowError(): [ReactElement, ErrorCallback] {
+export function useShowError(): [ReactElement, (error: Error) => void] {
   const [open, setOpen] = useState(false);
   const [error, setError] = useState<Error | null>(null);
-  const [severity, setSeverity] = useState<
-    'error' | 'warning' | 'info' | 'success'
-  >('error');
   const onClose = () => setOpen(false);
-
   const snackbar = (
     <Snackbar open={open} autoHideDuration={5000} onClose={onClose}>
       <Alert
-        severity={severity}
+        severity="error"
         sx={{
           fontSize: '1.2em',
           padding: '20px',
@@ -34,14 +28,10 @@ export function useShowError(): [ReactElement, ErrorCallback] {
     </Snackbar>
   );
 
-  const errorCallback: ErrorCallback = useCallback(
-    (error: Error, severity = 'error') => {
-      setError(error);
-      setSeverity(severity);
-      setOpen(true);
-    },
-    [],
-  );
+  const errorCallback = useCallback((error: Error) => {
+    setError(error);
+    setOpen(true);
+  }, []);
 
   return [snackbar, errorCallback];
 }

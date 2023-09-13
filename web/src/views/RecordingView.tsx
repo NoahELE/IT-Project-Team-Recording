@@ -56,7 +56,7 @@ export default function RecordingView() {
       <Container>
         <Stack spacing={5}>
           <Stack direction="row" spacing={10}>
-            <Stack spacing={3} flexGrow={1}>
+            <Stack spacing={3}>
               <Stack direction="row" spacing={3}>
                 <Button
                   variant="contained"
@@ -79,21 +79,10 @@ export default function RecordingView() {
               <Typography variant="h5">
                 Recorded Time: {recordedTime.toFixed(1)} seconds.
               </Typography>
-              {mediaBlobUrl !== undefined && (
-                <audio
-                  src={mediaBlobUrl}
-                  controls
-                  preload="metadata"
-                  style={{ width: 400 }}
-                />
-              )}
             </Stack>
-            <Typography width={500}>
-              Lorem ipsum dolor sit amet consectetur adipisicing elit. Rem
-              aliquid expedita voluptatem est placeat sint eligendi dolor?
-              Eveniet ex placeat modi? Velit, officiis dolorum soluta doloremque
-              iste voluptate quisquam provident.
-            </Typography>
+            {mediaBlobUrl !== undefined && (
+              <audio src={mediaBlobUrl} controls />
+            )}
           </Stack>
 
           <Divider variant="middle" />

@@ -8,7 +8,7 @@ export default function Header() {
     <AppBar position="static" color="primary">
       <Toolbar>
         <Box flexGrow={1}>
-          <img src="/logo.svg" alt="LOGO" height={50} />
+          <img src="/vite.svg" alt="LOGO" />
         </Box>
         <Stack direction="row" spacing={1}>
           <Button color="inherit" onClick={() => navigate('/')}>

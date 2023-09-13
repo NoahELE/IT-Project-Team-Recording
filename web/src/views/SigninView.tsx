@@ -1,21 +1,22 @@
+import * as React from 'react';
 import {
-  Box,
   Button,
-  Container,
-  Grid,
-  Link,
+  CssBaseline,
   TextField,
+  Link,
+  Grid,
+  Box,
   Typography,
+  Container,
+  createTheme,
+  ThemeProvider,
 } from '@mui/material';
-import { FormEvent } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { signIn } from '../api.ts';
 import { useShowError } from '../utils.tsx';
 
-export default function SignInView() {
-  const [snackbar, showError] = useShowError();
-  const navigate = useNavigate();
-  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+const defaultTheme = createTheme();
+
+export default function SigninView() {
+  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
     const username = data.get('username');
@@ -27,85 +28,76 @@ export default function SignInView() {
       return;
     }
 
-    if (typeof username !== 'string' || typeof password !== 'string') {
-      showError(new Error('Username or password is not a string.'));
-      return;
-    }
-
-    const userData = {
-      username,
-      password,
+    const jsonData = {
+      username: data.get('username'),
+      password: data.get('password'),
     };
-    console.log(JSON.stringify(userData, null, 2));
-
-    signIn(userData)
-      .then(() => {
-        navigate('/');
-      })
-      .catch((error) => {
-        showError(error as Error);
-      });
+    console.log(JSON.stringify(jsonData, null, 2));
   };
+  const [snackbar, showError] = useShowError();
 
   return (
-    <Box mt={10}>
-      <Container component="main" maxWidth="xs">
-        <Box
-          sx={{
-            marginTop: 8,
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-          }}
-        >
-          <Typography component="h1" variant="h5">
-            Sign in
-          </Typography>
+    <ThemeProvider theme={defaultTheme}>
+      <Box mt={10}>
+        <Container component="main" maxWidth="xs">
+          <CssBaseline />
           <Box
-            component="form"
-            onSubmit={handleSubmit}
-            noValidate
-            sx={{ mt: 1 }}
+            sx={{
+              marginTop: 8,
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+            }}
           >
-            <TextField
-              margin="normal"
-              required
-              fullWidth
-              id="username"
-              label="User Name"
-              name="username"
-              autoComplete="username"
-              autoFocus
-            />
-            <TextField
-              margin="normal"
-              required
-              fullWidth
-              name="password"
-              label="Password"
-              type="password"
-              id="password"
-              autoComplete="current-password"
-            />
-            <Button
-              type="submit"
-              fullWidth
-              variant="contained"
-              sx={{ mt: 3, mb: 2 }}
+            <Typography component="h1" variant="h5">
+              Sign in
+            </Typography>
+            <Box
+              component="form"
+              onSubmit={handleSubmit}
+              noValidate
+              sx={{ mt: 1 }}
             >
-              Sign In
-            </Button>
-            <Grid container>
-              <Grid item>
-                <Link href={'/signup'} variant="body2">
-                  Don't have an account? Sign Up
-                </Link>
+              <TextField
+                margin="normal"
+                required
+                fullWidth
+                id="username"
+                label="User Name"
+                name="username"
+                autoComplete="username"
+                autoFocus
+              />
+              <TextField
+                margin="normal"
+                required
+                fullWidth
+                name="password"
+                label="Password"
+                type="password"
+                id="password"
+                autoComplete="current-password"
+              />
+              <Button
+                type="submit"
+                fullWidth
+                variant="contained"
+                sx={{ mt: 3, mb: 2 }}
+              >
+                Sign In
+              </Button>
+              <Grid container>
+                <Grid item>
+                  <Link href={'/signup'} variant="body2">
+                    {"Don't have an account? Sign Up"}
+                  </Link>
+                </Grid>
               </Grid>
-            </Grid>
+            </Box>
           </Box>
-        </Box>
-        {snackbar}
-      </Container>
-    </Box>
+          {snackbar}
+        </Container>
+      </Box>
+    </ThemeProvider>
   );
 }

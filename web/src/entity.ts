@@ -4,16 +4,3 @@ export interface Recording {
   audioUrl: string;
   text: string;
 }
-
-export interface User {
-  username: string;
-  email: string;
-  password: string;
-}
-
-export type UserSignIn = Omit<User, 'email'> | Omit<User, 'username'>;
-
-export interface Token {
-  access: string;
-  refresh: string;
-}

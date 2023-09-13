@@ -34,11 +34,7 @@ export default function HomeView() {
                 <Typography variant="h3" component="h1">
                   Welcome to
                 </Typography>
-                <Typography
-                  variant="h2"
-                  component="h1"
-                  color={'rgb(56, 116, 203)'}
-                >
+                <Typography variant="h2" component="h1">
                   Recording Management
                 </Typography>
                 <Box mt={3}>
