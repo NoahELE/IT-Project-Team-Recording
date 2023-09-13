@@ -17,8 +17,8 @@ export function useShowError(): [ReactElement, ErrorCallback] {
       <Alert
         severity={severity}
         sx={{
-          fontSize: '1.2em',
-          padding: '20px',
+          fontSize: '1.2rem',
+          padding: '1.25rem',
         }}
       >
         {error?.message}

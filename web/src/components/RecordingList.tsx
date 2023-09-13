@@ -65,7 +65,7 @@ const GridCellExpand = memo(({ width, value }: GridCellExpandProps) => {
       onMouseLeave={handleMouseLeave}
       sx={{
         alignItems: 'center',
-        lineHeight: '24px',
+        lineHeight: '1.5rem',
         width: '100%',
         height: '100%',
         position: 'relative',

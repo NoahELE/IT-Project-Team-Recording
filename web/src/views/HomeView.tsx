@@ -1,8 +1,8 @@
-import { Typography, Button, Box, Grid, Container, Stack } from '@mui/material';
-import Image from '/home.svg';
-import RecordVoiceOverIcon from '@mui/icons-material/RecordVoiceOver';
 import DashboardIcon from '@mui/icons-material/Dashboard';
+import RecordVoiceOverIcon from '@mui/icons-material/RecordVoiceOver';
 import VerifiedUserIcon from '@mui/icons-material/VerifiedUser';
+import { Box, Button, Container, Grid, Stack, Typography } from '@mui/material';
+import Image from '/home.svg';
 
 export default function HomeView() {
   return (
@@ -10,7 +10,7 @@ export default function HomeView() {
       <Box
         sx={{
           width: '100%',
-          height: '600px',
+          height: '36rem',
           backgroundColor: 'rgb(247, 249, 252)',
           p: 2,
           display: 'flex',
@@ -18,12 +18,12 @@ export default function HomeView() {
           justifyContent: 'center',
         }}
       >
-        <Container style={{ maxWidth: '1500px' }}>
+        <Container style={{ maxWidth: '100rem' }}>
           <Grid container spacing={2}>
             <Grid item xs={6}>
               <Box
                 sx={{
-                  height: '500px',
+                  height: '30rem',
                   p: 2,
                   display: 'flex',
                   flexDirection: 'column',
@@ -55,7 +55,7 @@ export default function HomeView() {
                     variant="contained"
                     color="primary"
                     href="/public"
-                    style={{ marginRight: '20px' }}
+                    style={{ marginRight: '1rem' }}
                   >
                     Check out Public Records
                   </Button>
@@ -87,7 +87,7 @@ export default function HomeView() {
       <Box
         sx={{
           width: '100%',
-          height: '600px',
+          height: '36rem',
           p: 2,
           display: 'flex',
           alignItems: 'center',
@@ -110,7 +110,7 @@ export default function HomeView() {
                   }}
                 >
                   <RecordVoiceOverIcon
-                    style={{ color: 'green', fontSize: '50px' }}
+                    style={{ color: 'green', fontSize: '3rem' }}
                   />
                   <Box mt={2}>
                     <Typography variant="h4">
@@ -136,7 +136,7 @@ export default function HomeView() {
                     textAlign: 'center',
                   }}
                 >
-                  <DashboardIcon style={{ color: 'green', fontSize: '50px' }} />
+                  <DashboardIcon style={{ color: 'green', fontSize: '3rem' }} />
                   <Box mt={2}>
                     <Typography variant="h4">C-LARA Platform</Typography>
                   </Box>
@@ -159,7 +159,7 @@ export default function HomeView() {
                   }}
                 >
                   <VerifiedUserIcon
-                    style={{ color: 'green', fontSize: '50px' }}
+                    style={{ color: 'green', fontSize: '3rem' }}
                   />
                   <Box mt={2}>
                     <Typography variant="h4">
