@@ -1,14 +1,14 @@
 import axios from 'axios';
 import { Token, UserSignIn } from './entity';
 
-const API_URL = 'http://localhost:8000';
+axios.defaults.baseURL = import.meta.env.VITE_API_URL;
 
 /**
  * Sign in a user and stores the JWT token returned in local storage.
  * @param user the user that signs in
  */
 export async function signIn(user: UserSignIn): Promise<void> {
-  const response = await axios.post<Token>(API_URL + '/user/signin', user);
+  const response = await axios.post<Token>('/user/signin', user);
   const token = response.data;
   localStorage.setItem('token', JSON.stringify(token));
 }
