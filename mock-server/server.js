@@ -36,18 +36,26 @@ server.post('/api/user/signup', (req, res) => {
   if (req.method === 'POST') {
     const newUser = req.body;
     const users = router.db.get('user').value();
+    const findUserName = router.db.get('user').find({ username: newUser.username }).value();
     const maxId = Math.max(...users.map(user => user.id));
 
-    newUser.id = maxId + 1;
-    const user = {
-      id: newUser.id,
-      ...newUser
-    };
+    if (!findUserName) {
+      newUser.id = maxId + 1;
+      const user = {
+        id: newUser.id,
+        ...newUser
+      };
 
-    router.db.get('user').push(user).write();
-    res.status(201).jsonp(user);
+      router.db.get('user').push(user).write();
+      res.status(201).jsonp(user);
+    } else {
+      res.status(400).jsonp({
+        error: "Username already exists"
+      });
+    }
   }
 });
+
 
 server.post('/api/recording', (req, res) => {
   if (req.method === 'POST') {

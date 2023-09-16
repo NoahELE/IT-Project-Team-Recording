@@ -43,7 +43,7 @@ export default function SignInView() {
         navigate('/');
       })
       .catch((error) => {
-        showError(error as Error);
+        showError(new Error(`Login Failed - ${error}`));
       });
   };
 
