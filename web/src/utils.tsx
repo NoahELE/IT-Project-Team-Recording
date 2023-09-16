@@ -4,6 +4,12 @@ import { ReactElement, useCallback, useState } from 'react';
 
 type Severity = 'error' | 'warning' | 'info' | 'success';
 type ErrorCallback = (error: Error, severity?: Severity) => void;
+/**
+ * Custom hook that displays a snackbar with an error message.
+ * @returns [snackbar, showError] snackbar is a ReactElement that should be
+ * rendered in the component, showError is a callback that takes an error and
+ * an optional severity level and displays the error in a snackbar
+ */
 export function useShowError(): [ReactElement, ErrorCallback] {
   const [open, setOpen] = useState(false);
   const [error, setError] = useState<Error | null>(null);
@@ -14,13 +20,7 @@ export function useShowError(): [ReactElement, ErrorCallback] {
 
   const snackbar = (
     <Snackbar open={open} autoHideDuration={5000} onClose={onClose}>
-      <Alert
-        severity={severity}
-        sx={{
-          fontSize: '1.2rem',
-          padding: '1.25rem',
-        }}
-      >
+      <Alert severity={severity}>
         {error?.message}
         <IconButton
           size="small"

@@ -9,29 +9,14 @@ import {
 import { GridRowSelectionModel } from '@mui/x-data-grid';
 import { useEffect, useState } from 'react';
 import { useReactMediaRecorder } from 'react-media-recorder';
+import { deleteRecording, getAllRecordings } from '../api';
 import RecordingList from '../components/RecordingList';
 import { Recording } from '../entity';
-
-// HACK: mock data of the recordings
-const recordings: Recording[] = [
-  {
-    id: '1',
-    name: 'Recording 1',
-    audioUrl: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3',
-    text: 'They lived with their mother in a sand-bank, underneath the root of a very big fir-tree.',
-  },
-  {
-    id: '2',
-    name: 'Recording 2',
-    audioUrl: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3',
-    text: 'Once upon a time there were four little rabbits, and their names were Flopsy, Mopsy, Cottontail and Peter.',
-  },
-];
+import { useShowError } from '../utils';
 
 export default function RecordingView() {
   const { mediaBlobUrl, status, startRecording, stopRecording } =
     useReactMediaRecorder({ audio: true });
-
   const [recordedTime, setRecordedTime] = useState(0.0);
   const isRecording = status === 'recording';
   useEffect(() => {
@@ -47,6 +32,19 @@ export default function RecordingView() {
       }
     };
   }, [isRecording]);
+
+  const [snackbar, showError] = useShowError();
+
+  const [recordings, setRecordings] = useState<Recording[]>([]);
+  useEffect(() => {
+    getAllRecordings()
+      .then((recordings) => {
+        setRecordings(recordings);
+      })
+      .catch((error) => {
+        showError(new Error(`Failed to fetch recordings - ${error}`));
+      });
+  }, [showError]);
 
   const [rowSelectionModel, setRowSelectionModel] =
     useState<GridRowSelectionModel>([]);
@@ -109,8 +107,13 @@ export default function RecordingView() {
           <Button
             onClick={() => {
               rowSelectionModel.forEach((id) => {
-                // TODO: delete the selected recordings
-                console.log(id);
+                deleteRecording(id as string).catch((error) => {
+                  showError(
+                    new Error(
+                      `Failed to delete recording with id ${id} - ${error}`,
+                    ),
+                  );
+                });
               });
             }}
           >
@@ -118,6 +121,7 @@ export default function RecordingView() {
           </Button>
         </Stack>
       </Stack>
+      {snackbar}
     </Container>
   );
 }

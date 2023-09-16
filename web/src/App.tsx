@@ -17,7 +17,6 @@ const router = createBrowserRouter(
     <Route element={<RootView />}>
       <Route index element={<HomeView />} />
       <Route path="/recording" element={<RecordingView />} />
-      {/* TODO */}
       <Route path="/public" element={<PublicRecordsView />} />
       <Route path="/signin" element={<SignInView />} />
       <Route path="/signup" element={<SignUpView />} />
