@@ -1,7 +1,4 @@
-import { Box, Container, Stack } from '@mui/material';
-import { GridRowSelectionModel } from '@mui/x-data-grid';
-import { useState } from 'react';
-import { useReactMediaRecorder } from 'react-media-recorder';
+import { Container, Stack } from '@mui/material';
 import RecordingList from '../components/RecordingList';
 import { Recording } from '../entity';
 
@@ -22,27 +19,11 @@ const recordings: Recording[] = [
 ];
 
 export default function PublicRecordsView() {
-  const { mediaBlobUrl } = useReactMediaRecorder({ audio: true });
-
-  const [rowSelectionModel, setRowSelectionModel] =
-    useState<GridRowSelectionModel>([]);
-
   return (
-    <Box mt={10}>
-      <Container>
-        <Stack spacing={5}>
-          <Stack direction="row" spacing={10}>
-            {mediaBlobUrl !== undefined && (
-              <audio src={mediaBlobUrl} controls />
-            )}
-          </Stack>
-          <RecordingList
-            recordings={recordings}
-            rowSelectionModel={rowSelectionModel}
-            setRowSelectionModel={setRowSelectionModel}
-          />
-        </Stack>
-      </Container>
-    </Box>
+    <Container sx={{ mt: 10 }}>
+      <Stack spacing={5}>
+        <RecordingList recordings={recordings} />
+      </Stack>
+    </Container>
   );
 }

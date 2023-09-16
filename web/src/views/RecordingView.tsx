@@ -52,15 +52,22 @@ export default function RecordingView() {
     useState<GridRowSelectionModel>([]);
 
   return (
-    <Box mt={10}>
-      <Container>
-        <Stack spacing={5}>
-          <Stack direction="row" spacing={10}>
-            <Stack spacing={3} flexGrow={1}>
-              <Stack direction="row" spacing={3}>
+    <Container sx={{ mt: 10 }}>
+      <Stack spacing={5}>
+        <Stack direction="row" spacing={10}>
+          <Stack spacing={3} flexGrow={1}>
+            <Box width={500}>
+              {isRecording ? (
                 <Button
                   variant="contained"
-                  disabled={isRecording}
+                  color="error"
+                  onClick={stopRecording}
+                >
+                  Stop Recording
+                </Button>
+              ) : (
+                <Button
+                  variant="contained"
                   onClick={() => {
                     startRecording();
                     setRecordedTime(0.0);
@@ -68,56 +75,49 @@ export default function RecordingView() {
                 >
                   Start Recording
                 </Button>
-                <Button
-                  variant="contained"
-                  disabled={!isRecording}
-                  onClick={stopRecording}
-                >
-                  Stop Recording
-                </Button>
-              </Stack>
-              <Typography variant="h5">
-                Recorded Time: {recordedTime.toFixed(1)} seconds.
-              </Typography>
-              {mediaBlobUrl !== undefined && (
-                <audio
-                  src={mediaBlobUrl}
-                  controls
-                  preload="metadata"
-                  style={{ width: 400 }}
-                />
               )}
-            </Stack>
-            <Typography width={500}>
-              Lorem ipsum dolor sit amet consectetur adipisicing elit. Rem
-              aliquid expedita voluptatem est placeat sint eligendi dolor?
-              Eveniet ex placeat modi? Velit, officiis dolorum soluta doloremque
-              iste voluptate quisquam provident.
+            </Box>
+            <Typography variant="h5">
+              Recorded Time: {recordedTime.toFixed(1)} seconds.
             </Typography>
+            {mediaBlobUrl !== undefined && (
+              <audio
+                src={mediaBlobUrl}
+                controls
+                preload="metadata"
+                style={{ width: 400 }}
+              />
+            )}
           </Stack>
-
-          <Divider variant="middle" />
-
-          <RecordingList
-            recordings={recordings}
-            rowSelectionModel={rowSelectionModel}
-            setRowSelectionModel={setRowSelectionModel}
-          />
-
-          <Stack direction="row-reverse" spacing={3}>
-            <Button
-              onClick={() => {
-                rowSelectionModel.forEach((id) => {
-                  // TODO: delete the selected recordings
-                  console.log(id);
-                });
-              }}
-            >
-              Delete Selected
-            </Button>
-          </Stack>
+          <Typography width={500}>
+            Lorem ipsum dolor sit amet consectetur adipisicing elit. Rem aliquid
+            expedita voluptatem est placeat sint eligendi dolor? Eveniet ex
+            placeat modi? Velit, officiis dolorum soluta doloremque iste
+            voluptate quisquam provident.
+          </Typography>
         </Stack>
-      </Container>
-    </Box>
+
+        <Divider variant="middle" />
+
+        <RecordingList
+          recordings={recordings}
+          rowSelectionModel={rowSelectionModel}
+          setRowSelectionModel={setRowSelectionModel}
+        />
+
+        <Stack direction="row-reverse" spacing={3}>
+          <Button
+            onClick={() => {
+              rowSelectionModel.forEach((id) => {
+                // TODO: delete the selected recordings
+                console.log(id);
+              });
+            }}
+          >
+            Delete Selected
+          </Button>
+        </Stack>
+      </Stack>
+    </Container>
   );
 }
