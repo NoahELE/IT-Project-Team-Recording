@@ -13,12 +13,6 @@ export interface User {
 
 export type UserSignIn = Omit<User, 'email'> | Omit<User, 'username'>;
 
-export type UserSignUp = {
-  username: string;
-  email: string;
-  password: string;
-};
-
 export interface Token {
   access: string;
   refresh: string;
