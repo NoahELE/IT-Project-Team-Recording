@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { Token, UserSignIn } from './entity';
+import { Token, UserSignIn, UserSignUp } from './entity';
 
 axios.defaults.baseURL = import.meta.env.VITE_API_URL;
 
@@ -8,9 +8,13 @@ axios.defaults.baseURL = import.meta.env.VITE_API_URL;
  * @param user the user that signs in
  */
 export async function signIn(user: UserSignIn): Promise<void> {
-  const response = await axios.post<Token>('/user/signin', user);
+  const response = await axios.post<Token>('/api/user/login', user);
   const token = response.data;
   localStorage.setItem('token', JSON.stringify(token));
+}
+
+export async function signUp(user: UserSignUp): Promise<void> {
+  await axios.post('/api/user/signup', user);
 }
 
 /**

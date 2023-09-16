@@ -11,6 +11,8 @@ import {
 } from '@mui/material';
 import { ChangeEvent, FormEvent, useState } from 'react';
 import { useShowError } from '../utils.tsx';
+import { signUp } from '../api.ts';
+//import { useNavigate } from 'react-router-dom';
 
 const emailValidation = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const passwordValidation = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{6,}$/;
@@ -20,6 +22,7 @@ export default function SignUpView() {
   const [isPasswordValid, setIsPasswordValid] = useState<boolean | null>(null);
   const [isEmailValid, setIsEmailValid] = useState<boolean | null>(null);
   const [confirmPassword, setConfirmPassword] = useState('');
+  //const navigate = useNavigate();
 
   const handleEmailFormat = (event: ChangeEvent<HTMLInputElement>) => {
     const email = event.target.value;
@@ -72,14 +75,25 @@ export default function SignUpView() {
       return;
     }
 
-    const jsonData = {
-      username: data.get('username'),
-      email: data.get('email'),
-      password: data.get('password'),
+    const userData = {
+      username: data.get('username') as string,
+      email: data.get('email') as string,
+      password: data.get('password') as string,
     };
-    console.log(JSON.stringify(jsonData, null, 2));
 
-    // Send to backend cloud...
+    console.log(JSON.stringify(userData, null, 2));
+
+    signUp(userData)
+      .then(() => {
+        showError(
+          new Error('Signup success - Redirecting to Login Page'),
+          'success',
+        );
+        //navigate('/signin');
+      })
+      .catch((error) => {
+        showError(new Error(`Signup Failed - ${error}`));
+      });
   };
 
   return (
