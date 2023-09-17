@@ -11,7 +11,7 @@ export interface User {
   password: string;
 }
 
-export type UserSignIn = Omit<User, 'email'> | Omit<User, 'username'>;
+export type UserLogin = Omit<User, 'email'> | Omit<User, 'username'>;
 
 export interface Token {
   access: string;

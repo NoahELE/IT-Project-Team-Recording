@@ -9,10 +9,10 @@ import {
 } from '@mui/material';
 import { FormEvent } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { signIn } from '../api.ts';
+import { login } from '../api.ts';
 import { useShowError } from '../utils.tsx';
 
-export default function SignInView() {
+export default function LoginView() {
   const [snackbar, showError] = useShowError();
   const navigate = useNavigate();
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
@@ -38,7 +38,7 @@ export default function SignInView() {
     };
     console.log(JSON.stringify(userData, null, 2));
 
-    signIn(userData)
+    login(userData)
       .then(() => {
         navigate('/');
       })
@@ -58,7 +58,7 @@ export default function SignInView() {
         }}
       >
         <Typography component="h1" variant="h5">
-          Sign in
+          Login
         </Typography>
         <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
           <TextField
@@ -87,7 +87,7 @@ export default function SignInView() {
             variant="contained"
             sx={{ mt: 3, mb: 2 }}
           >
-            Sign In
+            Login
           </Button>
           <Grid container>
             <Grid item>

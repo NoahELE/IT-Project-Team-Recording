@@ -1,13 +1,13 @@
 import axios from 'axios';
-import { Recording, Token, User, UserSignIn } from './entity';
+import { Recording, Token, User, UserLogin } from './entity';
 
 axios.defaults.baseURL = import.meta.env.VITE_API_URL;
 
 /**
- * Sign in a user and stores the JWT token returned in local storage.
- * @param user the user that signs in
+ * Login a user and stores the JWT token returned in local storage.
+ * @param user the user that logs in
  */
-export async function signIn(user: UserSignIn): Promise<void> {
+export async function login(user: UserLogin): Promise<void> {
   const response = await axios.post<Token>('/api/user/login', user);
   const token = response.data;
   localStorage.setItem('token', JSON.stringify(token));
@@ -29,13 +29,13 @@ export function setJwtToken(): void {
   const tokenStr = localStorage.getItem('token');
   if (tokenStr === null) {
     throw new Error(
-      'It seems that you are not logged in. Please sign in first.',
+      'It seems that you are not logged in. Please login first.',
     );
   }
   const token = JSON.parse(tokenStr) as Token;
   if (!token.access || !token.refresh) {
     throw new Error(
-      'It seems that your token is invalid. Please sign in again.',
+      'It seems that your token is invalid. Please login again.',
     );
   }
   axios.defaults.headers.common.Authorization = `Bearer ${token.access}`;

@@ -3,7 +3,6 @@ import { useNavigate } from 'react-router-dom';
 
 export default function Header() {
   const navigate = useNavigate();
-  // TODO: find a better icon for header
   return (
     <AppBar position="static" color="primary">
       <Toolbar>
@@ -20,8 +19,8 @@ export default function Header() {
           <Button color="inherit" onClick={() => navigate('/public')}>
             Public Records
           </Button>
-          <Button color="inherit" onClick={() => navigate('/signin')}>
-            Sign in/up
+          <Button color="inherit" onClick={() => navigate('/login')}>
+            Login/Register
           </Button>
         </Stack>
       </Toolbar>
