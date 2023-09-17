@@ -13,8 +13,10 @@ import { deleteRecording, getAllRecordings } from '../api';
 import RecordingList from '../components/RecordingList';
 import { Recording } from '../entity';
 import { useShowError } from '../utils';
+import { useNavigate } from 'react-router-dom';
 
 export default function RecordingView() {
+  const navigate = useNavigate();
   const { mediaBlobUrl, status, startRecording, stopRecording } =
     useReactMediaRecorder({ audio: true });
   const [recordedTime, setRecordedTime] = useState(0.0);
@@ -41,8 +43,19 @@ export default function RecordingView() {
       .then((recordings) => {
         setRecordings(recordings);
       })
-      .catch((error) => {
-        showError(new Error(`Failed to fetch recordings - ${error}`));
+      .catch((error: Error) => {
+        showError(new Error(`Failed to fetch recordings - ${error.message}`));
+        if (
+          error.message ===
+          'It seems that you are not logged in. Please login first.'
+        ) {
+          navigate('/login');
+        } else if (
+          error.message ===
+          'It seems that your token is invalid. Please login again.'
+        ) {
+          navigate('/login');
+        }
       });
   }, [showError]);
 

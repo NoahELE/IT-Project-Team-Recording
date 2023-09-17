@@ -4,6 +4,7 @@ import { ReactElement, useCallback, useState } from 'react';
 
 type Severity = 'error' | 'warning' | 'info' | 'success';
 type ErrorCallback = (error: Error, severity?: Severity) => void;
+
 /**
  * Custom hook that displays a snackbar with an error message.
  * @returns [snackbar, showError] snackbar is a ReactElement that should be
@@ -45,3 +46,7 @@ export function useShowError(): [ReactElement, ErrorCallback] {
 
   return [snackbar, errorCallback];
 }
+
+export const sleep = (milliseconds: number) => {
+  return new Promise((resolve) => setTimeout(resolve, milliseconds));
+};
