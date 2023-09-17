@@ -2,24 +2,23 @@
   "user": [
     {
       "id": 1,
-      "username": "As",
-      "email": "As@test.com",
+      "username": "Jack",
+      "email": "Jack@student.com",
       "password": "123456",
       "isAdmin": true
     },
     {
       "id": 2,
-      "username": "Bs",
-      "email": "Bs@test.com",
-      "password": "ASDFGHJ",
+      "username": "Will",
+      "email": "Will@student.com",
+      "password": "wasd",
       "isAdmin": false
     },
     {
       "id": 3,
-      "username": "cs",
-      "email": "cs@test.com",
-      "password": "ASDFGHJ",
-      "isAdmin": false
+      "username": "Tom",
+      "email": "tom@gmail.com",
+      "password": "Qw12345"
     }
   ],
   "recording": [
@@ -34,12 +33,6 @@
       "name": "Recording 2",
       "audioUrl": "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3",
       "text": "Once upon a time there were four little rabbits, and their names were Flopsy, Mopsy, Cottontail and Peter."
-    },
-    {
-      "id": 3,
-      "name": "Recording 3",
-      "audioUrl": "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3",
-      "text": "Sample 3."
     }
   ]
 }

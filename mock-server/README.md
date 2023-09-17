@@ -9,7 +9,7 @@ Default port: `4000`
 
 URL: <http://localhost:4000>
 
-- user sign up POST `/api/user/signup`
+- user sign up POST `/api/user/register`
 - user sign in POST `/api/user/login`
 - get all recording GET `/api/recording`
 - get recording with id GET `/api/recording/{id}`

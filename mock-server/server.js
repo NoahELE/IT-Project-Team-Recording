@@ -32,7 +32,7 @@ server.post('/api/user/login', (req, res) => {
   }
 });
 
-server.post('/api/user/signup', (req, res) => {
+server.post('/api/user/register', (req, res) => {
   if (req.method === 'POST') {
     const newUser = req.body;
     const users = router.db.get('user').value();
