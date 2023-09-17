@@ -37,7 +37,7 @@ export default function HomeView() {
                 <Typography
                   variant="h2"
                   component="h1"
-                  color={'rgb(56, 116, 203)'}
+                  color="rgb(56, 116, 203)"
                 >
                   Recording Management
                 </Typography>
@@ -59,8 +59,8 @@ export default function HomeView() {
                   >
                     Check out Public Records
                   </Button>
-                  <Button variant="contained" color="primary" href="/signup">
-                    Sign Up
+                  <Button variant="contained" color="primary" href="/register">
+                    Register
                   </Button>
                 </Box>
               </Box>

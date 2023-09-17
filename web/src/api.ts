@@ -14,11 +14,11 @@ export async function login(user: UserLogin): Promise<void> {
 }
 
 /**
- * Sign up a user.
- * @param user the user that signs up
+ * Register a user.
+ * @param user the user that registers
  */
-export async function signUp(user: User): Promise<void> {
-  await axios.post('/api/user/signup', user);
+export async function register(user: User): Promise<void> {
+  await axios.post('/api/user/register', user);
 }
 
 /**
@@ -28,15 +28,11 @@ export async function signUp(user: User): Promise<void> {
 export function setJwtToken(): void {
   const tokenStr = localStorage.getItem('token');
   if (tokenStr === null) {
-    throw new Error(
-      'It seems that you are not logged in. Please login first.',
-    );
+    throw new Error('It seems that you are not logged in. Please login first.');
   }
   const token = JSON.parse(tokenStr) as Token;
   if (!token.access || !token.refresh) {
-    throw new Error(
-      'It seems that your token is invalid. Please login again.',
-    );
+    throw new Error('It seems that your token is invalid. Please login again.');
   }
   axios.defaults.headers.common.Authorization = `Bearer ${token.access}`;
 }
