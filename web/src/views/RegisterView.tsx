@@ -10,14 +10,14 @@ import {
   Typography,
 } from '@mui/material';
 import { ChangeEvent, FormEvent, useState } from 'react';
-import { signUp } from '../api.ts';
+import { register } from '../api.ts';
 import { useShowError } from '../utils.tsx';
 //import { useNavigate } from 'react-router-dom';
 
 const emailValidation = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const passwordValidation = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{6,}$/;
 
-export default function SignUpView() {
+export default function RegisterView() {
   const [isChecked, setIsChecked] = useState(false);
   const [isPasswordValid, setIsPasswordValid] = useState<boolean | null>(null);
   const [isEmailValid, setIsEmailValid] = useState<boolean | null>(null);
@@ -83,16 +83,16 @@ export default function SignUpView() {
 
     console.log(JSON.stringify(userData, null, 2));
 
-    signUp(userData)
+    register(userData)
       .then(() => {
         showError(
-          new Error('Signup success - Redirecting to Login Page'),
+          new Error('Registration success - Redirecting to Login Page'),
           'success',
         );
         //navigate('/signin');
       })
       .catch((error) => {
-        showError(new Error(`Signup Failed - ${error}`));
+        showError(new Error(`Registration Failed - ${error}`));
       });
   };
 
@@ -107,7 +107,7 @@ export default function SignUpView() {
         }}
       >
         <Typography component="h1" variant="h5">
-          Sign up
+          Register
         </Typography>
         <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 3 }}>
           <Grid container spacing={2}>
@@ -190,11 +190,11 @@ export default function SignUpView() {
             sx={{ mt: 3, mb: 2 }}
             disabled={!isChecked}
           >
-            Sign Up
+            Register
           </Button>
           <Grid container justifyContent="flex-end">
             <Grid item>
-              <Link href={'/login'} variant="body2">
+              <Link href="/login" variant="body2">
                 Already have an account? Login
               </Link>
             </Grid>
