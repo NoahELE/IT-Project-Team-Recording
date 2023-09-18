@@ -1,7 +1,6 @@
 from django.urls import path
-from .views import AddBatchJob
+from .views import AddBatchJobView
 
 urlpatterns = [
-        path('add-batch-job', TokenObtainPairView.as_view(), name='add-batch-job'),
-
+        path('add-batch-job', AddBatchJobView.as_view(), name='add-batch-job'),
 ]
