@@ -3,9 +3,8 @@ from django.db import models
 class AudioDataManager(models.Manager):
     use_in_migrations = True
 
-    def addNewAudioData(self, request):
-        data = self.model(request)
-        data.save(using=self.db)
+    def addNewAudioData(self, task_id, user, tag_id, filename, text, description, uploadTime, privacy):
+        data = self.create(task_id = task_id, created_by_user = user, tag_id = tag_id, filename = filename, text = text, description = description, uploadTime = uploadTime, privacy = privacy)
         return data
 
 
