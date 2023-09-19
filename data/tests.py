@@ -27,4 +27,15 @@ class AudioDataManagerTest(TestCase):
 
         manager.add_new_audio_data(request)
 
-        return AudioData.objects.filter(task_id = "Alice in Wonderland").exists()
+        assert AudioData.objects.filter(task_id = "Alice in Wonderland").exists()
+    
+    def test_delete_existing_audio_data(self):
+        manager = AudioData.objects
+
+        request = {
+            "task_id": "Alice in Wonderland",
+        }
+
+        manager.delete_existing_audio_data(request)
+
+        assert(not AudioData.objects.filter(task_id = "Alice in Wonderland").exists())

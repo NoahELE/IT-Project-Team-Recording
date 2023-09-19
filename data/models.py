@@ -16,6 +16,12 @@ class AudioDataManager(models.Manager):
             privacy=request.get('privacy')
         )
         return data
+    
+    def delete_existing_audio_data(self, request):
+        task_id = request.get('task_id')
+        if AudioData.objects.filter(task_id = "Alice in Wonderland").exists():
+            AudioData.objects.delete(task_id = "Alice in Wonderland")
+        return
 
 
 class AudioData(models.Model):
