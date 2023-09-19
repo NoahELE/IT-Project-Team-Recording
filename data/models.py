@@ -5,41 +5,38 @@ class AudioDataManager(models.Manager):
 
     def add_new_audio_data(self, request):
         data = self.create(
-            id = request.get('id'),
-            task_id=request.get('task_id'),
-            created_by_user=request.get('user'),
-            tag_id=request.get('tag_id'),
-            filename=request.get('filename'),
-            text=request.get('text'),
-            description=request.get('description'),
-            uploadTime=request.get('uploadTime'),
-            privacy=request.get('privacy')
+            id=request['id'],
+            task_id=request['task_id'],
+            user=request['user'],
+            tag_id=request['tag_id'],
+            filename=request['filename'],
+            text=request['text'],
+            description=request['description'],
+            uploadTime=request['uploadTime'],
+            privacy=request['privacy']
         )
         return data
     
-    def delete_existing_audio_data(self, request):
-        task_id = request.get('task_id')
-        if AudioData.objects.filter(task_id = "Alice in Wonderland").exists():
-            AudioData.objects.delete(task_id = "Alice in Wonderland")
-        return
-
+    def delete_existing_audio_data(self, task_id):
+        AudioData.objects.filter(task_id=task_id).delete()
+    
+    def get_users_tasks(self, username, task_id):
+        return AudioData.objects.filter(task_id=task_id, user=username)
 
 class AudioData(models.Model):
     id = models.IntegerField(primary_key=True)
-    task_id = models.CharField(unique = True)
-    created_by_user = models.CharField(unique = True)
-    tag_id = models.CharField(unique = True)
-    filename = models.CharField(unique = True)
-    text = models.CharField()
-    description = models.CharField()
+    task_id = models.CharField(unique=True, max_length=255)
+    user = models.CharField(max_length=255)
+    tag_id = models.CharField(max_length=255)
+    filename = models.CharField(unique=True, max_length=255)
+    description = models.TextField()
     uploadTime = models.DateTimeField()
     privacy = models.BooleanField()
 
     objects = AudioDataManager()
 
     def __str__(self):
-        return self.id
-
+        return str(self.id)
 
 class Tag(models.Model):
     class Languages(models.TextChoices):
@@ -50,5 +47,11 @@ class Tag(models.Model):
         MALE = "M"
         FEMALE = "F"
 
-    language = models.CharField(choices=Languages.choices, default=Languages.OTHER)
-    gender = models.CharField(choices=Gender.choices)
+    language = models.CharField(choices=Languages.choices, default=Languages.OTHER, max_length=100)
+    gender = models.CharField(choices=Gender.choices, max_length=1)
+
+class TaskData(models.Model):
+    task_id = models.CharField(max_length=255)
+    block_index = models.IntegerField()
+    text = models.TextField()
+    link = models.CharField(unique=True, max_length=255)
