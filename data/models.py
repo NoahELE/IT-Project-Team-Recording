@@ -3,15 +3,23 @@ from django.db import models
 class AudioDataManager(models.Manager):
     use_in_migrations = True
 
-    def add_new_audio_data(self, task_id, user, tag_id, filename, text, description, uploadTime, privacy):
-        data = self.create(task_id = task_id, created_by_user = user, tag_id = tag_id, filename = filename, text = text, description = description, uploadTime = uploadTime, privacy = privacy)
+    def add_new_audio_data(self, request):
+        data = self.create(
+            id = request.get('id'),
+            task_id=request.get('task_id'),
+            created_by_user=request.get('user'),
+            tag_id=request.get('tag_id'),
+            filename=request.get('filename'),
+            text=request.get('text'),
+            description=request.get('description'),
+            uploadTime=request.get('uploadTime'),
+            privacy=request.get('privacy')
+        )
         return data
 
 
 class AudioData(models.Model):
-    objects = AudioDataManager()
-
-    id = models.IntegerField(unique = True)
+    id = models.IntegerField(primary_key=True)
     task_id = models.CharField(unique = True)
     created_by_user = models.CharField(unique = True)
     tag_id = models.CharField(unique = True)
@@ -20,6 +28,8 @@ class AudioData(models.Model):
     description = models.CharField()
     uploadTime = models.DateTimeField()
     privacy = models.BooleanField()
+
+    objects = AudioDataManager()
 
     def __str__(self):
         return self.id
@@ -36,5 +46,3 @@ class Tag(models.Model):
 
     language = models.CharField(choices=Languages.choices, default=Languages.OTHER)
     gender = models.CharField(choices=Gender.choices)
-
-data = AudioDataManager.addNewAudioData(request)
