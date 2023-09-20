@@ -12,7 +12,7 @@ import {
 import { ChangeEvent, FormEvent, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { register } from '../api';
-import { sleep, useShowSnackbar } from '../utils';
+import { useShowSnackbar } from '../utils';
 
 const emailValidation = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const passwordValidation = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{6,}$/;
@@ -23,11 +23,6 @@ export default function RegisterView() {
   const [isEmailValid, setIsEmailValid] = useState<boolean | null>(null);
   const [confirmPassword, setConfirmPassword] = useState('');
   const navigate = useNavigate();
-
-  async function waiting() {
-    await sleep(3000);
-    navigate('/login');
-  }
 
   const handleEmailFormat = (event: ChangeEvent<HTMLInputElement>) => {
     const email = event.target.value;
@@ -92,7 +87,9 @@ export default function RegisterView() {
           'Registration success - Redirecting to Login Page',
           'success',
         );
-        void waiting();
+        setTimeout(() => {
+          navigate('/');
+        }, 3000);
       })
       .catch((error) => {
         showSnackbar(`Registration Failed - ${error}`);

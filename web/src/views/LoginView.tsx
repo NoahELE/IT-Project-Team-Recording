@@ -10,16 +10,11 @@ import {
 import { FormEvent } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { login } from '../api';
-import { sleep, useShowSnackbar } from '../utils';
+import { useShowSnackbar } from '../utils';
 
 export default function LoginView() {
   const [snackbar, showSnackbar] = useShowSnackbar();
   const navigate = useNavigate();
-
-  async function waiting() {
-    await sleep(3000);
-    navigate('/');
-  }
 
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -47,7 +42,9 @@ export default function LoginView() {
     login(userData)
       .then(() => {
         showSnackbar('Login success - Redirecting to Home Page', 'success');
-        void waiting();
+        setTimeout(() => {
+          navigate('/');
+        }, 3000);
       })
       .catch((error) => {
         showSnackbar(`Login Failed - ${error}`);
