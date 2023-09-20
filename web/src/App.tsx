@@ -11,7 +11,7 @@ import PublicRecordsView from './views/PublicRecordsView.tsx';
 import RecordingView from './views/RecordingView';
 import RegisterView from './views/RegisterView.tsx';
 import RootView from './views/RootView';
-import UserView from './views/UserView.tsx';
+import ProfileView from './views/ProfileView.tsx';
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -21,7 +21,7 @@ const router = createBrowserRouter(
       <Route path="/public" element={<PublicRecordsView />} />
       <Route path="/login" element={<LoginView />} />
       <Route path="/register" element={<RegisterView />} />
-      <Route path="/user" element={<UserView />} />
+      <Route path="/profile" element={<ProfileView />} />
     </Route>,
   ),
 );

@@ -51,7 +51,7 @@ export default function RegisterView() {
       return;
     }
 
-    // Check is password format correct
+    // Check is email format correct
     if (!emailValidation.test(email as string)) {
       showSnackbar('Invalid email address.');
       return;
