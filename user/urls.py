@@ -14,5 +14,7 @@ urlpatterns = [
     
     # For C-LARA to create a new task.
     path('api/tasks/', TaskCreateView.as_view(), name='task_create'),
+    
+
 ]
 

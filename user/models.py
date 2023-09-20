@@ -46,28 +46,19 @@ class UserData(AbstractUser):
 class Task(models.Model):
     
     username = models.ForeignKey(UserData, on_delete=models.CASCADE)
-    task_id = models.CharField(max_length=255)
+    task_name = models.CharField(max_length=255)
     data = models.JSONField()
     accepted = models.BooleanField(default=False)
+    dateLastModified = models.DateField()
 
     def __str__(self):
         return f"Task ID: {self.task_id} for User: {self.user}"
     
-# class Tags(models.Model):
-#     language = models.CharField(max_length=100)
-#     gender = models.CharField(max_length=100)
-#     other = models.CharField(max_length=100)
-    
-#     def __str__(self):
-#         return f"Language: {self.language}, Gender: {self.gender}, Other: {self.other}"
 
 class AudioRecording(models.Model):
     
     taskId = models.ForeignKey(Task, on_delete=models.DO_NOTHING) # The task audio recording created for.
     userId = models.ForeignKey(UserData, on_delete=models.CASCADE) # The user who created it.
-    title = models.CharField(max_length=100, null=False)
-    public = models.BooleanField(null=False)
-    uploadTime = models.DateField(null=False)
     audioFilePath = models.URLField(null=False)
     
     def __str__(self):
@@ -84,3 +75,11 @@ class VideoRecording(models.Model):
     
     def __str__(self):
         return self.title
+    
+    
+{“user”: “user123”,
+“task_id”: “peter_rabbit_segments”,
+“data”: [ { “text”: “Once upon a time there were four little rabbits, and their names were Flopsy, Mopsy, Cottontail and Peter.”,
+              “file”: “” },
+            { “text”: “They lived with their mother in a sand-bank, underneath the root of a very big fir-tree.”,
+              “file”: “” } ] }
