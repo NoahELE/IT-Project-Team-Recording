@@ -47,3 +47,15 @@ export function useShowSnackbar(): [ReactElement, ShowSnackbarCallback] {
 
   return [snackbar, showSnackbar];
 }
+
+/**
+ * check if the user is logged in by checking if the token is in local storage
+ * @returns true if the user is logged in, false otherwise
+ */
+export function isLoggedIn(): boolean {
+  const token = localStorage.getItem('token');
+  if (token === null || token === '') {
+    return false;
+  }
+  return true;
+}
