@@ -36,6 +36,12 @@ class TaskMetaDataManager(models.Manager):
             task.completed = True
             task.save()
 
+    def change_task_user(self, request):
+        task = self.filter(task_id = request.task_id).first()
+        task.user = request.user
+        task.completed = True
+        task.save()
+
 
 class TaskDataManager(models.Manager):
     def add_new_audio_data(self, task_id, block_index, text):
