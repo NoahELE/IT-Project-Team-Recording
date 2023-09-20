@@ -1,6 +1,6 @@
 from django.test import TestCase
 from django.utils import timezone
-from data.models import AudioDataManager, AudioData
+from data.models import TaskManager, Task
 from datetime import datetime
 import requests
 import json

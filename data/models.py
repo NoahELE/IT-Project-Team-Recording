@@ -1,6 +1,6 @@
 from django.db import models
 
-class AudioDataManager(models.Manager):
+class TaskManager(models.Manager):
     use_in_migrations = True
 
     def add_new_audio_data(self, request):
@@ -18,12 +18,12 @@ class AudioDataManager(models.Manager):
         return data
     
     def delete_existing_audio_data(self, task_id):
-        AudioData.objects.filter(task_id=task_id).delete()
+        Task.objects.filter(task_id=task_id).delete()
     
     def get_users_tasks(self, username):
-        return AudioData.objects.filter(user=username)
+        return Task.objects.filter(user=username)
 
-class AudioData(models.Model):
+class Task(models.Model):
     id = models.IntegerField(primary_key=True)
     task_id = models.CharField(unique=True, max_length=255)
     user = models.CharField(max_length=255)
@@ -33,7 +33,7 @@ class AudioData(models.Model):
     uploadTime = models.DateTimeField()
     privacy = models.BooleanField()
 
-    objects = AudioDataManager()
+    objects = TaskManager()
 
     def __str__(self):
         return str(self.id)

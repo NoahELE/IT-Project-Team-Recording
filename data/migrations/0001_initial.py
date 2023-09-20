@@ -26,7 +26,7 @@ class Migration(migrations.Migration):
                 ('privacy', models.BooleanField()),
             ],
             managers=[
-                ('objects', data.models.AudioDataManager()),
+                ('objects', data.models.TaskManager()),
             ],
         ),
         migrations.CreateModel(
