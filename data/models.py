@@ -6,12 +6,12 @@ class TaskMetaDataManager(models.Manager):
     def __check_task_completed__(self, task_id):
         return
 
-    def add_new_audio_data(self, task_id, user, tag_id, upload_time):
+    def add_new_audio_metadata(self, request):
         data = self.create(
-            task_id=task_id,
-            user=user,
-            tag_id=tag_id,
-            upload_time=upload_time,
+            task_id=request['task_id'],
+            user=request['user'],
+            tag_id=request['tag_id'],
+            upload_time=request['upload_time'],
             privacy=False,
         )
         return data
@@ -38,7 +38,7 @@ class TaskMetaDataManager(models.Manager):
 
 
 class TaskDataManager(models.Manager):
-    def add_new_subtask(self, task_id, block_index, text):
+    def add_new_audio_data(self, task_id, block_index, text):
         self.create(
             task_id=task_id,
             block_index = block_index,

@@ -1,12 +1,11 @@
 from rest_framework import serializers
 from .models import TaskMetaData, TaskData
 
-class TaskMetaDataSerializer(serializers.ModelSerializer):
+class NewMetaDataAudioSerializer(serializers.ModelSerializer):
     class Meta:
         model = TaskMetaData
-        fields = '__all__'
+        fields = ('task_id, user, tag_id, upload_time')
 
-class TaskDataSerializer(serializers.ModelSerializer):
+class NewDataAudioSerializer(serializers.ModelSerializer):
     class Meta:
-        model = TaskData
-        fields = '__all__'
+        model = TaskMetaData
