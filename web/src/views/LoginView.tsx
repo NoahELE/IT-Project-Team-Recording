@@ -10,16 +10,11 @@ import {
 import { FormEvent } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { login } from '../api.ts';
-import { useShowError, sleep } from '../utils.tsx';
+import { useShowError } from '../utils.tsx';
 
 export default function LoginView() {
   const [snackbar, showError] = useShowError();
   const navigate = useNavigate();
-
-  async function waiting() {
-    await sleep(3000);
-    navigate('/');
-  }
 
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -50,7 +45,9 @@ export default function LoginView() {
           new Error('Login success - Redirecting to Home Page'),
           'success',
         );
-        void waiting();
+        setTimeout(() => {
+          navigate('/');
+        }, 3000);
       })
       .catch((error) => {
         showError(new Error(`Login Failed - ${error}`));

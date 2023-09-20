@@ -11,7 +11,7 @@ import {
 } from '@mui/material';
 import { ChangeEvent, FormEvent, useState } from 'react';
 import { register } from '../api.ts';
-import { sleep, useShowError } from '../utils.tsx';
+import { useShowError } from '../utils.tsx';
 import { useNavigate } from 'react-router-dom';
 
 const emailValidation = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -23,11 +23,6 @@ export default function RegisterView() {
   const [isEmailValid, setIsEmailValid] = useState<boolean | null>(null);
   const [confirmPassword, setConfirmPassword] = useState('');
   const navigate = useNavigate();
-
-  async function waiting() {
-    await sleep(3000);
-    navigate('/login');
-  }
 
   const handleEmailFormat = (event: ChangeEvent<HTMLInputElement>) => {
     const email = event.target.value;
@@ -94,7 +89,9 @@ export default function RegisterView() {
           new Error('Registration success - Redirecting to Login Page'),
           'success',
         );
-        void waiting();
+        setTimeout(() => {
+          navigate('/');
+        }, 3000);
       })
       .catch((error) => {
         showError(new Error(`Registration Failed - ${error}`));
