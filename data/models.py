@@ -20,8 +20,8 @@ class AudioDataManager(models.Manager):
     def delete_existing_audio_data(self, task_id):
         AudioData.objects.filter(task_id=task_id).delete()
     
-    def get_users_tasks(self, username, task_id):
-        return AudioData.objects.filter(task_id=task_id, user=username)
+    def get_users_tasks(self, username):
+        return AudioData.objects.filter(user=username)
 
 class AudioData(models.Model):
     id = models.IntegerField(primary_key=True)

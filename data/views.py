@@ -2,39 +2,16 @@ from rest_framework import status
 from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
+from django.http import JsonResponse
 from.models import AudioDataManager
 
 import requests
 
-class AddBatchJobView(APIView):
+class GetUserTasks(APIView):
     permission_classes = [IsAuthenticated]
 
-    def post(self, request):
-        if (request.get('jobs') is None):
-            return Response(status=status.HTTP_404)
+    def get(self, request):
+        if (request.get('user') is None):
+            return Response(message = "User is blank, please enter a username and try again", status=status.HTTP_404)
 
-        for i in request.get('jobs'):
-            AudioDataManager().add_new_audio_data(i)
-
-        return Response(status=status.HTTP_200_OK)
-    
-
-class DeleteJobsWithTaskID(APIView):
-    permission_classes = [IsAuthenticated]
-
-    def post(self, request):
-        if (request.get('task_id') is None):
-            return Response(status=status.HTTP_404)
-
-        AudioDataManager().delete_existing_audio_data(request.get('task_id'))
-        return Response(status=status.HTTP_200_OK)
-    
-class changeUserOnTaskID(APIView):
-    permissions_classes = [IsAuthenticated]
-
-    def post(self, request):
-        if (request.get('task_id') is None):
-            return Response(status=status.HTTP_404)
-        
-        AudioDataManager.change
-        return Response(status=status.HTTP_200_OK)
+        return JsonResponse(AudioDataManager().get_users_tasks(request.get('user')), status=status.HTTP_200_OK)
