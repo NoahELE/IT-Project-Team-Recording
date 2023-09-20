@@ -32,12 +32,18 @@ class AddBatchJobView(APIView):
     def post(self, request):
         required_keys = ['user', 'task_id', 'data']
         check_required_keys(POST, required_keys, request)
-        
-        TaskMetaDataManager().add_new_audio_metadata(NewMetaDataAudioSerializer(request))
+
+        serialized_data = {}
+        serialized_data['user'] = request['user']
+        serialized_data['task_id'] = request['task_id']
+        serialized_data['data'] = []
 
         for job in request.get('data'):
-            TaskDataManager().add_new_audio_data(NewDataAudioSerializer(job))
+            required_keys = ['text', 'file']
+            check_required_keys(POST, required_keys, job)
+            serialized_data['data'].append(NewDataAudioSerializer(job))
 
+        TaskMetaDataManager().add_new_audio_metadata(NewMetaDataAudioSerializer(serialized_data))
         return Response(status=status.HTTP_200_OK)
     
 

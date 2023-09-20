@@ -1,19 +1,19 @@
 from django.test import TestCase
 from django.utils import timezone
-from data.models import TaskManager, Task
+from data.models import TaskData, TaskMetaData
 from datetime import datetime
 import requests
 import json
 
-manager = Task.objects
+task_data_manager = TaskData.objects
+task_metadata_manager = TaskMetaData.objects
+
 request = {
     "id": 1,
     "task_id": "Alice in Wonderland",
     "user": "user_example",
     "tag_id": 123,
-    "filename": "AliceinWonderlandExcerpt",
     "text": "Once upon a time there lived a girl called Alice",
-    "description": "N/A",
     "uploadTime": timezone.now(),
     "privacy": False,
 }
@@ -34,7 +34,8 @@ request2 = {
 class AudioDataManagerTest(TestCase):
     
     def setUp(self):
-        manager.all().delete()
+        task_data_manager.all().delete()
+        task_metadata_manager.all().delete()
         manager.add_new_audio_data(request)
         manager.add_new_audio_data(request2)
 

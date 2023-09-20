@@ -5,8 +5,9 @@ class TaskMetaDataManager(models.Manager):
 
     def __check_task_completed__(self, task_id):
         return
+    
 
-    def add_new_audio_metadata(self, request):
+    def __add_new_audio_metadata__(self, request):
         data = self.create(
             task_id=request['task_id'],
             user=request['user'],
@@ -15,6 +16,18 @@ class TaskMetaDataManager(models.Manager):
             privacy=False,
         )
         return data
+    
+    def add_task(self, request):
+
+        self.__add_new_audio_metadata__(request)
+
+        block_id = 1
+        for job in request.get('data'):
+            job['task_id'] = request['task_id']
+            job['block_id'] = block_id
+            block_id += 1
+
+            TaskDataManager().add_new_audio_data(job)
 
     def delete_existing_audio_data(self, task_id):
         self.filter(task_id=task_id).delete()
@@ -44,11 +57,12 @@ class TaskMetaDataManager(models.Manager):
 
 
 class TaskDataManager(models.Manager):
-    def add_new_audio_data(self, task_id, block_index, text):
+    def add_new_audio_data(self, request):
         self.create(
-            task_id=task_id,
-            block_index = block_index,
-            text = text
+            task_id=request['task_id'],
+            block_id = request['block_id'],
+            text = request['text'],
+            file = request['file'],
         )
 
 
@@ -78,9 +92,9 @@ class Tag(models.Model):
 
 class TaskData(models.Model):
     task_id = models.CharField(max_length=255)
-    block_index = models.IntegerField()
+    block_id = models.IntegerField()
     text = models.TextField()
     completed = models.BooleanField(default=False)
-    link = models.CharField(unique=True, max_length=255)
+    file = models.CharField(unique=True, max_length=255)
 
     objects = TaskDataManager()
