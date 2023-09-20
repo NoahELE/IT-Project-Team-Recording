@@ -29,8 +29,9 @@ class TaskMetaDataManager(models.Manager):
 
             TaskDataManager().add_new_audio_data(job)
 
-    def delete_existing_audio_data(self, task_id):
-        self.filter(task_id=task_id).delete()
+    def delete_existing_audio_data(self, request):
+        self.filter(task_id=request['task_id']).delete()
+        TaskDataManager().delete_task_of_id(request)
 
     def get_users_tasks(self, username):
         return self.filter(user=username)
@@ -64,6 +65,9 @@ class TaskDataManager(models.Manager):
             text = request['text'],
             file = request['file'],
         )
+
+    def delete_task_of_id(self, request):
+        self.filter(task_id = request['task_id']).delete()
 
 
 class TaskMetaData(models.Model):

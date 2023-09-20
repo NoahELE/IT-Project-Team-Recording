@@ -13,7 +13,14 @@ request = {
     "task_id": "Alice in Wonderland",
     "user": "user_example",
     "tag_id": 123,
-    "text": "Once upon a time there lived a girl called Alice",
+    "data": [
+        {"text": "Once upon a time there lived a girl called Alice",
+         "file": "",
+         },
+        {"text": "She lives in a Wonderland",
+         "file": "",
+         },
+    ],
     "uploadTime": timezone.now(),
     "privacy": False,
 }
@@ -23,9 +30,14 @@ request2 = {
     "task_id": "Winnie the Pooh",
     "user": "user_example",
     "tag_id": 123,
-    "filename": "WinnieThePoohExcerpt",
-    "text": "Once upon a time there lived a bear who loved honey",
-    "description": "N/A",
+    "data": [
+        {"text": "Once upon a time there lived a bear called Pooh",
+         "file": "",
+         },
+        {"text": "who lives in a 1000 Acre Forest",
+         "file": "",
+         },
+    ],
     "uploadTime": timezone.now(),
     "privacy": False,
 }
@@ -36,12 +48,17 @@ class AudioDataManagerTest(TestCase):
     def setUp(self):
         task_data_manager.all().delete()
         task_metadata_manager.all().delete()
-        manager.add_new_audio_data(request)
-        manager.add_new_audio_data(request2)
+        task_metadata_manager.add_task(request)
+        task_metadata_manager.add_task(request2)
 
-    def test_add_new_audio_data(self):
+    def test_add_task(self):
 
-        result = manager.filter(id=request['id']).first()
+        result = task_metadata_manager.filter(id=request['id']).first()
+
+        self.assertEqual(result.id, request['id'])
+        self.assertEqual(result.task_id, request['task_id'])
+
+        result = task_metadata_manager.filter(id=request2['id']).first()
 
         self.assertEqual(result.id, request['id'])
         self.assertEqual(result.task_id, request['task_id'])
