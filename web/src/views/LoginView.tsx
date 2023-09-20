@@ -9,11 +9,11 @@ import {
 } from '@mui/material';
 import { FormEvent } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { login } from '../api.ts';
-import { useShowError, sleep } from '../utils.tsx';
+import { login } from '../api';
+import { sleep, useShowSnackbar } from '../utils';
 
 export default function LoginView() {
-  const [snackbar, showError] = useShowError();
+  const [snackbar, showSnackbar] = useShowSnackbar();
   const navigate = useNavigate();
 
   async function waiting() {
@@ -29,12 +29,12 @@ export default function LoginView() {
 
     // Check if all the text is filled
     if (!username || !password) {
-      showError(new Error('Please fill all the text field!'));
+      showSnackbar('Please fill all the text field!');
       return;
     }
 
     if (typeof username !== 'string' || typeof password !== 'string') {
-      showError(new Error('Username or password is not a string.'));
+      showSnackbar('Username or password is not a string.');
       return;
     }
 
@@ -46,14 +46,11 @@ export default function LoginView() {
 
     login(userData)
       .then(() => {
-        showError(
-          new Error('Login success - Redirecting to Home Page'),
-          'success',
-        );
+        showSnackbar('Login success - Redirecting to Home Page', 'success');
         void waiting();
       })
       .catch((error) => {
-        showError(new Error(`Login Failed - ${error}`));
+        showSnackbar(`Login Failed - ${error}`);
       });
   };
 

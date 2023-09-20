@@ -9,11 +9,11 @@ import {
 import { GridRowSelectionModel } from '@mui/x-data-grid';
 import { useEffect, useState } from 'react';
 import { useReactMediaRecorder } from 'react-media-recorder';
+import { useNavigate } from 'react-router-dom';
 import { deleteRecording, getAllRecordings } from '../api';
 import RecordingList from '../components/RecordingList';
 import { Recording } from '../entity';
-import { useShowError } from '../utils';
-import { useNavigate } from 'react-router-dom';
+import { useShowSnackbar } from '../utils';
 
 export default function RecordingView() {
   const navigate = useNavigate();
@@ -35,7 +35,7 @@ export default function RecordingView() {
     };
   }, [isRecording]);
 
-  const [snackbar, showError] = useShowError();
+  const [snackbar, showSnackbar] = useShowSnackbar();
 
   const [recordings, setRecordings] = useState<Recording[]>([]);
   useEffect(() => {
@@ -44,7 +44,7 @@ export default function RecordingView() {
         setRecordings(recordings);
       })
       .catch((error: Error) => {
-        showError(new Error(`Failed to fetch recordings - ${error.message}`));
+        showSnackbar(`Failed to fetch recordings - ${error.message}`);
         if (
           error.message ===
           'It seems that you are not logged in. Please login first.'
@@ -57,7 +57,7 @@ export default function RecordingView() {
           navigate('/login');
         }
       });
-  }, [showError]);
+  }, [navigate, showSnackbar]);
 
   const [rowSelectionModel, setRowSelectionModel] =
     useState<GridRowSelectionModel>([]);
@@ -121,10 +121,8 @@ export default function RecordingView() {
             onClick={() => {
               rowSelectionModel.forEach((id) => {
                 deleteRecording(id as string).catch((error) => {
-                  showError(
-                    new Error(
-                      `Failed to delete recording with id ${id} - ${error}`,
-                    ),
+                  showSnackbar(
+                    `Failed to delete recording with id ${id} - ${error}`,
                   );
                 });
               });
