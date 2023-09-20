@@ -2,8 +2,6 @@ from django.test import TestCase
 from django.utils import timezone
 from data.models import TaskData, TaskMetaData
 from datetime import datetime
-import requests
-import json
 
 task_data_manager = TaskData.objects
 task_metadata_manager = TaskMetaData.objects
@@ -21,7 +19,7 @@ request = {
          "file": "",
          },
     ],
-    "uploadTime": timezone.now(),
+    "upload_time": timezone.now(),
     "privacy": False,
 }
 
@@ -38,7 +36,7 @@ request2 = {
          "file": "",
          },
     ],
-    "uploadTime": timezone.now(),
+    "upload_time": timezone.now(),
     "privacy": False,
 }
 
@@ -64,13 +62,13 @@ class AudioDataManagerTest(TestCase):
         self.assertEqual(result.task_id, request['task_id'])
     
     def test_delete_existing_audio_data(self):
-        manager.delete_existing_audio_data(request['task_id'])
+        task_metadata_manager.delete_existing_audio_data(request['task_id'])
 
-        result = manager.filter(task_id = request['task_id'])
+        result = task_metadata_manager.filter(task_id = request['task_id'])
 
         self.assertEqual(result.first(), None)
 
     def test_get_users_tasks(self):
-        result = manager.filter(user = "user_example")
+        result = task_metadata_manager.filter(user = "user_example")
 
         self.assertEqual(result.count(), 2)

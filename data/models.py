@@ -43,7 +43,7 @@ class TaskMetaDataManager(models.Manager):
         completed_task.completed = True
         completed_task.save()
 
-        task_blocks = TaskDataManager().filter(task_id = task_id) 
+        task_blocks = TaskDataManager.objects.filter(task_id = task_id) 
 
         if self.__check_task_completed__(task_id):
             task = self.filter(task_id = task_id).first()
@@ -74,7 +74,7 @@ class TaskMetaData(models.Model):
     task_id = models.CharField(unique=True, max_length=255)
     user = models.CharField(max_length=255)
     tag_id = models.CharField(max_length=255)
-    uploadTime = models.DateTimeField()
+    upload_time = models.DateTimeField()
     privacy = models.BooleanField()
     completed = models.BooleanField(default=False)
     objects = TaskMetaDataManager()
