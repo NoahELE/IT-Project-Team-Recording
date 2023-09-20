@@ -76,10 +76,16 @@ class VideoRecording(models.Model):
     def __str__(self):
         return self.title
     
+class TaskData(models.Model):
+    task_id = models.CharField(max_length=255)
+    block_index = models.IntegerField()
+    text = models.TextField()
+    link = models.CharField(unique=True, max_length=255)
     
-{“user”: “user123”,
-“task_id”: “peter_rabbit_segments”,
-“data”: [ { “text”: “Once upon a time there were four little rabbits, and their names were Flopsy, Mopsy, Cottontail and Peter.”,
-              “file”: “” },
-            { “text”: “They lived with their mother in a sand-bank, underneath the root of a very big fir-tree.”,
-              “file”: “” } ] }
+    
+# {“user”: “user123”,
+# “task_id”: “peter_rabbit_segments”,
+# “data”: [ { “text”: “Once upon a time there were four little rabbits, and their names were Flopsy, Mopsy, Cottontail and Peter.”,
+#               “file”: “” },
+#             { “text”: “They lived with their mother in a sand-bank, underneath the root of a very big fir-tree.”,
+#               “file”: “” } ] }
