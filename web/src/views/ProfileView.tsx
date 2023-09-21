@@ -7,6 +7,7 @@ import { Box, Button, Container, TextField, Typography } from '@mui/material';
 import { ChangeEvent, FormEvent, useState } from 'react';
 import { useShowSnackbar } from '../utils.tsx';
 import { editProfileAPI, changePasswordAPI } from '../api';
+import { useNavigate } from 'react-router-dom';
 
 const emailValidation = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const passwordValidation = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{6,}$/;
@@ -17,6 +18,7 @@ export default function ProfileView() {
   const [isEmailValid, setIsEmailValid] = useState<boolean | null>(null);
   const [isPasswordValid, setIsPasswordValid] = useState<boolean | null>(null);
   const [confirmPassword, setConfirmPassword] = useState('');
+  const navigate = useNavigate();
   const handleEmailFormat = (event: ChangeEvent<HTMLInputElement>) => {
     const email = event.target.value;
     setIsEmailValid(emailValidation.test(email));
@@ -46,6 +48,9 @@ export default function ProfileView() {
   const handleLogout = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     localStorage.removeItem('token');
+    setTimeout(() => {
+      navigate('/');
+    }, 1500);
   };
 
   const handleChangePassword = (event: FormEvent<HTMLFormElement>) => {
@@ -151,7 +156,7 @@ export default function ProfileView() {
         }}
       >
         <Typography component="h1" variant="h5">
-          Hello User
+          Hello User TODO
         </Typography>
         <Button
           variant="text"
