@@ -6,6 +6,7 @@ import ExpandMore from '@mui/icons-material/ExpandMore';
 import { Box, Button, Container, TextField, Typography } from '@mui/material';
 import { ChangeEvent, FormEvent, useState } from 'react';
 import { useShowSnackbar } from '../utils.tsx';
+import { editProfileAPI, changePasswordAPI } from '../api';
 
 const emailValidation = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const passwordValidation = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{6,}$/;
@@ -21,17 +22,17 @@ export default function ProfileView() {
     setIsEmailValid(emailValidation.test(email));
   };
 
+  const handlePasswordFormat = (event: ChangeEvent<HTMLInputElement>) => {
+    const password = event.target.value;
+    setIsPasswordValid(passwordValidation.test(password));
+  };
+
   const handleChangePasswordClick = () => {
     if (openPanel === 'changePassword') {
       setOpenPanel(null);
     } else {
       setOpenPanel('changePassword');
     }
-  };
-
-  const handlePasswordFormat = (event: ChangeEvent<HTMLInputElement>) => {
-    const password = event.target.value;
-    setIsPasswordValid(passwordValidation.test(password));
   };
 
   const handleEditProfileClick = () => {
@@ -44,7 +45,7 @@ export default function ProfileView() {
 
   const handleLogout = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    console.log('This is logout function');
+    localStorage.removeItem('token');
   };
 
   const handleChangePassword = (event: FormEvent<HTMLFormElement>) => {
@@ -97,6 +98,14 @@ export default function ProfileView() {
       newConfirmPassword: data.get('newConfirmPassword') as string,
     };
     console.log(JSON.stringify(userData, null, 2));
+
+    changePasswordAPI(userData)
+      .then(() => {
+        showSnackbar('Change Password Success', 'success');
+      })
+      .catch((error) => {
+        showSnackbar(`Change Password Failed - ${error}`);
+      });
   };
 
   const handleEditProfileSubmit = (event: FormEvent<HTMLFormElement>) => {
@@ -121,6 +130,14 @@ export default function ProfileView() {
       email: data.get('newEmail') as string,
     };
     console.log(JSON.stringify(userData, null, 2));
+
+    editProfileAPI(userData)
+      .then(() => {
+        showSnackbar('Edit Profile Success', 'success');
+      })
+      .catch((error) => {
+        showSnackbar(`Edit Profile Failed - ${error}`);
+      });
   };
 
   return (
