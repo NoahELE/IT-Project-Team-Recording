@@ -5,6 +5,7 @@ from datetime import datetime
 from data.serializer import NewMetaDataAudioSerializer
 
 data_manager = TaskData.objects
+metadata_manager = TaskMetaData.objects
 
 request = {
     "task_id": "Alice in Wonderland",
@@ -41,14 +42,15 @@ request2 = {
 class AudioDataManagerTest(TestCase):
     
     def setUp(self):
-        manager.all().delete()
-        # task_metadata_manager.add_task(request)
-        # task_metadata_manager.add_task(request2)
+        data_manager.all().delete()
+        metadata_manager.all().delete()
+        metadata_manager.add_task(request)
+        data_manager.add_task(request2)
 
     def test_add_task(self):
 
-        task_metadata_manager.add_task(NewMetaDataAudioSerializer(request))
-        result = task_metadata_manager.filter(id=request['id'])
+        data_manager.add_task(NewMetaDataAudioSerializer(request))
+        result = data_manager.filter(id=request['id'])
 
         self.assertEqual(result.count(), 0)
 

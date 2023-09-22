@@ -30,6 +30,7 @@ class TaskManager(models.Manager):
 
     
     def add_task(self, request):
+        print("Adding task")
         self.__add_audio_metadata__(request)
 
         block_id = 1
@@ -85,7 +86,7 @@ class TaskMetaData(models.Model):
             F = "FEMALE"
 
         language = models.CharField(choices=Languages.choices, default=Languages.OTHER, max_length=100)
-        gender = models.CharField(choices=Gender.choices, max_length=1)
+        gender = models.CharField(choices=Gender.choices)
 
 class TaskData(models.Model):
     task_id = models.CharField(max_length=255)

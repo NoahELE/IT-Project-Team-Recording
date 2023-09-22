@@ -2,7 +2,7 @@ from rest_framework import status
 from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
-from data.models import TaskDataManager, TaskMetaDataManager
+from data.models import TaskManager
 from data.serializer import NewMetaDataAudioSerializer, NewDataAudioSerializer, TaskUserSerializer
 
 import requests
@@ -43,7 +43,7 @@ class AddBatchJobView(APIView):
             check_required_keys(POST, required_keys, job)
             serialized_data['data'].append(NewDataAudioSerializer(job))
 
-        TaskMetaDataManager().add_new_audio_metadata(NewMetaDataAudioSerializer(serialized_data))
+        TaskManager().add_new_audio_metadata(NewMetaDataAudioSerializer(serialized_data))
         return Response(status=status.HTTP_200_OK)
     
 
@@ -54,7 +54,7 @@ class DeleteJobsWithTaskID(APIView):
         required_keys = ['task_id']
         check_required_keys(POST, required_keys, request)
 
-        TaskMetaDataManager().delete_existing_audio_data(request) # might need a serializer, reduces input size
+        TaskManager().delete_existing_audio_data(request) # might need a serializer, reduces input size
 
         return Response(status=status.HTTP_200_OK)
     
@@ -65,5 +65,5 @@ class changeUserOnTaskID(APIView):
         required_keys = ['task_id', 'user']
         check_required_keys(POST, required_keys, request)
         
-        TaskMetaDataManager.change_task_user(TaskUserSerializer(request))
+        TaskManager.change_task_user(TaskUserSerializer(request))
         return Response(status=status.HTTP_200_OK)

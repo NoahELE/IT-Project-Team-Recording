@@ -34,7 +34,7 @@ class Migration(migrations.Migration):
                 ('completed', models.BooleanField(default=False)),
             ],
             managers=[
-                ('objects', data.models.TaskMetaDataManager()),
+                ('objects', data.models.TaskManager()),
             ],
         ),
         migrations.DeleteModel(
