@@ -1,25 +1,36 @@
 from django.db import models
 
-class TaskMetaDataManager(models.Manager):
+class TaskManager(models.Manager):
     use_in_migrations = True
 
-    def __check_task_completed__(self, task_id):
-        return
+    def __check_task_completed__(self, request):
+        return TaskData.objects.filter(task_id = request['task_id'], completed = True).exists()
     
+    def __add_audio_data__(self, request):
 
-    def __add_new_audio_metadata__(self, request):
-        data = self.create(
-            task_id=request['task_id'],
-            user=request['user'],
-            tag_id=request['tag_id'],
-            upload_time=request['upload_time'],
-            privacy=False,
-        )
-        return data
+        data = TaskData()
+        data.task_id = request['task_id']
+        data.block_id = request['block_id']
+        data.text = request['text']
+        data.file = request['file']
+        data.save()
+
+    def __add_audio_metadata__(self, request):
+        metadata = TaskMetaData()
+        metadata.task_id=request['task_id']
+        metadata.user=request['user']
+        metadata.tag_id=request['tag_id']
+        metadata.upload_time=request['upload_time']
+        metadata.privacy=False
+        metadata.save()
+
+    def delete_task(self, request):
+        TaskMetaData.objects.filter(task_id = request['task_id']).delete()
+        TaskData.objects.filter(task_id = request['task_id']).delete()
+
     
     def add_task(self, request):
-
-        self.__add_new_audio_metadata__(request)
+        self.__add_audio_metadata__(request)
 
         block_id = 1
         for job in request.get('data'):
@@ -27,72 +38,54 @@ class TaskMetaDataManager(models.Manager):
             job['block_id'] = block_id
             block_id += 1
 
-            TaskDataManager().add_new_audio_data(job)
-
-    def delete_existing_audio_data(self, request):
-        self.filter(task_id=request['task_id']).delete()
-        TaskDataManager().delete_task_of_id(request)
+            self.__add_audio_data__(job)
 
     def get_users_tasks(self, username):
         return self.filter(user=username)
 
-    def submitUserTask(self, task_id, block_index, link):
-        completed_task = TaskDataManager().filter(task_id = task_id, block_index = block_index).first()
+    # def submitUserTask(self, task_id, block_index, link):
+    #     completed_task = TaskData.objects.filter(task_id = task_id, block_index = block_index).first()
+    #     completed_task.file = link
+    #     completed_task.completed = True
+    #     completed_task.save()
 
-        completed_task.link = link
-        completed_task.completed = True
-        completed_task.save()
+    #     task_blocks = TaskData.objects.filter(task_id = task_id) 
 
-        task_blocks = TaskDataManager.objects.filter(task_id = task_id) 
-
-        if self.__check_task_completed__(task_id):
-            task = self.filter(task_id = task_id).first()
-            task.completed = True
-            task.save()
+    #     if self.__check_task_completed__(task_id):
+    #         task = TaskMetaData.objects.filter(task_id = task_id).first()
+    #         task.completed = True
+    #         task.save()
 
     def change_task_user(self, request):
-        task = self.filter(task_id = request.task_id).first()
-        task.user = request.user
+        task = TaskMetaData.objects.filter(task_id = request.task_id).first()
+        task.user = request['user']
         task.completed = True
         task.save()
-
-
-class TaskDataManager(models.Manager):
-    def add_new_audio_data(self, request):
-        self.create(
-            task_id=request['task_id'],
-            block_id = request['block_id'],
-            text = request['text'],
-            file = request['file'],
-        )
-
-    def delete_task_of_id(self, request):
-        self.filter(task_id = request['task_id']).delete()
-
 
 class TaskMetaData(models.Model):
     task_id = models.CharField(unique=True, max_length=255)
     user = models.CharField(max_length=255)
-    tag_id = models.CharField(max_length=255)
+    tag_id = models.IntegerField()
     upload_time = models.DateTimeField()
-    privacy = models.BooleanField()
+    privacy = models.BooleanField(default=False)
     completed = models.BooleanField(default=False)
-    objects = TaskMetaDataManager()
+
+    objects = TaskManager()
 
     def __str__(self):
         return str(self.task_id)
 
-class Tag(models.Model):
-    class Languages(models.TextChoices):
-        ENGLISH = "ENGLISH"
-        OTHER = "OTHER"
+    class Tag(models.Model):
+        class Languages(models.TextChoices):
+            ENGLISH = "ENGLISH"
+            OTHER = "OTHER"
 
-    class Gender(models.TextChoices):
-        MALE = "M"
-        FEMALE = "F"
+        class Gender(models.TextChoices):
+            M = "MALE"
+            F = "FEMALE"
 
-    language = models.CharField(choices=Languages.choices, default=Languages.OTHER, max_length=100)
-    gender = models.CharField(choices=Gender.choices, max_length=1)
+        language = models.CharField(choices=Languages.choices, default=Languages.OTHER, max_length=100)
+        gender = models.CharField(choices=Gender.choices, max_length=1)
 
 class TaskData(models.Model):
     task_id = models.CharField(max_length=255)
@@ -101,4 +94,4 @@ class TaskData(models.Model):
     completed = models.BooleanField(default=False)
     file = models.CharField(unique=True, max_length=255)
 
-    objects = TaskDataManager()
+    objects = TaskManager()
