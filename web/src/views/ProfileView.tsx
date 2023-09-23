@@ -10,7 +10,7 @@ import {
   TextField,
   Typography,
 } from '@mui/material';
-import { ChangeEvent, FormEvent, useState } from 'react';
+import { ChangeEvent, FormEvent, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { changePassword, editProfile } from '../api';
 import { useShowSnackbar } from '../utils.tsx';
@@ -25,6 +25,14 @@ export default function ProfileView() {
   const [isPasswordValid, setIsPasswordValid] = useState<boolean | null>(null);
   const [confirmPassword, setConfirmPassword] = useState('');
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    if (!token) {
+      navigate('/login');
+    }
+  }, [navigate]);
+
   const handleEmailFormat = (event: ChangeEvent<HTMLInputElement>) => {
     const email = event.target.value;
     setIsEmailValid(emailValidation.test(email));
