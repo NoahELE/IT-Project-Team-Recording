@@ -4,6 +4,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from data.models import TaskManager
 from data.serializer import NewMetaDataAudioSerializer, NewDataAudioSerializer, TaskUserSerializer
+from django.utils import timezone
 
 import requests
 
@@ -36,14 +37,15 @@ class AddBatchJobView(APIView):
         serialized_data = {}
         serialized_data['user'] = request['user']
         serialized_data['task_id'] = request['task_id']
-        serialized_data['data'] = []
+        serialized_data['data'] = {}
+        serialized_data['upload_time'] = timezone.now()
 
-        for job in request.get('data'):
+        for job in request['data']:
             required_keys = ['text', 'file']
             check_required_keys(POST, required_keys, job)
             serialized_data['data'].append(NewDataAudioSerializer(job))
 
-        TaskManager().add_new_audio_metadata(NewMetaDataAudioSerializer(serialized_data))
+        TaskManager().add_task(NewMetaDataAudioSerializer(serialized_data))
         return Response(status=status.HTTP_200_OK)
     
 
@@ -54,7 +56,7 @@ class DeleteJobsWithTaskID(APIView):
         required_keys = ['task_id']
         check_required_keys(POST, required_keys, request)
 
-        TaskManager().delete_existing_audio_data(request) # might need a serializer, reduces input size
+        TaskManager().delete_task(request) # might need a serializer, reduces input size
 
         return Response(status=status.HTTP_200_OK)
     

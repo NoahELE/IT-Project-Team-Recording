@@ -1,8 +1,6 @@
 from django.test import TestCase
 from django.utils import timezone
 from data.models import TaskData, TaskMetaData
-from datetime import datetime
-from data.serializer import NewMetaDataAudioSerializer
 
 data_manager = TaskData.objects
 metadata_manager = TaskMetaData.objects
