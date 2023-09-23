@@ -1,11 +1,11 @@
 import axios from 'axios';
 import {
+  ChangePassword,
+  EditProfile,
   Recording,
   Token,
   User,
   UserLogin,
-  EditProfile,
-  ChangePassword,
 } from './entity';
 
 axios.defaults.baseURL = import.meta.env.VITE_API_URL;
@@ -28,13 +28,15 @@ export async function register(user: User): Promise<void> {
   await axios.post('/api/user/register', user);
 }
 
-export async function changePasswordAPI(
+export async function changePassword(
   changePassword: ChangePassword,
 ): Promise<void> {
+  setJwtToken();
   await axios.post('/api/user/change-password', changePassword);
 }
 
-export async function editProfileAPI(editProfile: EditProfile): Promise<void> {
+export async function editProfile(editProfile: EditProfile): Promise<void> {
+  setJwtToken();
   await axios.post('/api/user/edit-profile', editProfile);
 }
 
