@@ -7,7 +7,6 @@ class TaskManager(models.Manager):
         return TaskData.objects.filter(task_id = request['task_id'], completed = True).exists()
     
     def __add_audio_data__(self, request):
-
         data = TaskData()
         data.task_id = request['task_id']
         data.block_id = request['block_id']
@@ -30,7 +29,6 @@ class TaskManager(models.Manager):
 
     
     def add_task(self, request):
-        print("Adding task")
         self.__add_audio_metadata__(request)
 
         block_id = 1

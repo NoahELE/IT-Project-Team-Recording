@@ -13,10 +13,13 @@ request = {
     "tag_id": 123,
     "data": [
         {"text": "Once upon a time there lived a girl called Alice",
-         "file": "",
+         "file": "test/example",
          },
         {"text": "She lives in a Wonderland",
-         "file": "",
+         "file": "test/example2",
+         },
+        {"text": "where she falls into a rabbit hole.",
+         "file": "test/example3",
          },
     ],
     "upload_time": timezone.now(),
@@ -28,10 +31,23 @@ request2 = {
     "tag_id": 123,
     "data": [
         {"text": "Once upon a time there lived a bear called Pooh",
-         "file": "",
+         "file": "test/example4",
          },
         {"text": "who lives in a 1000 Acre Forest",
-         "file": "",
+         "file": "test/example5",
+         },
+    ],
+    "upload_time": timezone.now(),
+    "privacy": False,
+}
+
+request3 = {
+    "task_id": "NA",
+    "user": "NA",
+    "tag_id": 123,
+    "data": [
+        {"text": "NA",
+         "file": "NA",
          },
     ],
     "upload_time": timezone.now(),
@@ -49,27 +65,42 @@ class AudioDataManagerTest(TestCase):
 
     def test_add_task(self):
 
-        data_manager.add_task(NewMetaDataAudioSerializer(request))
-        result = data_manager.filter(id=request['id'])
+        metadata_result = metadata_manager.filter(task_id=request['task_id'])
 
-        self.assertEqual(result.count(), 0)
+        data_result = data_manager.filter(task_id=request['task_id'])
 
-        # self.assertEqual(result.id, request['id'])
-        # self.assertEqual(result.task_id, request['task_id'])
+        self.assertEqual(data_result.count(), 3)
+        self.assertEqual(metadata_result.count(), 1)
 
-    #     result = task_metadata_manager.filter(id=request2['id']).first()
+        metadata_result = metadata_manager.filter(task_id=request2['task_id'])
+        data_result = data_manager.filter(task_id=request2['task_id'])
 
-    #     self.assertEqual(result.id, request['id'])
-    #     self.assertEqual(result.task_id, request['task_id'])
+        self.assertEqual(data_result.count(), 2)
+        self.assertEqual(metadata_result.count(), 1)
+
+        metadata_result = metadata_manager.filter(task_id=request3['task_id'])
+        data_result = data_manager.filter(task_id=request3['task_id'])
+
+        self.assertEqual(data_result.count(), 0)
+        self.assertEqual(metadata_result.count(), 0)
     
-    # def test_delete_existing_audio_data(self):
-    #     task_metadata_manager.delete_existing_audio_data(request['task_id'])
+    def test_delete_existing_audio_data(self):
 
-    #     result = task_metadata_manager.filter(task_id = request['task_id'])
+        data_result = data_manager.filter(task_id = request['task_id'])
+        metadata_result = metadata_manager.filter(task_id = request['task_id'])
 
-    #     self.assertEqual(result.first(), None)
+        self.assertEqual(data_result.count(), 3)
+        self.assertEqual(metadata_result.count(), 1)
 
-    # def test_get_users_tasks(self):
-    #     result = task_metadata_manager.filter(user = "user_example")
+        data_manager.delete_task(request)
 
-    #     self.assertEqual(result.count(), 2)
+        data_result = data_manager.filter(task_id = request['task_id'])
+        metadata_result = metadata_manager.filter(task_id = request['task_id'])
+
+        self.assertEqual(data_result.count(), 0)
+        self.assertEqual(metadata_result.count(), 0)
+
+    def test_get_users_tasks(self):
+        result = metadata_manager.filter(user = "user_example")
+
+        self.assertEqual(result.count(), 2)
