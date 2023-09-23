@@ -1,20 +1,26 @@
-import * as React from 'react';
-import ListItemText from '@mui/material/ListItemText';
-import Collapse from '@mui/material/Collapse';
 import ExpandLess from '@mui/icons-material/ExpandLess';
 import ExpandMore from '@mui/icons-material/ExpandMore';
-import { Box, Button, Container, TextField, Typography } from '@mui/material';
+import {
+  Box,
+  Button,
+  Collapse,
+  Container,
+  ListItemText,
+  Stack,
+  TextField,
+  Typography,
+} from '@mui/material';
 import { ChangeEvent, FormEvent, useState } from 'react';
-import { useShowSnackbar } from '../utils.tsx';
-import { editProfileAPI, changePasswordAPI } from '../api';
 import { useNavigate } from 'react-router-dom';
+import { changePassword, editProfile } from '../api';
+import { useShowSnackbar } from '../utils.tsx';
 
 const emailValidation = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const passwordValidation = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{6,}$/;
 
 export default function ProfileView() {
   const [snackbar, showSnackbar] = useShowSnackbar();
-  const [openPanel, setOpenPanel] = React.useState<string | null>(null);
+  const [openPanel, setOpenPanel] = useState<string | null>(null);
   const [isEmailValid, setIsEmailValid] = useState<boolean | null>(null);
   const [isPasswordValid, setIsPasswordValid] = useState<boolean | null>(null);
   const [confirmPassword, setConfirmPassword] = useState('');
@@ -96,15 +102,14 @@ export default function ProfileView() {
     }
 
     const userData = {
-      username: data.get('username') as string,
-      email: data.get('email') as string,
-      oldPassword: data.get('oldPassword') as string,
-      newPassword: data.get('newPassword') as string,
-      newConfirmPassword: data.get('newConfirmPassword') as string,
+      username: username as string,
+      email: email as string,
+      oldPassword: oldPassword as string,
+      newPassword: newPassword as string,
     };
     console.log(JSON.stringify(userData, null, 2));
 
-    changePasswordAPI(userData)
+    changePassword(userData)
       .then(() => {
         showSnackbar('Change Password Success', 'success');
       })
@@ -136,7 +141,7 @@ export default function ProfileView() {
     };
     console.log(JSON.stringify(userData, null, 2));
 
-    editProfileAPI(userData)
+    editProfile(userData)
       .then(() => {
         showSnackbar('Edit Profile Success', 'success');
       })
@@ -179,75 +184,77 @@ export default function ProfileView() {
             timeout="auto"
             unmountOnExit
           >
-            <TextField
-              required
-              fullWidth
-              id="username"
-              label="User Name"
-              name="username"
-              autoComplete="username"
-            />
-            <TextField
-              required
-              fullWidth
-              id="email"
-              label="Email Address"
-              name="email"
-              autoComplete="email"
-              onChange={handleEmailFormat}
-              error={isEmailValid === false}
-              helperText={
-                isEmailValid === false ? 'Invalid email address.' : ''
-              }
-            />
-            <TextField
-              margin="normal"
-              required
-              fullWidth
-              name="oldPassword"
-              label="Old Password"
-              type="password"
-              id="oldPassword"
-              autoComplete="oldPassword"
-            />
-            <TextField
-              margin="normal"
-              required
-              fullWidth
-              name="newPassword"
-              label="New Password"
-              type="password"
-              id="newPassword"
-              autoComplete="new-password"
-              onChange={handlePasswordFormat}
-              error={isPasswordValid === false}
-              helperText={
-                isPasswordValid === false
-                  ? 'Password must contain at' +
-                    ' least one uppercase letter, one lowercase letter, one number,' +
-                    ' and be at least 6 characters long.'
-                  : ''
-              }
-            />
-            <TextField
-              required
-              fullWidth
-              name="newConfirmPassword"
-              label="Confirm Password"
-              type="password"
-              id="newConfirmPassword"
-              autoComplete="new-password"
-              value={confirmPassword}
-              onChange={(e) => setConfirmPassword(e.target.value)}
-            />
-            <Button
-              type="submit"
-              fullWidth
-              variant="contained"
-              sx={{ mt: 3, mb: 2 }}
-            >
-              Change Password
-            </Button>
+            <Stack spacing={2} width={500}>
+              <TextField
+                required
+                fullWidth
+                id="username"
+                label="User Name"
+                name="username"
+                autoComplete="username"
+              />
+              <TextField
+                required
+                fullWidth
+                id="email"
+                label="Email Address"
+                name="email"
+                autoComplete="email"
+                onChange={handleEmailFormat}
+                error={isEmailValid === false}
+                helperText={
+                  isEmailValid === false ? 'Invalid email address.' : ''
+                }
+              />
+              <TextField
+                margin="normal"
+                required
+                fullWidth
+                name="oldPassword"
+                label="Old Password"
+                type="password"
+                id="oldPassword"
+                autoComplete="oldPassword"
+              />
+              <TextField
+                margin="normal"
+                required
+                fullWidth
+                name="newPassword"
+                label="New Password"
+                type="password"
+                id="newPassword"
+                autoComplete="new-password"
+                onChange={handlePasswordFormat}
+                error={isPasswordValid === false}
+                helperText={
+                  isPasswordValid === false
+                    ? 'Password must contain at' +
+                      ' least one uppercase letter, one lowercase letter, one number,' +
+                      ' and be at least 6 characters long.'
+                    : ''
+                }
+              />
+              <TextField
+                required
+                fullWidth
+                name="newConfirmPassword"
+                label="Confirm Password"
+                type="password"
+                id="newConfirmPassword"
+                autoComplete="new-password"
+                value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)}
+              />
+              <Button
+                type="submit"
+                fullWidth
+                variant="contained"
+                sx={{ mt: 3, mb: 2 }}
+              >
+                Change Password
+              </Button>
+            </Stack>
           </Collapse>
         </Box>
 
@@ -271,39 +278,41 @@ export default function ProfileView() {
             timeout="auto"
             unmountOnExit
           >
-            <TextField
-              margin="normal"
-              required
-              fullWidth
-              name="newUsername"
-              label="New Username"
-              type="newUsername"
-              id="newUsername"
-              autoComplete="newUsername"
-            />
-            <TextField
-              margin="normal"
-              required
-              fullWidth
-              name="newEmail"
-              label="New Email"
-              type="newEmail"
-              id="newEmail"
-              autoComplete="newEmail"
-              onChange={handleEmailFormat}
-              error={isEmailValid === false}
-              helperText={
-                isEmailValid === false ? 'Invalid email address.' : ''
-              }
-            />
-            <Button
-              type="submit"
-              fullWidth
-              variant="contained"
-              sx={{ mt: 3, mb: 2 }}
-            >
-              Edit Profile
-            </Button>
+            <Stack spacing={2} width={500}>
+              <TextField
+                margin="normal"
+                required
+                fullWidth
+                name="newUsername"
+                label="New Username"
+                type="newUsername"
+                id="newUsername"
+                autoComplete="newUsername"
+              />
+              <TextField
+                margin="normal"
+                required
+                fullWidth
+                name="newEmail"
+                label="New Email"
+                type="newEmail"
+                id="newEmail"
+                autoComplete="newEmail"
+                onChange={handleEmailFormat}
+                error={isEmailValid === false}
+                helperText={
+                  isEmailValid === false ? 'Invalid email address.' : ''
+                }
+              />
+              <Button
+                type="submit"
+                fullWidth
+                variant="contained"
+                sx={{ mt: 3, mb: 2 }}
+              >
+                Edit Profile
+              </Button>
+            </Stack>
           </Collapse>
         </Box>
       </Box>
