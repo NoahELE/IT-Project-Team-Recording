@@ -9,7 +9,7 @@ class NewMetaDataAudioSerializer(serializers.ModelSerializer):
 class NewDataAudioSerializer(serializers.ModelSerializer):
     class Meta:
         model = TaskData
-        fields = ('block_id, file')
+        fields = ('block_id', 'text', 'file')
 
 class TaskUserSerializer(serializers.ModelSerializer):
     class Meta:

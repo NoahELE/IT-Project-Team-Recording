@@ -60,7 +60,7 @@ class DeleteJobsWithTaskID(APIView):
 
         return Response(status=status.HTTP_200_OK)
     
-class changeUserOnTaskID(APIView):
+class ChangeUserOnTaskID(APIView):
     permissions_classes = [IsAuthenticated]
 
     def post(self, request):
