@@ -74,3 +74,15 @@ export async function deleteRecording(id: string): Promise<void> {
   setJwtToken();
   await axios.delete(`/api/recording/${id}`);
 }
+
+/**
+ * Update a recording.
+ * @param recording the recording to be updated
+ */
+export async function updateRecording(
+  id: string,
+  recording: Recording,
+): Promise<void> {
+  setJwtToken();
+  await axios.put(`/api/recording/${id}`, recording);
+}
