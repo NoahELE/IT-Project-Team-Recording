@@ -45,17 +45,6 @@ export default function RecordingView() {
       })
       .catch((error: Error) => {
         showSnackbar(`Failed to fetch recordings - ${error.message}`);
-        if (
-          error.message ===
-          'It seems that you are not logged in. Please login first.'
-        ) {
-          navigate('/login');
-        } else if (
-          error.message ===
-          'It seems that your token is invalid. Please login again.'
-        ) {
-          navigate('/login');
-        }
       });
   }, [navigate, showSnackbar]);
 
