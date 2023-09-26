@@ -1,17 +1,19 @@
 import { CssBaseline } from '@mui/material';
+import { lazy } from 'react';
 import {
   Route,
   RouterProvider,
   createBrowserRouter,
   createRoutesFromElements,
 } from 'react-router-dom';
-import HomeView from './views/HomeView';
-import LoginView from './views/LoginView.tsx';
-import PublicRecordsView from './views/PublicRecordsView.tsx';
-import RecordingView from './views/RecordingView';
-import RegisterView from './views/RegisterView.tsx';
-import RootView from './views/RootView';
-import ProfileView from './views/ProfileView.tsx';
+
+const HomeView = lazy(() => import('./views/HomeView'));
+const LoginView = lazy(() => import('./views/LoginView'));
+const ProfileView = lazy(() => import('./views/ProfileView'));
+const PublicRecordsView = lazy(() => import('./views/PublicRecordsView'));
+const RecordingView = lazy(() => import('./views/RecordingView'));
+const RegisterView = lazy(() => import('./views/RegisterView'));
+const RootView = lazy(() => import('./views/RootView'));
 
 const router = createBrowserRouter(
   createRoutesFromElements(
