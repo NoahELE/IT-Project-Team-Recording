@@ -1,10 +1,5 @@
-import { Box, Button, Paper, Popper, Typography } from '@mui/material';
-import {
-  DataGrid,
-  GridColDef,
-  GridRenderCellParams,
-  GridRowSelectionModel,
-} from '@mui/x-data-grid';
+import { Box, Paper, Popper, Typography } from '@mui/material';
+import { DataGrid, GridColDef, GridRenderCellParams } from '@mui/x-data-grid';
 import { memo, useEffect, useRef, useState } from 'react';
 import { Recording } from '../entity';
 
@@ -120,11 +115,6 @@ function renderCellExpand(params: GridRenderCellParams<Recording, string>) {
   );
 }
 
-function renderCellButton(params: GridRenderCellParams<Recording, string>) {
-  const { id } = params.row;
-  return <Button variant="outlined">Record {id}</Button>;
-}
-
 const columns: GridColDef[] = [
   { field: 'id', headerName: 'ID', width: 50 },
   { field: 'name', headerName: 'Name', width: 150 },
@@ -153,31 +143,17 @@ const columns: GridColDef[] = [
   {
     field: 'text',
     headerName: 'Text',
-    width: 200,
+    width: 300,
     sortable: false,
     renderCell: renderCellExpand,
-  },
-  {
-    field: 'action',
-    headerName: 'Action',
-    width: 200,
-    sortable: false,
-    align: 'center',
-    renderCell: renderCellButton,
   },
 ];
 
 interface Props {
   recordings: Recording[];
-  rowSelectionModel?: GridRowSelectionModel;
-  setRowSelectionModel?: (rowSelectionModel: GridRowSelectionModel) => void;
 }
 
-export default function RecordingList({
-  recordings,
-  rowSelectionModel,
-  setRowSelectionModel,
-}: Props) {
+export default function PublicRecordsList({ recordings }: Props) {
   return (
     <DataGrid
       rows={recordings}
@@ -188,14 +164,7 @@ export default function RecordingList({
         },
       }}
       pageSizeOptions={[10, 20, 50]}
-      checkboxSelection
       getRowHeight={() => 'auto'}
-      rowSelectionModel={rowSelectionModel}
-      onRowSelectionModelChange={(newRowSelectionModel) => {
-        if (setRowSelectionModel !== undefined) {
-          setRowSelectionModel(newRowSelectionModel);
-        }
-      }}
     />
   );
 }

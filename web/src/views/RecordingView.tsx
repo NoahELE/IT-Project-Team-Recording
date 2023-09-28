@@ -3,6 +3,7 @@ import { GridRowSelectionModel } from '@mui/x-data-grid';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { deleteRecording, getAllRecordings, updateRecording } from '../api';
+import ModifyRecordingModal from '../components/ModifyRecordingModal';
 import Recorder from '../components/Recorder';
 import RecordingList from '../components/RecordingList';
 import { Recording } from '../entity';
@@ -93,6 +94,7 @@ export default function RecordingView() {
           </Button>
         </Stack>
       </Stack>
+      <ModifyRecordingModal open={true} />
       {snackbar}
     </Container>
   );
