@@ -5,8 +5,7 @@ from rest_framework.response import Response
 from data.models import TaskManager
 from data.serializer import NewMetaDataAudioSerializer, NewDataAudioSerializer, TaskUserSerializer
 from django.utils import timezone
-
-import requests
+from user.models import UserManager
 
 POST = "POST"
 GET = "GET"
@@ -62,6 +61,15 @@ class DeleteJobsWithTaskID(APIView):
     
 class ClearTaskID(APIView):
     permission_classes = [IsAuthenticated]
+
+    def post(self, request):
+        required_keys = ['task_id']
+        check_required_keys(POST, required_keys, request)
+
+        TaskManager().clear_task(request) # might need a serializer, reduces input size
+
+        return Response(status=status.HTTP_200_OK)
+    
     
 class ChangeUserOnTaskID(APIView):
     permissions_classes = [IsAuthenticated]
@@ -72,3 +80,12 @@ class ChangeUserOnTaskID(APIView):
         
         TaskManager.change_task_user(TaskUserSerializer(request))
         return Response(status=status.HTTP_200_OK)
+    
+class FilterUsers(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        required_keys = ['language']
+        check_required_keys(GET, required_keys, request)
+
+        # UserManager function call to return usernames filtered on language
