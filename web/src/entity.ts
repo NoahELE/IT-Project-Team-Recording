@@ -12,8 +12,6 @@ export interface User {
 }
 
 export interface ChangePassword {
-  username: string;
-  email: string;
   oldPassword: string;
   newPassword: string;
 }
