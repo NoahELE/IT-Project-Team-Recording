@@ -10,9 +10,9 @@ import {
   Typography,
 } from '@mui/material';
 import { ChangeEvent, FormEvent, useState } from 'react';
-import { register } from '../api.ts';
-import { sleep, useShowError } from '../utils.tsx';
 import { useNavigate } from 'react-router-dom';
+import { register } from '../api';
+import { useShowSnackbar } from '../utils';
 
 const emailValidation = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const passwordValidation = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{6,}$/;
@@ -23,11 +23,6 @@ export default function RegisterView() {
   const [isEmailValid, setIsEmailValid] = useState<boolean | null>(null);
   const [confirmPassword, setConfirmPassword] = useState('');
   const navigate = useNavigate();
-
-  async function waiting() {
-    await sleep(3000);
-    navigate('/login');
-  }
 
   const handleEmailFormat = (event: ChangeEvent<HTMLInputElement>) => {
     const email = event.target.value;
@@ -41,7 +36,7 @@ export default function RegisterView() {
     setIsChecked(event.target.checked);
   };
 
-  const [snackbar, showError] = useShowError();
+  const [snackbar, showSnackbar] = useShowSnackbar();
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
@@ -52,31 +47,29 @@ export default function RegisterView() {
 
     // Check is all the text filled
     if (!username || !email || !password || !confirmPassword) {
-      showError(new Error('Please fill all the text field!'));
+      showSnackbar('Please fill all the text field!');
       return;
     }
 
-    // Check is password format correct
+    // Check is email format correct
     if (!emailValidation.test(email as string)) {
-      showError(new Error('Invalid email address.'));
+      showSnackbar('Invalid email address.');
       return;
     }
 
     // Check is password format correct
     if (!passwordValidation.test(password as string)) {
-      showError(
-        new Error(
-          'Password must contain at least one uppercase letter,' +
-            ' one lowercase letter, one number,' +
-            ' and be at least 6 characters long.',
-        ),
+      showSnackbar(
+        'Password must contain at least one uppercase letter, ' +
+          'one lowercase letter, one number, ' +
+          'and be at least 6 characters long.',
       );
       return;
     }
 
     // Check is password equal to confirm password
     if (password !== confirmPassword) {
-      showError(new Error('Password does not match.'));
+      showSnackbar('Password does not match.');
       return;
     }
 
@@ -90,14 +83,16 @@ export default function RegisterView() {
 
     register(userData)
       .then(() => {
-        showError(
-          new Error('Registration success - Redirecting to Login Page'),
+        showSnackbar(
+          'Registration success - Redirecting to Login Page',
           'success',
         );
-        void waiting();
+        setTimeout(() => {
+          navigate('/');
+        }, 3000);
       })
       .catch((error) => {
-        showError(new Error(`Registration Failed - ${error}`));
+        showSnackbar(`Registration Failed - ${error}`);
       });
   };
 

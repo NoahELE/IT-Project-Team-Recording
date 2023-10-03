@@ -1,5 +1,12 @@
 import axios from 'axios';
-import { Recording, Token, User, UserLogin } from './entity';
+import {
+  ChangePassword,
+  EditProfile,
+  Recording,
+  Token,
+  User,
+  UserLogin,
+} from './entity';
 
 axios.defaults.baseURL = import.meta.env.VITE_API_URL;
 
@@ -19,6 +26,18 @@ export async function login(user: UserLogin): Promise<void> {
  */
 export async function register(user: User): Promise<void> {
   await axios.post('/api/user/register', user);
+}
+
+export async function changePassword(
+  changePassword: ChangePassword,
+): Promise<void> {
+  setJwtToken();
+  await axios.post('/api/user/change-password', changePassword);
+}
+
+export async function editProfile(editProfile: EditProfile): Promise<void> {
+  setJwtToken();
+  await axios.post('/api/user/edit-profile', editProfile);
 }
 
 /**
@@ -54,4 +73,16 @@ export async function getAllRecordings(): Promise<Recording[]> {
 export async function deleteRecording(id: string): Promise<void> {
   setJwtToken();
   await axios.delete(`/api/recording/${id}`);
+}
+
+/**
+ * Update a recording.
+ * @param recording the recording to be updated
+ */
+export async function updateRecording(
+  id: string,
+  recording: Recording,
+): Promise<void> {
+  setJwtToken();
+  await axios.put(`/api/recording/${id}`, recording);
 }

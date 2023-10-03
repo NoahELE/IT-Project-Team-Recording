@@ -11,6 +11,18 @@ export interface User {
   password: string;
 }
 
+export interface ChangePassword {
+  username: string;
+  email: string;
+  oldPassword: string;
+  newPassword: string;
+}
+
+export interface EditProfile {
+  username: string;
+  email: string;
+}
+
 export type UserLogin = Omit<User, 'email'> | Omit<User, 'username'>;
 
 export interface Token {
