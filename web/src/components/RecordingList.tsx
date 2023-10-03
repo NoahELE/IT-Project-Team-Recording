@@ -7,6 +7,7 @@ import {
 } from '@mui/x-data-grid';
 import { memo, useEffect, useRef, useState } from 'react';
 import { Recording } from '../entity';
+import ModifyRecordingModal from './ModifyRecordingModal';
 
 function isOverflown(element: Element): boolean {
   return (
@@ -120,9 +121,31 @@ function renderCellExpand(params: GridRenderCellParams<Recording, string>) {
   );
 }
 
+interface ModifyButtonProps {
+  id: string;
+}
+
+function ModifyButton({ id }: ModifyButtonProps) {
+  const [open, setOpen] = useState(false);
+  return (
+    <>
+      <Button
+        variant="outlined"
+        onClick={(e) => {
+          e.stopPropagation();
+          setOpen(true);
+        }}
+      >
+        Modify Record {id}
+      </Button>
+      <ModifyRecordingModal open={open} setOpen={setOpen} />
+    </>
+  );
+}
+
 function renderCellButton(params: GridRenderCellParams<Recording, string>) {
   const { id } = params.row;
-  return <Button variant="outlined">Record {id}</Button>;
+  return <ModifyButton id={id} />;
 }
 
 const columns: GridColDef[] = [
