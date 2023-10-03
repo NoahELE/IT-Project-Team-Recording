@@ -60,6 +60,9 @@ class DeleteJobsWithTaskID(APIView):
 
         return Response(status=status.HTTP_200_OK)
     
+class ClearTaskID(APIView):
+    permission_classes = [IsAuthenticated]
+    
 class ChangeUserOnTaskID(APIView):
     permissions_classes = [IsAuthenticated]
 
