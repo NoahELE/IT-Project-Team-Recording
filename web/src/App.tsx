@@ -1,5 +1,5 @@
 import { CssBaseline } from '@mui/material';
-import { lazy } from 'react';
+import { Suspense, lazy } from 'react';
 import {
   Route,
   RouterProvider,
@@ -30,9 +30,9 @@ const router = createBrowserRouter(
 
 export default function App() {
   return (
-    <>
+    <Suspense>
       <CssBaseline />
       <RouterProvider router={router} />
-    </>
+    </Suspense>
   );
 }
