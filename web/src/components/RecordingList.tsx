@@ -138,7 +138,7 @@ function ModifyButton({ id }: ModifyButtonProps) {
       >
         Modify Record {id}
       </Button>
-      <ModifyRecordingModal open={open} setOpen={setOpen} />
+      <ModifyRecordingModal id={id} open={open} setOpen={setOpen} />
     </>
   );
 }

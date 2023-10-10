@@ -2,6 +2,7 @@ import { Box, Modal, SxProps, Typography } from '@mui/material';
 import Recorder from './Recorder';
 
 interface Props {
+  id: string;
   open: boolean;
   setOpen: (open: boolean) => void;
 }
@@ -18,7 +19,7 @@ const modalStyle: SxProps = {
   padding: 4,
 };
 
-export default function ModifyRecordingModal({ open, setOpen }: Props) {
+export default function ModifyRecordingModal({ id, open, setOpen }: Props) {
   return (
     <Modal
       open={open}
@@ -30,7 +31,7 @@ export default function ModifyRecordingModal({ open, setOpen }: Props) {
         <Typography variant="h5" fontSize="1.5rem" fontWeight="bold" mb={5}>
           Modify Recording
         </Typography>
-        <Recorder />
+        <Recorder id={id} type="update" />
       </Box>
     </Modal>
   );

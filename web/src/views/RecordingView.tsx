@@ -2,7 +2,7 @@ import { Button, Container, Divider, Stack } from '@mui/material';
 import { GridRowSelectionModel } from '@mui/x-data-grid';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { deleteRecording, getAllRecordings, updateRecording } from '../api';
+import { deleteRecording, getAllRecordings } from '../api';
 import Recorder from '../components/Recorder';
 import RecordingList from '../components/RecordingList';
 import { Recording } from '../entity';
@@ -30,7 +30,7 @@ export default function RecordingView() {
   return (
     <Container sx={{ mt: 10 }}>
       <Stack spacing={5}>
-        <Recorder />
+        <Recorder type="create" />
 
         <Divider variant="middle" />
 
@@ -57,39 +57,6 @@ export default function RecordingView() {
             }}
           >
             Delete Selected
-          </Button>
-          <Button
-            onClick={() => {
-              if (rowSelectionModel.length !== 1) {
-                showSnackbar(
-                  'Please select only one recording to update',
-                  'warning',
-                );
-                return;
-              }
-              const id = rowSelectionModel[0];
-              if (typeof id !== 'string') {
-                throw new Error('Expected id to be string');
-              }
-              const recording = recordings.find((r) => r.id === id);
-              if (recording === undefined) {
-                showSnackbar(
-                  `Cannot to find recording with id ${id}`,
-                  'warning',
-                );
-                return;
-              }
-
-              // TODO: create a modal to update the recording
-
-              updateRecording(id, recording).catch((error) => {
-                showSnackbar(
-                  `Failed to update recording with id ${id} - ${error}`,
-                );
-              });
-            }}
-          >
-            Update Selected
           </Button>
         </Stack>
       </Stack>
