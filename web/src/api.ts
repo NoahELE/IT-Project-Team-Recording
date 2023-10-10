@@ -85,8 +85,26 @@ export async function deleteRecording(id: string): Promise<void> {
  */
 export async function updateRecording(
   id: string,
-  recording: Recording,
+  recording: Partial<Recording>,
+  recordingBlob: Blob,
 ): Promise<void> {
   setJwtToken();
   await axios.put(`/api/recording/${id}`, recording);
+  // TODO save binary recording data
+  console.log(recordingBlob);
+}
+
+/**
+ * Create a recording.
+ * @param recording the recording to be created
+ * @param recordingBlob the binary data of the recording
+ */
+export async function createRecording(
+  recording: Omit<Recording, 'id' | 'audioUrl'>,
+  recordingBlob: Blob,
+): Promise<void> {
+  setJwtToken();
+  await axios.post('/api/recording', recording);
+  // TODO save binary recording data
+  console.log(recordingBlob);
 }
