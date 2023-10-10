@@ -1,6 +1,6 @@
 import axios from 'axios';
 import {
-  ChangePassword,
+  ChangePasswordDto,
   EditProfile,
   Recording,
   Token,
@@ -28,11 +28,15 @@ export async function register(user: User): Promise<void> {
   await axios.post('/api/user/register', user);
 }
 
+/**
+ *  Change the password of current user.
+ * @param changePasswordDto the old and new password
+ */
 export async function changePassword(
-  changePassword: ChangePassword,
+  changePasswordDto: ChangePasswordDto,
 ): Promise<void> {
   setJwtToken();
-  await axios.post('/api/user/change-password', changePassword);
+  await axios.post('/api/user/change-password', changePasswordDto);
 }
 
 export async function editProfile(editProfile: EditProfile): Promise<void> {

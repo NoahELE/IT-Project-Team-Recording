@@ -28,7 +28,7 @@ export default function ModifyRecordingModal({ open, setOpen }: Props) {
     >
       <Box sx={modalStyle}>
         <Typography variant="h5" fontSize="1.5rem" fontWeight="bold" mb={5}>
-          ModifyRecordingModal
+          Modify Recording
         </Typography>
         <Recorder />
       </Box>

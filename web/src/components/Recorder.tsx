@@ -46,12 +46,17 @@ export default function Recorder() {
           Recorded Time: {recordedTime.toFixed(1)} seconds.
         </Typography>
         {mediaBlobUrl !== undefined && (
-          <audio
-            src={mediaBlobUrl}
-            controls
-            preload="metadata"
-            style={{ width: 400 }}
-          />
+          <Stack spacing={3} direction="row">
+            <audio
+              src={mediaBlobUrl}
+              controls
+              preload="metadata"
+              style={{ width: 400 }}
+            />
+            <Button variant="contained" sx={{ alignSelf: 'center' }}>
+              Upload
+            </Button>
+          </Stack>
         )}
       </Stack>
       <Typography width={500}>

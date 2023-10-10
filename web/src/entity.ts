@@ -11,7 +11,7 @@ export interface User {
   password: string;
 }
 
-export interface ChangePassword {
+export interface ChangePasswordDto {
   oldPassword: string;
   newPassword: string;
 }
