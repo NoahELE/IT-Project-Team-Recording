@@ -123,9 +123,10 @@ function renderCellExpand(params: GridRenderCellParams<Recording, string>) {
 
 interface ModifyButtonProps {
   id: string;
+  text: string;
 }
 
-function ModifyButton({ id }: ModifyButtonProps) {
+function ModifyButton({ id, text }: ModifyButtonProps) {
   const [open, setOpen] = useState(false);
   return (
     <>
@@ -138,14 +139,14 @@ function ModifyButton({ id }: ModifyButtonProps) {
       >
         Modify Record {id}
       </Button>
-      <ModifyRecordingModal id={id} open={open} setOpen={setOpen} />
+      <ModifyRecordingModal id={id} text={text} open={open} setOpen={setOpen} />
     </>
   );
 }
 
 function renderCellButton(params: GridRenderCellParams<Recording, string>) {
-  const { id } = params.row;
-  return <ModifyButton id={id} />;
+  const { id, text } = params.row;
+  return <ModifyButton id={id} text={text} />;
 }
 
 const columns: GridColDef[] = [

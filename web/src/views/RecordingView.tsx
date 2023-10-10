@@ -30,7 +30,7 @@ export default function RecordingView() {
   return (
     <Container sx={{ mt: 10 }}>
       <Stack spacing={5}>
-        <Recorder type="create" />
+        <Recorder text="" type="create" />
 
         <Divider variant="middle" />
 

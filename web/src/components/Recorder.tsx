@@ -5,14 +5,16 @@ import { createRecording, updateRecording } from '../api';
 
 interface Props {
   id?: string;
+  text: string;
   type: 'create' | 'update';
 }
 
-export default function Recorder({ id, type }: Props) {
+export default function Recorder({ id, text, type }: Props) {
   const { mediaBlobUrl, status, startRecording, stopRecording } =
     useReactMediaRecorder({ audio: true });
   const [recordedTime, setRecordedTime] = useState(0.0);
   const isRecording = status === 'recording';
+
   const [recordingName, setRecordingName] = useState('');
 
   const uploadButtonOnClick = () => {
@@ -22,7 +24,7 @@ export default function Recorder({ id, type }: Props) {
         .then((blob) => {
           if (type === 'create') {
             // FIXME also fetch text
-            return createRecording({ name: recordingName, text: '' }, blob);
+            return createRecording({ name: recordingName }, blob);
           } else if (type === 'update') {
             if (id === undefined) {
               throw new Error('Expect id to be defined');
@@ -93,12 +95,7 @@ export default function Recorder({ id, type }: Props) {
           </Stack>
         )}
       </Stack>
-      <Typography width={500}>
-        Lorem ipsum dolor sit amet consectetur adipisicing elit. Rem aliquid
-        expedita voluptatem est placeat sint eligendi dolor? Eveniet ex placeat
-        modi? Velit, officiis dolorum soluta doloremque iste voluptate quisquam
-        provident.
-      </Typography>
+      <Typography width={500}>{text}</Typography>
     </Stack>
   );
 }

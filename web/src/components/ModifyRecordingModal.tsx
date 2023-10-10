@@ -3,6 +3,7 @@ import Recorder from './Recorder';
 
 interface Props {
   id: string;
+  text: string;
   open: boolean;
   setOpen: (open: boolean) => void;
 }
@@ -19,7 +20,12 @@ const modalStyle: SxProps = {
   padding: 4,
 };
 
-export default function ModifyRecordingModal({ id, open, setOpen }: Props) {
+export default function ModifyRecordingModal({
+  id,
+  text,
+  open,
+  setOpen,
+}: Props) {
   return (
     <Modal
       open={open}
@@ -31,7 +37,7 @@ export default function ModifyRecordingModal({ id, open, setOpen }: Props) {
         <Typography variant="h5" fontSize="1.5rem" fontWeight="bold" mb={5}>
           Modify Recording
         </Typography>
-        <Recorder id={id} type="update" />
+        <Recorder id={id} text={text} type="update" />
       </Box>
     </Modal>
   );

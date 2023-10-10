@@ -100,7 +100,7 @@ export async function updateRecording(
  * @param recordingBlob the binary data of the recording
  */
 export async function createRecording(
-  recording: Omit<Recording, 'id' | 'audioUrl'>,
+  recording: Omit<Recording, 'id' | 'audioUrl' | 'text'>,
   recordingBlob: Blob,
 ): Promise<void> {
   setJwtToken();
