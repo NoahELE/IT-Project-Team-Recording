@@ -1,7 +1,7 @@
 import { Box, Paper, Popper, Typography } from '@mui/material';
 import { DataGrid, GridColDef, GridRenderCellParams } from '@mui/x-data-grid';
 import { memo, useEffect, useRef, useState } from 'react';
-import { Recording } from '../entity';
+import { Task } from '../entity';
 
 function isOverflown(element: Element): boolean {
   return (
@@ -106,7 +106,7 @@ const GridCellExpand = memo(({ width, value }: GridCellExpandProps) => {
   );
 });
 
-function renderCellExpand(params: GridRenderCellParams<Recording, string>) {
+function renderCellExpand(params: GridRenderCellParams<Task, string>) {
   return (
     <GridCellExpand
       value={params.value || ''}
@@ -124,7 +124,7 @@ const columns: GridColDef[] = [
     width: 450,
     sortable: false,
     align: 'center',
-    renderCell: (params: GridRenderCellParams<Recording, string>) => {
+    renderCell: (params: GridRenderCellParams<Task, string>) => {
       if (params.value === undefined) {
         return null;
       }
@@ -150,7 +150,7 @@ const columns: GridColDef[] = [
 ];
 
 interface Props {
-  recordings: Recording[];
+  recordings: Task[];
 }
 
 export default function PublicRecordsList({ recordings }: Props) {

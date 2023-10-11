@@ -1,8 +1,13 @@
-export interface Recording {
+export interface Task {
   id: string;
-  name: string;
-  audioUrl: string;
   text: string;
+  file: string;
+  has_existing: boolean;
+}
+
+export interface TaskResponse {
+  task_id: string;
+  data: Task[];
 }
 
 export interface User {

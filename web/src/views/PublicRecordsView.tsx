@@ -1,9 +1,9 @@
 import { Container, Stack } from '@mui/material';
 import PublicRecordsList from '../components/PublicRecordsList';
-import { Recording } from '../entity';
+import { Task } from '../entity';
 
 // HACK: mock data of the recordings
-const recordings: Recording[] = [
+const recordings: Task[] = [
   {
     id: '1',
     name: 'Recording 1',

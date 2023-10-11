@@ -6,8 +6,8 @@ import {
   GridRowSelectionModel,
 } from '@mui/x-data-grid';
 import { memo, useEffect, useRef, useState } from 'react';
-import { Recording } from '../entity';
-import ModifyRecordingModal from './ModifyRecordingModal';
+import { getAudioUrl } from '../api';
+import { Task } from '../entity';
 
 function isOverflown(element: Element): boolean {
   return (
@@ -112,7 +112,7 @@ const GridCellExpand = memo(({ width, value }: GridCellExpandProps) => {
   );
 });
 
-function renderCellExpand(params: GridRenderCellParams<Recording, string>) {
+function renderCellExpand(params: GridRenderCellParams<Task, string>) {
   return (
     <GridCellExpand
       value={params.value || ''}
@@ -121,90 +121,92 @@ function renderCellExpand(params: GridRenderCellParams<Recording, string>) {
   );
 }
 
-interface ModifyButtonProps {
-  id: string;
-  text: string;
-}
-
-function ModifyButton({ id, text }: ModifyButtonProps) {
-  const [open, setOpen] = useState(false);
-  return (
-    <>
-      <Button
-        variant="outlined"
-        onClick={(e) => {
-          e.stopPropagation();
-          setOpen(true);
-        }}
-      >
-        Modify Record {id}
-      </Button>
-      <ModifyRecordingModal id={id} text={text} open={open} setOpen={setOpen} />
-    </>
-  );
-}
-
-function renderCellButton(params: GridRenderCellParams<Recording, string>) {
-  const { id, text } = params.row;
-  return <ModifyButton id={id} text={text} />;
-}
-
-const columns: GridColDef[] = [
-  { field: 'id', headerName: 'ID', width: 50 },
-  { field: 'name', headerName: 'Name', width: 150 },
-  {
-    field: 'audioUrl',
-    headerName: 'Audio',
-    width: 450,
-    sortable: false,
-    align: 'center',
-    renderCell: (params: GridRenderCellParams<Recording, string>) => {
-      if (params.value === undefined) {
-        return null;
-      }
-      return (
-        <Box m={1}>
-          <audio
-            src={params.value}
-            controls
-            preload="metadata"
-            style={{ width: 400 }}
-          />
-        </Box>
-      );
-    },
-  },
-  {
-    field: 'text',
-    headerName: 'Text',
-    width: 200,
-    sortable: false,
-    renderCell: renderCellExpand,
-  },
-  {
-    field: 'action',
-    headerName: 'Action',
-    width: 200,
-    sortable: false,
-    align: 'center',
-    renderCell: renderCellButton,
-  },
-];
-
 interface Props {
-  recordings: Recording[];
+  tasks: Task[];
+  setCurrentTask: (task: Task | null) => void;
   rowSelectionModel?: GridRowSelectionModel;
   setRowSelectionModel?: (rowSelectionModel: GridRowSelectionModel) => void;
 }
-
-export default function RecordingList({
-  recordings,
+export default function TaskList({
+  tasks,
+  setCurrentTask,
   rowSelectionModel,
   setRowSelectionModel,
 }: Props) {
+  function AudioPlayer({ file }: { file: string }) {
+    const [audioSrc, setAudioSrc] = useState('');
+    useEffect(() => {
+      getAudioUrl(file)
+        .then((url) => setAudioSrc(url))
+        .catch((err) => {
+          console.error(err);
+        });
+    }, [file]);
+    return audioSrc === '' ? (
+      'Loading'
+    ) : (
+      <audio src={audioSrc} controls preload="metadata" />
+    );
+  }
+
+  function ModifyButton({ task }: { task: Task }) {
+    return (
+      <>
+        <Button
+          variant="outlined"
+          onClick={(e) => {
+            e.stopPropagation();
+            setCurrentTask(task);
+          }}
+        >
+          Record
+        </Button>
+      </>
+    );
+  }
+
+  const columns: GridColDef[] = [
+    { field: 'id', headerName: 'ID', width: 50 },
+    {
+      field: 'file',
+      headerName: 'Audio File',
+      width: 500,
+      sortable: false,
+      align: 'center',
+      renderCell: (params: GridRenderCellParams<Task, string>) => {
+        if (params.row.has_existing) {
+          return (
+            <Box m={1}>
+              <AudioPlayer file={params.row.file} />
+            </Box>
+          );
+        } else {
+          return <Typography variant="body2">No audio file</Typography>;
+        }
+      },
+    },
+    {
+      field: 'text',
+      headerName: 'Text',
+      width: 200,
+      sortable: false,
+      renderCell: renderCellExpand,
+    },
+    {
+      field: 'action',
+      headerName: 'Action',
+      width: 200,
+      sortable: false,
+      align: 'center',
+      renderCell: (params: GridRenderCellParams<Task, string>) => {
+        return <ModifyButton task={params.row} />;
+      },
+    },
+  ];
+
   return (
     <DataGrid
-      rows={recordings}
+      rows={tasks}
       columns={columns}
       initialState={{
         pagination: {

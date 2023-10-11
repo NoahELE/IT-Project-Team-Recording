@@ -1,38 +1,30 @@
-import { Box, Button, Stack, TextField, Typography } from '@mui/material';
+import { Box, Button, Stack, Typography } from '@mui/material';
 import { useEffect, useState } from 'react';
 import { useReactMediaRecorder } from 'react-media-recorder';
-import { createRecording, updateRecording } from '../api';
+import { postTask } from '../api';
 
 interface Props {
-  id?: string;
+  taskId: string;
   text: string;
-  type: 'create' | 'update';
+  file: string;
 }
 
-export default function Recorder({ id, text, type }: Props) {
+export default function Recorder({ taskId, text, file }: Props) {
   const { mediaBlobUrl, status, startRecording, stopRecording } =
     useReactMediaRecorder({ audio: true });
   const [recordedTime, setRecordedTime] = useState(0.0);
   const isRecording = status === 'recording';
-
-  const [recordingName, setRecordingName] = useState('');
 
   const uploadButtonOnClick = () => {
     if (mediaBlobUrl !== undefined) {
       fetch(mediaBlobUrl)
         .then((res) => res.blob())
         .then((blob) => {
-          if (type === 'create') {
-            // FIXME also fetch text
-            return createRecording({ name: recordingName }, blob);
-          } else if (type === 'update') {
-            if (id === undefined) {
-              throw new Error('Expect id to be defined');
-            }
-            return updateRecording(id, { name: recordingName }, blob);
-          }
+          postTask(taskId, file, blob).catch((err) => {
+            console.error(err);
+          });
         })
-        .catch((err) => console.log(err));
+        .catch((err) => console.error(err));
     }
   };
 
@@ -74,27 +66,21 @@ export default function Recorder({ id, text, type }: Props) {
           Recorded Time: {recordedTime.toFixed(1)} seconds.
         </Typography>
         {mediaBlobUrl !== undefined && (
-          <>
-            <TextField
-              label="Recoding Name"
-              onChange={(e) => setRecordingName(e.target.value)}
+          <Stack spacing={3} direction="row">
+            <audio
+              src={mediaBlobUrl}
+              controls
+              preload="metadata"
+              style={{ width: 400 }}
             />
-            <Stack spacing={3} direction="row">
-              <audio
-                src={mediaBlobUrl}
-                controls
-                preload="metadata"
-                style={{ width: 400 }}
-              />
-              <Button
-                variant="contained"
-                sx={{ alignSelf: 'center' }}
-                onClick={uploadButtonOnClick}
-              >
-                Upload
-              </Button>
-            </Stack>
-          </>
+            <Button
+              variant="contained"
+              sx={{ alignSelf: 'center' }}
+              onClick={uploadButtonOnClick}
+            >
+              Upload
+            </Button>
+          </Stack>
         )}
       </Stack>
       <Typography width={500}>{text}</Typography>

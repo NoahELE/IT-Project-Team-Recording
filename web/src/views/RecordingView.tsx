@@ -1,11 +1,11 @@
-import { Button, Container, Divider, Stack } from '@mui/material';
+import { Button, Container, Divider, Stack, Typography } from '@mui/material';
 import { GridRowSelectionModel } from '@mui/x-data-grid';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { deleteRecording, getAllRecordings } from '../api';
+import { deleteTask, getAllTasks } from '../api';
 import Recorder from '../components/Recorder';
-import RecordingList from '../components/RecordingList';
-import { Recording } from '../entity';
+import TaskList from '../components/TaskList';
+import { Task } from '../entity';
 import { useShowSnackbar } from '../utils';
 
 export default function RecordingView() {
@@ -13,16 +13,20 @@ export default function RecordingView() {
 
   const [snackbar, showSnackbar] = useShowSnackbar();
 
-  const [recordings, setRecordings] = useState<Recording[]>([]);
+  const [tasks, setTasks] = useState<Task[]>([]);
+  const [taskId, setTaskId] = useState('');
   useEffect(() => {
-    getAllRecordings()
-      .then((recordings) => {
-        setRecordings(recordings);
+    getAllTasks()
+      .then((taskResponse) => {
+        setTasks(taskResponse.data);
+        setTaskId(taskResponse.task_id);
       })
       .catch((error) => {
-        showSnackbar(`Failed to fetch recordings - ${error}`);
+        showSnackbar(`Failed to fetch tasks - ${error}`);
       });
   }, [navigate, showSnackbar]);
+
+  const [currentTask, setCurrentTask] = useState<Task | null>(null);
 
   const [rowSelectionModel, setRowSelectionModel] =
     useState<GridRowSelectionModel>([]);
@@ -30,12 +34,23 @@ export default function RecordingView() {
   return (
     <Container sx={{ mt: 10 }}>
       <Stack spacing={5}>
-        <Recorder text="" type="create" />
+        {currentTask !== null ? (
+          <Recorder
+            taskId={taskId}
+            text={currentTask.text}
+            file={currentTask.file}
+          />
+        ) : (
+          <Typography variant="body2">
+            You haven't selected a task yet.
+          </Typography>
+        )}
 
         <Divider variant="middle" />
 
-        <RecordingList
-          recordings={recordings}
+        <TaskList
+          tasks={tasks}
+          setCurrentTask={setCurrentTask}
           rowSelectionModel={rowSelectionModel}
           setRowSelectionModel={setRowSelectionModel}
         />
@@ -44,11 +59,11 @@ export default function RecordingView() {
           <Button
             onClick={() => {
               rowSelectionModel.forEach((id) => {
-                if (typeof id !== 'string') {
-                  throw new Error('Expected id to be string');
+                if (typeof id !== 'number') {
+                  throw new Error('Expected id to be number');
                 }
 
-                deleteRecording(id).catch((error) => {
+                deleteTask(taskId, id).catch((error) => {
                   showSnackbar(
                     `Failed to delete recording with id ${id} - ${error}`,
                   );
