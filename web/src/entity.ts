@@ -10,6 +10,13 @@ export interface TaskResponse {
   data: Task[];
 }
 
+export interface PublicRecord {
+  id: string;
+  name: string;
+  audioUrl: string;
+  text: string;
+}
+
 export interface User {
   username: string;
   email: string;

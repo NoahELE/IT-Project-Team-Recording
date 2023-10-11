@@ -1,7 +1,7 @@
 import { Box, Paper, Popper, Typography } from '@mui/material';
 import { DataGrid, GridColDef, GridRenderCellParams } from '@mui/x-data-grid';
 import { memo, useEffect, useRef, useState } from 'react';
-import { Task } from '../entity';
+import { PublicRecord, Task } from '../entity';
 
 function isOverflown(element: Element): boolean {
   return (
@@ -150,13 +150,13 @@ const columns: GridColDef[] = [
 ];
 
 interface Props {
-  recordings: Task[];
+  records: PublicRecord[];
 }
 
-export default function PublicRecordsList({ recordings }: Props) {
+export default function PublicRecordsList({ records }: Props) {
   return (
     <DataGrid
-      rows={recordings}
+      rows={records}
       columns={columns}
       initialState={{
         pagination: {
