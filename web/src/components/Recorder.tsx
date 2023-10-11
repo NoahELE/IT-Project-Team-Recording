@@ -73,26 +73,28 @@ export default function Recorder({ id, text, type }: Props) {
         <Typography variant="h5">
           Recorded Time: {recordedTime.toFixed(1)} seconds.
         </Typography>
-        <TextField
-          label="Recoding Name"
-          onChange={(e) => setRecordingName(e.target.value)}
-        />
         {mediaBlobUrl !== undefined && (
-          <Stack spacing={3} direction="row">
-            <audio
-              src={mediaBlobUrl}
-              controls
-              preload="metadata"
-              style={{ width: 400 }}
+          <>
+            <TextField
+              label="Recoding Name"
+              onChange={(e) => setRecordingName(e.target.value)}
             />
-            <Button
-              variant="contained"
-              sx={{ alignSelf: 'center' }}
-              onClick={uploadButtonOnClick}
-            >
-              Upload
-            </Button>
-          </Stack>
+            <Stack spacing={3} direction="row">
+              <audio
+                src={mediaBlobUrl}
+                controls
+                preload="metadata"
+                style={{ width: 400 }}
+              />
+              <Button
+                variant="contained"
+                sx={{ alignSelf: 'center' }}
+                onClick={uploadButtonOnClick}
+              >
+                Upload
+              </Button>
+            </Stack>
+          </>
         )}
       </Stack>
       <Typography width={500}>{text}</Typography>
