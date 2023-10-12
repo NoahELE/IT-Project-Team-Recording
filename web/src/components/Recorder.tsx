@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 import { useReactMediaRecorder } from 'react-media-recorder';
 import { postTask } from '../api';
 import { Task } from '../entity';
+import { useShowSnackbar } from '../utils';
 
 interface Props {
   taskId: string;
@@ -14,6 +15,8 @@ export default function Recorder({ taskId, task }: Props) {
     useReactMediaRecorder({ audio: true });
   const [recordedTime, setRecordedTime] = useState(0.0);
   const isRecording = status === 'recording';
+
+  const [snackbar, showSnackbar] = useShowSnackbar();
 
   useEffect(() => {
     let intervalId: number | null = null;
@@ -33,12 +36,10 @@ export default function Recorder({ taskId, task }: Props) {
     if (mediaBlobUrl !== undefined) {
       fetch(mediaBlobUrl)
         .then((res) => res.blob())
-        .then((blob) => {
-          postTask(taskId, task.file, blob).catch((err) => {
-            console.error(err);
-          });
-        })
-        .catch((err) => console.error(err));
+        .then((blob) => postTask(taskId, task.file, blob))
+        .catch((err) => {
+          showSnackbar(`Failed to upload task - ${err}`);
+        });
     }
   };
 
@@ -89,6 +90,7 @@ export default function Recorder({ taskId, task }: Props) {
           {task.text}
         </Typography>
       </Stack>
+      {snackbar}
     </>
   );
 }

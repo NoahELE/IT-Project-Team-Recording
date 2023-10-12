@@ -9,6 +9,7 @@ import { memo, useEffect, useRef, useState } from 'react';
 import { getAudioUrl } from '../api';
 import { Task } from '../entity';
 import { useCurrentTaskStore } from '../store';
+import { useShowSnackbar } from '../utils';
 
 function isOverflown(element: Element): boolean {
   return (
@@ -112,17 +113,21 @@ const GridCellExpand = memo(
 
 const AudioPlayer = memo(({ file }: { file: string }) => {
   const [audioSrc, setAudioSrc] = useState('');
+  const [snackbar, showSnackbar] = useShowSnackbar();
   useEffect(() => {
     getAudioUrl(file)
       .then((url) => setAudioSrc(url))
       .catch((err) => {
-        console.error(err);
+        showSnackbar(`Failed to fetch audio - ${err}`);
       });
-  }, [file]);
+  }, [file, showSnackbar]);
   return audioSrc === '' ? (
     'Loading'
   ) : (
-    <audio src={audioSrc} controls preload="metadata" />
+    <>
+      <audio src={audioSrc} controls preload="metadata" />
+      {snackbar}
+    </>
   );
 });
 

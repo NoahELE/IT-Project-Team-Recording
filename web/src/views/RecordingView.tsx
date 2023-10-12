@@ -27,7 +27,6 @@ export default function RecordingView() {
       });
   }, [navigate, showSnackbar]);
 
-  // const [currentTask, setCurrentTask] = useState<Task | null>(null);
   const currentTask = useCurrentTaskStore((state) => state.currentTask);
 
   const [rowSelectionModel, setRowSelectionModel] =
@@ -39,7 +38,7 @@ export default function RecordingView() {
         {currentTask !== null ? (
           <Recorder taskId={taskId} task={currentTask} />
         ) : (
-          <Typography variant="body2">
+          <Typography variant="body1">
             You haven't selected a task yet.
           </Typography>
         )}
