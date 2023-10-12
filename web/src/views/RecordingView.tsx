@@ -6,6 +6,7 @@ import { deleteTask, getAllTasks } from '../api';
 import Recorder from '../components/Recorder';
 import TaskList from '../components/TaskList';
 import { Task } from '../entity';
+import { useCurrentTaskStore } from '../store';
 import { useShowSnackbar } from '../utils';
 
 export default function RecordingView() {
@@ -26,7 +27,8 @@ export default function RecordingView() {
       });
   }, [navigate, showSnackbar]);
 
-  const [currentTask, setCurrentTask] = useState<Task | null>(null);
+  // const [currentTask, setCurrentTask] = useState<Task | null>(null);
+  const currentTask = useCurrentTaskStore((state) => state.currentTask);
 
   const [rowSelectionModel, setRowSelectionModel] =
     useState<GridRowSelectionModel>([]);
@@ -35,11 +37,7 @@ export default function RecordingView() {
     <Container sx={{ mt: 10 }}>
       <Stack spacing={5}>
         {currentTask !== null ? (
-          <Recorder
-            taskId={taskId}
-            text={currentTask.text}
-            file={currentTask.file}
-          />
+          <Recorder taskId={taskId} task={currentTask} />
         ) : (
           <Typography variant="body2">
             You haven't selected a task yet.
@@ -50,7 +48,6 @@ export default function RecordingView() {
 
         <TaskList
           tasks={tasks}
-          setCurrentTask={setCurrentTask}
           rowSelectionModel={rowSelectionModel}
           setRowSelectionModel={setRowSelectionModel}
         />

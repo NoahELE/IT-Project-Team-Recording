@@ -100,6 +100,11 @@ export async function postTask(
   });
 }
 
+/**
+ * Delete a recording task.
+ * @param taskId the task id
+ * @param blockId the block id
+ */
 export async function deleteTask(
   taskId: string,
   blockId: number,

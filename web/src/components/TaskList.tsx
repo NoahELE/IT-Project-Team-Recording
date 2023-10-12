@@ -8,6 +8,7 @@ import {
 import { memo, useEffect, useRef, useState } from 'react';
 import { getAudioUrl } from '../api';
 import { Task } from '../entity';
+import { useCurrentTaskStore } from '../store';
 
 function isOverflown(element: Element): boolean {
   return (
@@ -16,194 +17,189 @@ function isOverflown(element: Element): boolean {
   );
 }
 
-interface GridCellExpandProps {
-  value: string;
-  width: number;
-}
+const GridCellExpand = memo(
+  ({ width, value }: { value: string; width: number }) => {
+    const wrapper = useRef<HTMLDivElement>(null);
+    const cellDiv = useRef<HTMLElement>(null);
+    const cellValue = useRef<HTMLElement>(null);
+    const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
+    const [showFullCell, setShowFullCell] = useState(false);
+    const [showPopper, setShowPopper] = useState(false);
 
-const GridCellExpand = memo(({ width, value }: GridCellExpandProps) => {
-  const wrapper = useRef<HTMLDivElement>(null);
-  const cellDiv = useRef<HTMLElement>(null);
-  const cellValue = useRef<HTMLElement>(null);
-  const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
-  const [showFullCell, setShowFullCell] = useState(false);
-  const [showPopper, setShowPopper] = useState(false);
-
-  const handleMouseEnter = () => {
-    const isCurrentlyOverflown = isOverflown(cellValue.current!);
-    setShowPopper(isCurrentlyOverflown);
-    setAnchorEl(cellDiv.current);
-    setShowFullCell(true);
-  };
-
-  const handleMouseLeave = () => {
-    setShowFullCell(false);
-  };
-
-  useEffect(() => {
-    if (!showFullCell) {
-      return undefined;
-    }
-
-    function handleKeyDown(nativeEvent: KeyboardEvent) {
-      if (nativeEvent.key === 'Escape' || nativeEvent.key === 'Esc') {
-        setShowFullCell(false);
-      }
-    }
-
-    document.addEventListener('keydown', handleKeyDown);
-
-    return () => {
-      document.removeEventListener('keydown', handleKeyDown);
+    const handleMouseEnter = () => {
+      const isCurrentlyOverflown = isOverflown(cellValue.current!);
+      setShowPopper(isCurrentlyOverflown);
+      setAnchorEl(cellDiv.current);
+      setShowFullCell(true);
     };
-  }, [setShowFullCell, showFullCell]);
 
-  return (
-    <Box
-      ref={wrapper}
-      onMouseEnter={handleMouseEnter}
-      onMouseLeave={handleMouseLeave}
-      sx={{
-        alignItems: 'center',
-        lineHeight: '1.5rem',
-        width: '100%',
-        height: '100%',
-        position: 'relative',
-        display: 'flex',
-      }}
-    >
+    const handleMouseLeave = () => {
+      setShowFullCell(false);
+    };
+
+    useEffect(() => {
+      if (!showFullCell) {
+        return undefined;
+      }
+
+      function handleKeyDown(nativeEvent: KeyboardEvent) {
+        if (nativeEvent.key === 'Escape' || nativeEvent.key === 'Esc') {
+          setShowFullCell(false);
+        }
+      }
+
+      document.addEventListener('keydown', handleKeyDown);
+
+      return () => {
+        document.removeEventListener('keydown', handleKeyDown);
+      };
+    }, [setShowFullCell, showFullCell]);
+
+    return (
       <Box
-        ref={cellDiv}
+        ref={wrapper}
+        onMouseEnter={handleMouseEnter}
+        onMouseLeave={handleMouseLeave}
         sx={{
+          alignItems: 'center',
+          lineHeight: '1.5rem',
+          width: '100%',
           height: '100%',
-          width,
-          display: 'block',
-          position: 'absolute',
-          top: 0,
-        }}
-      />
-      <Box
-        ref={cellValue}
-        sx={{
-          whiteSpace: 'nowrap',
-          overflow: 'hidden',
-          textOverflow: 'ellipsis',
+          position: 'relative',
+          display: 'flex',
         }}
       >
-        {value}
-      </Box>
-      {showPopper && (
-        <Popper
-          open={showFullCell && anchorEl !== null}
-          anchorEl={anchorEl}
-          style={{ width, marginLeft: -17 }}
+        <Box
+          ref={cellDiv}
+          sx={{
+            height: '100%',
+            width,
+            display: 'block',
+            position: 'absolute',
+            top: 0,
+          }}
+        />
+        <Box
+          ref={cellValue}
+          sx={{
+            whiteSpace: 'nowrap',
+            overflow: 'hidden',
+            textOverflow: 'ellipsis',
+          }}
         >
-          <Paper
-            elevation={1}
-            style={{ minHeight: wrapper.current!.offsetHeight - 3 }}
+          {value}
+        </Box>
+        {showPopper && (
+          <Popper
+            open={showFullCell && anchorEl !== null}
+            anchorEl={anchorEl}
+            style={{ width, marginLeft: -17 }}
           >
-            <Typography variant="body2" style={{ padding: 8 }}>
-              {value}
-            </Typography>
-          </Paper>
-        </Popper>
-      )}
-    </Box>
+            <Paper
+              elevation={1}
+              style={{ minHeight: wrapper.current!.offsetHeight - 3 }}
+            >
+              <Typography variant="body2" style={{ padding: 8 }}>
+                {value}
+              </Typography>
+            </Paper>
+          </Popper>
+        )}
+      </Box>
+    );
+  },
+);
+
+const AudioPlayer = memo(({ file }: { file: string }) => {
+  const [audioSrc, setAudioSrc] = useState('');
+  useEffect(() => {
+    getAudioUrl(file)
+      .then((url) => setAudioSrc(url))
+      .catch((err) => {
+        console.error(err);
+      });
+  }, [file]);
+  return audioSrc === '' ? (
+    'Loading'
+  ) : (
+    <audio src={audioSrc} controls preload="metadata" />
   );
 });
 
-function renderCellExpand(params: GridRenderCellParams<Task, string>) {
+const SelectButton = memo(({ task }: { task: Task }) => {
+  const setCurrentTask = useCurrentTaskStore((state) => state.setCurrentTask);
   return (
-    <GridCellExpand
-      value={params.value || ''}
-      width={params.colDef.computedWidth}
-    />
+    <>
+      <Button
+        variant="outlined"
+        onClick={(e) => {
+          e.stopPropagation();
+          setCurrentTask(task);
+        }}
+      >
+        Select
+      </Button>
+    </>
   );
-}
+});
+
+const columns: GridColDef[] = [
+  { field: 'id', headerName: 'ID', width: 100 },
+  {
+    field: 'file',
+    headerName: 'Audio File',
+    width: 400,
+    sortable: false,
+    align: 'center',
+    renderCell: (params: GridRenderCellParams<Task, string>) => {
+      if (params.row.has_existing) {
+        return (
+          <Box m={1}>
+            <AudioPlayer file={params.row.file} />
+          </Box>
+        );
+      } else {
+        return <Typography variant="body2">No audio file</Typography>;
+      }
+    },
+  },
+  {
+    field: 'text',
+    headerName: 'Text',
+    width: 300,
+    sortable: false,
+    renderCell: (params: GridRenderCellParams<Task, string>) => {
+      return (
+        <GridCellExpand
+          value={params.value || ''}
+          width={params.colDef.computedWidth}
+        />
+      );
+    },
+  },
+  {
+    field: 'select',
+    headerName: 'Select',
+    width: 200,
+    sortable: false,
+    align: 'center',
+    renderCell: (params: GridRenderCellParams<Task, string>) => {
+      return <SelectButton task={params.row} />;
+    },
+  },
+];
 
 interface Props {
   tasks: Task[];
-  setCurrentTask: (task: Task | null) => void;
   rowSelectionModel?: GridRowSelectionModel;
   setRowSelectionModel?: (rowSelectionModel: GridRowSelectionModel) => void;
 }
+
 export default function TaskList({
   tasks,
-  setCurrentTask,
   rowSelectionModel,
   setRowSelectionModel,
 }: Props) {
-  function AudioPlayer({ file }: { file: string }) {
-    const [audioSrc, setAudioSrc] = useState('');
-    useEffect(() => {
-      getAudioUrl(file)
-        .then((url) => setAudioSrc(url))
-        .catch((err) => {
-          console.error(err);
-        });
-    }, [file]);
-    return audioSrc === '' ? (
-      'Loading'
-    ) : (
-      <audio src={audioSrc} controls preload="metadata" />
-    );
-  }
-
-  function ModifyButton({ task }: { task: Task }) {
-    return (
-      <>
-        <Button
-          variant="outlined"
-          onClick={(e) => {
-            e.stopPropagation();
-            setCurrentTask(task);
-          }}
-        >
-          Record
-        </Button>
-      </>
-    );
-  }
-
-  const columns: GridColDef[] = [
-    { field: 'id', headerName: 'ID', width: 50 },
-    {
-      field: 'file',
-      headerName: 'Audio File',
-      width: 500,
-      sortable: false,
-      align: 'center',
-      renderCell: (params: GridRenderCellParams<Task, string>) => {
-        if (params.row.has_existing) {
-          return (
-            <Box m={1}>
-              <AudioPlayer file={params.row.file} />
-            </Box>
-          );
-        } else {
-          return <Typography variant="body2">No audio file</Typography>;
-        }
-      },
-    },
-    {
-      field: 'text',
-      headerName: 'Text',
-      width: 200,
-      sortable: false,
-      renderCell: renderCellExpand,
-    },
-    {
-      field: 'action',
-      headerName: 'Action',
-      width: 200,
-      sortable: false,
-      align: 'center',
-      renderCell: (params: GridRenderCellParams<Task, string>) => {
-        return <ModifyButton task={params.row} />;
-      },
-    },
-  ];
-
   return (
     <DataGrid
       rows={tasks}
