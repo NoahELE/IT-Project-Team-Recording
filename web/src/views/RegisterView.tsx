@@ -13,10 +13,11 @@ import {
   DialogContent,
   DialogActions,
 } from '@mui/material';
-import { ChangeEvent, FormEvent, useEffect, useState } from 'react';
+import { ChangeEvent, FormEvent, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { register } from '../api';
 import { useShowSnackbar } from '../utils';
+import { termsAndConditionsContent } from '../T&D.ts';
 
 const emailValidation = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const passwordValidation = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{6,}$/;
@@ -28,7 +29,6 @@ export default function RegisterView() {
   const [confirmPassword, setConfirmPassword] = useState('');
   const navigate = useNavigate();
   const [dialogOpen, setDialogOpen] = useState(false);
-  const [TnDOpen, setTnDOpen] = useState('');
 
   const handleEmailFormat = (event: ChangeEvent<HTMLInputElement>) => {
     const email = event.target.value;
@@ -47,21 +47,6 @@ export default function RegisterView() {
   const handleDialogClose = () => {
     setDialogOpen(false);
   };
-  useEffect(() => {
-    fetch('../src/assets/T&D.txt')
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error('Failed to fetch txt file');
-        }
-        return response.text();
-      })
-      .then((data) => {
-        setTnDOpen(data);
-      })
-      .catch((error) => {
-        console.error('Error fetching txt file:', error);
-      });
-  }, []);
 
   const [snackbar, showSnackbar] = useShowSnackbar();
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
@@ -223,7 +208,7 @@ export default function RegisterView() {
               >
                 <DialogTitle>Terms & Conditions</DialogTitle>
                 <DialogContent>
-                  <pre>{TnDOpen}</pre>
+                  <pre>{termsAndConditionsContent}</pre>
                 </DialogContent>
                 <DialogActions>
                   <Button onClick={handleDialogClose} color="primary">
