@@ -26,6 +26,17 @@ export default function ProfileView() {
   const [confirmPassword, setConfirmPassword] = useState('');
   const navigate = useNavigate();
 
+  function findTime() {
+    const currentHour = new Date().getHours();
+    if (currentHour < 12) {
+      return 'Good morning';
+    } else if (currentHour < 18) {
+      return 'Good afternoon';
+    } else {
+      return 'Good evening';
+    }
+  }
+
   useEffect(() => {
     const token = localStorage.getItem('token');
     if (!token) {
@@ -153,7 +164,7 @@ export default function ProfileView() {
         }}
       >
         <Typography component="h1" variant="h5">
-          Hello
+          {findTime()}
         </Typography>
         <Button
           variant="text"
