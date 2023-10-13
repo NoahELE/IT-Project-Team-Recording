@@ -1,0 +1,43 @@
+1.	Introduction
+    a.	Purpose
+        i.	Welcome to Recording Management. This application is designed to provide a platform for users to select the language you are familiar with, pick the relevant content your need to record, then record, upload, and can share their recordings.
+    b.	Purpose and scope of application of terms and conditions
+        i.	The purpose of these Terms & Conditions ("Terms") is to set out the rules and responsibilities of users when using Recording Management. These Terms apply to all users who access and use Recording Management. By registering, accessing or using our services, you agree to be bound by these Terms. If you do not agree to these Terms, please do not access or use the Application.
+2.	Register and Account
+    a.	How to register an account
+        i.	To use Recording Management, users must first register for an account. During the registration process, the user will be asked to provide personal information such as a username and e-mail address and password. Users are required to provide valid, truthful and complete information and to update this information as it changes.
+    b.	User responsibilities
+        i.	Users should be obliged to keep the information in their accounts secure. We recommend that users choose a strong password and change it regularly. Users should notify us immediately if they believe their account has been illegally accessed by another user. Users should understand and take full responsibility for all activities conducted with their accounts.
+    c.	Conditions for Account Termination or Suspension
+        i.	Recording Management reserves the right to suspend, terminate, or restrict a user’s access to the application at any time, for any reason violation of these terms and without additional notice. We may suspend or terminate a user's account if we believe that the user's behavior may expose us to liability or interfere with other users' use or enjoyment of the Services.
+3.	Data and privacy
+    a.	How we collect use and store user data
+        i.	When users register for a Recording Management account or use our services, we may collect certain personal information they provide, such as usernames, e-mail addresses, and passwords. In addition, to improve the user experience, we use JWT to verify user information.
+    b.	How users can access and correct their data
+        i.	Users can change their personal information at any time by logging into their account. Users can contact us if they need to delete their account.
+    c.	Data sharing and disclosure
+        i.	We do not share any user information with third parties unless the user has consented.
+4.	User submitted content
+    a.	Ownership and License of User Uploaded Content.
+        i.	Users retain ownership of all content they upload to Recording Management. However, when the User uploads voice files, the User grants Recording Management and C-LARA a royalty-free and transferable license to.
+    b.	Right to review and remove uploaded content
+        i.	Recording Management will reserve the right to review content uploaded by users. If we find that the content of their audio files violates these Terms and Conditions or any applicable laws or regulations, or if we believe that the content is inappropriate or may be harmful to other Users or Recording Management, we reserve the right to remove or modify the content without notice to the User. Users agree that Recording Management will not be liable for the removal or non-removal of content.
+5.	usage norms
+    a.	Code of Conduct to be followed by Users when using the Services.
+        i.	Users shall comply with all applicable laws and regulations.
+        ii.	Users may not use the Recording Management Services for any illegal or unauthorized activity.
+        iii.	Users should respect other users
+        iv.	Users should not record content that is unrelated to the target content
+    b.	Prohibited behaviors and consequences
+        i.	Users shall not attempt to gain unauthorized access to, interfere with, disrupt or interrupt any portion of the Recording Management Services, servers or networks connected to the Services.
+        ii.	Users may not use the Recording Management Services to transmit viruses, spyware, malware or other harmful computer code.
+        iii.	Users shall not impersonate any other person or entity, or falsely represent or misrepresent their affiliation with any person or entity.
+        iv.	Users may not use the Recording Management Services for any form of automated access or data collection.
+6.	statement denying or limiting responsibility
+    a.	"As is" provision of services.
+        i.	The Recording Management Services are provided on an "as is" and "as available" basis. this means that we disclaim all warranties, express or implied, including, but not limited to, implied warranties of merchantability, fitness for a particular purpose or non-infringement.
+        ii.	We do not guarantee that the Recording Management Service will always be available, timely, secure or error-free. The use of the Recording Management Service is entirely at the user's own risk.
+    b.	Disclaimer of liability for third-party content or content uploaded by users.
+        i.	Third party platforms, C-LARA, may collect personal information and recorded audio content from users and use it for other purposes for which we are not responsible.
+7.	Other articles
+    a.	All copyright, intellectual property rights and other related rights in the Application are owned exclusively by University of Melbourne and may not be reproduced, distributed, transmitted, sold, rented, displayed, performed, played, broadcast or used in any other way by any person or organization without the express written permission of University of Melbourne. No person or organization may reproduce, distribute, transmit, sell, rent, display, perform, broadcast or in any other way use any part of the Application or modify or create derivative works in connection with the Application without the express written permission of University of Melbourne.

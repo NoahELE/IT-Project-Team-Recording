@@ -8,8 +8,12 @@ import {
   Link,
   TextField,
   Typography,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
 } from '@mui/material';
-import { ChangeEvent, FormEvent, useState } from 'react';
+import { ChangeEvent, FormEvent, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { register } from '../api';
 import { useShowSnackbar } from '../utils';
@@ -23,6 +27,8 @@ export default function RegisterView() {
   const [isEmailValid, setIsEmailValid] = useState<boolean | null>(null);
   const [confirmPassword, setConfirmPassword] = useState('');
   const navigate = useNavigate();
+  const [dialogOpen, setDialogOpen] = useState(false);
+  const [TnDOpen, setTnDOpen] = useState('');
 
   const handleEmailFormat = (event: ChangeEvent<HTMLInputElement>) => {
     const email = event.target.value;
@@ -35,6 +41,27 @@ export default function RegisterView() {
   const handleTerm = (event: ChangeEvent<HTMLInputElement>) => {
     setIsChecked(event.target.checked);
   };
+  const handleDialogOpen = () => {
+    setDialogOpen(true);
+  };
+  const handleDialogClose = () => {
+    setDialogOpen(false);
+  };
+  useEffect(() => {
+    fetch('../src/assets/T&D.txt')
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error('Failed to fetch txt file');
+        }
+        return response.text();
+      })
+      .then((data) => {
+        setTnDOpen(data);
+      })
+      .catch((error) => {
+        console.error('Error fetching txt file:', error);
+      });
+  }, []);
 
   const [snackbar, showSnackbar] = useShowSnackbar();
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
@@ -179,8 +206,31 @@ export default function RegisterView() {
                     onChange={handleTerm}
                   />
                 }
-                label="Accept Terms & Conditions"
+                label={
+                  <>
+                    Accept{' '}
+                    <Link href="#" onClick={handleDialogOpen}>
+                      Terms & Conditions
+                    </Link>
+                  </>
+                }
               />
+              <Dialog
+                open={dialogOpen}
+                onClose={handleDialogClose}
+                maxWidth="xl"
+                fullWidth={true}
+              >
+                <DialogTitle>Terms & Conditions</DialogTitle>
+                <DialogContent>
+                  <pre>{TnDOpen}</pre>
+                </DialogContent>
+                <DialogActions>
+                  <Button onClick={handleDialogClose} color="primary">
+                    Close
+                  </Button>
+                </DialogActions>
+              </Dialog>
             </Grid>
           </Grid>
           <Button
