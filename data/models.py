@@ -1,4 +1,7 @@
 from django.db import models
+import os
+
+destination = os.environ["localpath"]
 
 class TaskManager(models.Manager):
     use_in_migrations = True
@@ -42,24 +45,34 @@ class TaskManager(models.Manager):
     def get_users_tasks(self, username):
         return self.filter(user=username)
 
-    # def submitUserTask(self, task_id, block_index, link):
-    #     completed_task = TaskData.objects.filter(task_id = task_id, block_index = block_index).first()
-    #     completed_task.file = link
-    #     completed_task.completed = True
-    #     completed_task.save()
+    def submitTask(self, task_id, block_index, audiofile):
+        completed_task = TaskData.objects.filter(task_id = task_id, block_index = block_index).first()
+        
+        completed_task.completed = True
+        completed_task.save()
 
-    #     task_blocks = TaskData.objects.filter(task_id = task_id) 
+        task_blocks = TaskData.objects.filter(task_id = task_id) 
+        file_path = destination + completed_task.file
 
-    #     if self.__check_task_completed__(task_id):
-    #         task = TaskMetaData.objects.filter(task_id = task_id).first()
-    #         task.completed = True
-    #         task.save()
+        with open(file_path, "wb") as file:
+            file.write(audiofile)
+
+        file.close()
+
+        if self.__check_task_completed__(task_id):
+            task = TaskMetaData.objects.filter(task_id = task_id).first()
+            task.completed = True
+            task.save()
 
     def change_task_user(self, request):
         task = TaskMetaData.objects.filter(task_id = request.task_id).first()
         task.user = request['user']
         task.completed = True
         task.save()
+
+    def clear_task(self, request):
+        # remove existing audio file code required
+        task = TaskMetaData.objects.user
 
 class TaskMetaData(models.Model):
     task_id = models.CharField(unique=True, max_length=255)

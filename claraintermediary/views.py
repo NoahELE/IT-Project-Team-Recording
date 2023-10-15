@@ -48,7 +48,7 @@ class AddBatchJobView(APIView):
         return Response(status=status.HTTP_200_OK)
     
 
-class DeleteJobsWithTaskID(APIView):
+class DeleteJobsWithTaskIDView(APIView):
     permission_classes = [IsAuthenticated]
 
     def post(self, request):
@@ -59,7 +59,7 @@ class DeleteJobsWithTaskID(APIView):
 
         return Response(status=status.HTTP_200_OK)
     
-class ClearTaskID(APIView):
+class ClearTaskIDView(APIView):
     permission_classes = [IsAuthenticated]
 
     def post(self, request):
@@ -71,7 +71,7 @@ class ClearTaskID(APIView):
         return Response(status=status.HTTP_200_OK)
     
     
-class ChangeUserOnTaskID(APIView):
+class ChangeUserOnTaskIDView(APIView):
     permissions_classes = [IsAuthenticated]
 
     def post(self, request):
@@ -81,7 +81,7 @@ class ChangeUserOnTaskID(APIView):
         TaskManager.change_task_user(TaskUserSerializer(request))
         return Response(status=status.HTTP_200_OK)
     
-class FilterUsers(APIView):
+class FilterUsersView(APIView):
     permission_classes = [IsAuthenticated]
 
     def get(self, request):
