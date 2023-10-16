@@ -26,7 +26,7 @@ SECRET_KEY = 'django-insecure-cg_*h)!!cy4gwe62sw6qgljuzhz%pht85sm9d*s3ii^4$r54i9
 IS_HEROKU_APP = "DYNO" in os.environ and not "CI" in os.environ
 
 # SECURITY WARNING: don't run with debug turned on in production!
-if not IS_HEROKU_APP:
+if IS_HEROKU_APP:
     DEBUG = True
 
 if IS_HEROKU_APP:
