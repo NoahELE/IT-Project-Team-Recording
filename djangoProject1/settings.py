@@ -148,7 +148,7 @@ SIMPLE_JWT = {
 
 }
 CORS_ALLOWED_ORIGINS = [
-    'https://it-project-team-recording.vercel.app/',  # Adjust with your React app's URL
+    'https://it-project-team-recording.vercel.app',  # Adjust with your React app's URL
 
 ]
 # Internationalization
