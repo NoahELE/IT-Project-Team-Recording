@@ -91,11 +91,11 @@ export async function getAudioUrl(file: string): Promise<string> {
  */
 export async function postTask(
   taskId: string,
-  file: string,
+  blockId: string,
   blob: Blob,
 ): Promise<void> {
   setJwtToken();
-  await axios.post(`/api/task/${taskId}/${encodeURI(file)}`, blob, {
+  await axios.post(`/api/task/${taskId}/${blockId}`, blob, {
     headers: { 'Content-Type': blob.type },
   });
 }

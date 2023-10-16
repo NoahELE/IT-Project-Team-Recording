@@ -36,7 +36,7 @@ export default function Recorder({ taskId, task }: Props) {
     if (mediaBlobUrl !== undefined) {
       fetch(mediaBlobUrl)
         .then((res) => res.blob())
-        .then((blob) => postTask(taskId, task.file, blob))
+        .then((blob) => postTask(taskId, task.id, blob))
         .catch((err) => {
           showSnackbar(`Failed to upload task - ${err}`);
         });
