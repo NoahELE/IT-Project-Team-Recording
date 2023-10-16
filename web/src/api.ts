@@ -25,7 +25,7 @@ export async function login(user: UserLogin): Promise<void> {
  * @param user the user that registers
  */
 export async function register(user: User): Promise<void> {
-  await axios.post('/api/user/register', user);
+  await axios.post('/api/user/signup', user);
 }
 
 /**
