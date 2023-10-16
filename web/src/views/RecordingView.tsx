@@ -1,12 +1,12 @@
-import { Button, Container, Divider, Stack } from '@mui/material';
+import { Button, Container, Divider, Stack, Typography } from '@mui/material';
 import { GridRowSelectionModel } from '@mui/x-data-grid';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { deleteRecording, getAllRecordings, updateRecording } from '../api';
-import ModifyRecordingModal from '../components/ModifyRecordingModal';
+import { deleteTask, getAllTasks } from '../api';
 import Recorder from '../components/Recorder';
-import RecordingList from '../components/RecordingList';
-import { Recording } from '../entity';
+import TaskList from '../components/TaskList';
+import { Task } from '../entity';
+import { useCurrentTaskStore } from '../store';
 import { useShowSnackbar } from '../utils';
 
 export default function RecordingView() {
@@ -14,16 +14,20 @@ export default function RecordingView() {
 
   const [snackbar, showSnackbar] = useShowSnackbar();
 
-  const [recordings, setRecordings] = useState<Recording[]>([]);
+  const [tasks, setTasks] = useState<Task[]>([]);
+  const [taskId, setTaskId] = useState('');
   useEffect(() => {
-    getAllRecordings()
-      .then((recordings) => {
-        setRecordings(recordings);
+    getAllTasks()
+      .then((taskResponse) => {
+        setTasks(taskResponse.data);
+        setTaskId(taskResponse.task_id);
       })
       .catch((error) => {
-        showSnackbar(`Failed to fetch recordings - ${error}`);
+        showSnackbar(`Failed to fetch tasks - ${error}`);
       });
   }, [navigate, showSnackbar]);
+
+  const currentTask = useCurrentTaskStore((state) => state.currentTask);
 
   const [rowSelectionModel, setRowSelectionModel] =
     useState<GridRowSelectionModel>([]);
@@ -31,12 +35,18 @@ export default function RecordingView() {
   return (
     <Container sx={{ mt: 10 }}>
       <Stack spacing={5}>
-        <Recorder />
+        {currentTask !== null ? (
+          <Recorder taskId={taskId} task={currentTask} />
+        ) : (
+          <Typography variant="body1">
+            You haven't selected a task yet.
+          </Typography>
+        )}
 
         <Divider variant="middle" />
 
-        <RecordingList
-          recordings={recordings}
+        <TaskList
+          tasks={tasks}
           rowSelectionModel={rowSelectionModel}
           setRowSelectionModel={setRowSelectionModel}
         />
@@ -45,11 +55,11 @@ export default function RecordingView() {
           <Button
             onClick={() => {
               rowSelectionModel.forEach((id) => {
-                if (typeof id !== 'string') {
-                  throw new Error('Expected id to be string');
+                if (typeof id !== 'number') {
+                  throw new Error('Expected id to be number');
                 }
 
-                deleteRecording(id).catch((error) => {
+                deleteTask(taskId, id).catch((error) => {
                   showSnackbar(
                     `Failed to delete recording with id ${id} - ${error}`,
                   );
@@ -59,42 +69,8 @@ export default function RecordingView() {
           >
             Delete Selected
           </Button>
-          <Button
-            onClick={() => {
-              if (rowSelectionModel.length !== 1) {
-                showSnackbar(
-                  'Please select only one recording to update',
-                  'warning',
-                );
-                return;
-              }
-              const id = rowSelectionModel[0];
-              if (typeof id !== 'string') {
-                throw new Error('Expected id to be string');
-              }
-              const recording = recordings.find((r) => r.id === id);
-              if (recording === undefined) {
-                showSnackbar(
-                  `Cannot to find recording with id ${id}`,
-                  'warning',
-                );
-                return;
-              }
-
-              // TODO: create a modal to update the recording
-
-              updateRecording(id, recording).catch((error) => {
-                showSnackbar(
-                  `Failed to update recording with id ${id} - ${error}`,
-                );
-              });
-            }}
-          >
-            Update Selected
-          </Button>
         </Stack>
       </Stack>
-      <ModifyRecordingModal open={true} />
       {snackbar}
     </Container>
   );

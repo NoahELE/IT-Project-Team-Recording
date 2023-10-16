@@ -1,8 +1,8 @@
 import axios from 'axios';
 import {
-  ChangePassword,
+  ChangePasswordDto,
   EditProfile,
-  Recording,
+  TaskResponse,
   Token,
   User,
   UserLogin,
@@ -28,11 +28,15 @@ export async function register(user: User): Promise<void> {
   await axios.post('/api/user/register', user);
 }
 
+/**
+ *  Change the password of current user.
+ * @param changePasswordDto the old and new password
+ */
 export async function changePassword(
-  changePassword: ChangePassword,
+  changePasswordDto: ChangePasswordDto,
 ): Promise<void> {
   setJwtToken();
-  await axios.post('/api/user/change-password', changePassword);
+  await axios.post('/api/user/change-password', changePasswordDto);
 }
 
 export async function editProfile(editProfile: EditProfile): Promise<void> {
@@ -57,32 +61,54 @@ export function setJwtToken(): void {
 }
 
 /**
- * Get all recordings of current user.
- * @returns the recordings of current user
+ * Get all recording tasks of current user.
+ * @returns the recording tasks of current user
  */
-export async function getAllRecordings(): Promise<Recording[]> {
+export async function getAllTasks(): Promise<TaskResponse> {
   setJwtToken();
-  const response = await axios.get<Recording[]>('/api/recording');
+  const response = await axios.get<TaskResponse>('/api/task');
   return response.data;
 }
 
 /**
- * Delete a recording with the given id.
- * @param id the id of the recording to be deleted
+ *  Get the audio url of a recording task.
+ * @param file the file name of the audio
+ * @returns
  */
-export async function deleteRecording(id: string): Promise<void> {
+export async function getAudioUrl(file: string): Promise<string> {
   setJwtToken();
-  await axios.delete(`/api/recording/${id}`);
+  const response = await axios.get<Blob>(`/api/data/${encodeURI(file)}`, {
+    responseType: 'blob',
+  });
+  return URL.createObjectURL(response.data);
 }
 
 /**
- * Update a recording.
- * @param recording the recording to be updated
+ * Post an audio to a recording task.
+ * @param taskId the id of the task
+ * @param file the file name of the audio
+ * @param blob the blob of the audio
  */
-export async function updateRecording(
-  id: string,
-  recording: Recording,
+export async function postTask(
+  taskId: string,
+  blockId: string,
+  blob: Blob,
 ): Promise<void> {
   setJwtToken();
-  await axios.put(`/api/recording/${id}`, recording);
+  await axios.post(`/api/task/${taskId}/${blockId}`, blob, {
+    headers: { 'Content-Type': blob.type },
+  });
+}
+
+/**
+ * Delete a recording task.
+ * @param taskId the task id
+ * @param blockId the block id
+ */
+export async function deleteTask(
+  taskId: string,
+  blockId: number,
+): Promise<void> {
+  setJwtToken();
+  await axios.delete(`/api/task/${taskId}/${blockId}`);
 }

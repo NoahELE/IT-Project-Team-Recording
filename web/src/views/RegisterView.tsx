@@ -8,11 +8,16 @@ import {
   Link,
   TextField,
   Typography,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
 } from '@mui/material';
 import { ChangeEvent, FormEvent, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { register } from '../api';
 import { useShowSnackbar } from '../utils';
+import { termsAndConditionsContent } from '../T&D.ts';
 
 const emailValidation = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const passwordValidation = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{6,}$/;
@@ -23,6 +28,7 @@ export default function RegisterView() {
   const [isEmailValid, setIsEmailValid] = useState<boolean | null>(null);
   const [confirmPassword, setConfirmPassword] = useState('');
   const navigate = useNavigate();
+  const [dialogOpen, setDialogOpen] = useState(false);
 
   const handleEmailFormat = (event: ChangeEvent<HTMLInputElement>) => {
     const email = event.target.value;
@@ -34,6 +40,12 @@ export default function RegisterView() {
   };
   const handleTerm = (event: ChangeEvent<HTMLInputElement>) => {
     setIsChecked(event.target.checked);
+  };
+  const handleDialogOpen = () => {
+    setDialogOpen(true);
+  };
+  const handleDialogClose = () => {
+    setDialogOpen(false);
   };
 
   const [snackbar, showSnackbar] = useShowSnackbar();
@@ -179,8 +191,31 @@ export default function RegisterView() {
                     onChange={handleTerm}
                   />
                 }
-                label="Accept Terms & Conditions"
+                label={
+                  <>
+                    Accept{' '}
+                    <Link href="#" onClick={handleDialogOpen}>
+                      Terms & Conditions
+                    </Link>
+                  </>
+                }
               />
+              <Dialog
+                open={dialogOpen}
+                onClose={handleDialogClose}
+                maxWidth="xl"
+                fullWidth={true}
+              >
+                <DialogTitle>Terms & Conditions</DialogTitle>
+                <DialogContent>
+                  <pre>{termsAndConditionsContent}</pre>
+                </DialogContent>
+                <DialogActions>
+                  <Button onClick={handleDialogClose} color="primary">
+                    Close
+                  </Button>
+                </DialogActions>
+              </Dialog>
             </Grid>
           </Grid>
           <Button

@@ -26,6 +26,17 @@ export default function ProfileView() {
   const [confirmPassword, setConfirmPassword] = useState('');
   const navigate = useNavigate();
 
+  function findTime() {
+    const currentHour = new Date().getHours();
+    if (currentHour < 12) {
+      return 'Good morning';
+    } else if (currentHour < 18) {
+      return 'Good afternoon';
+    } else {
+      return 'Good evening';
+    }
+  }
+
   useEffect(() => {
     const token = localStorage.getItem('token');
     if (!token) {
@@ -44,18 +55,18 @@ export default function ProfileView() {
   };
 
   const handleChangePasswordClick = () => {
-    if (openPanel === 'changePassword') {
+    if (openPanel === 'changePasswordOpen') {
       setOpenPanel(null);
     } else {
-      setOpenPanel('changePassword');
+      setOpenPanel('changePasswordOpen');
     }
   };
 
   const handleEditProfileClick = () => {
-    if (openPanel === 'editProfile') {
+    if (openPanel === 'editProfileOpen') {
       setOpenPanel(null);
     } else {
-      setOpenPanel('editProfile');
+      setOpenPanel('editProfileOpen');
     }
   };
 
@@ -70,26 +81,12 @@ export default function ProfileView() {
   const handleChangePassword = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
-    const username = data.get('username');
-    const email = data.get('email');
     const oldPassword = data.get('oldPassword');
     const newPassword = data.get('newPassword');
     const newConfirmPassword = data.get('newConfirmPassword');
 
-    if (
-      !username ||
-      !email ||
-      !oldPassword ||
-      !newPassword ||
-      !newConfirmPassword
-    ) {
+    if (!oldPassword || !newPassword || !newConfirmPassword) {
       showSnackbar('Please fill all the text field!');
-      return;
-    }
-
-    // Check is email format correct
-    if (!emailValidation.test(email as string)) {
-      showSnackbar('Invalid email address.');
       return;
     }
 
@@ -110,8 +107,6 @@ export default function ProfileView() {
     }
 
     const userData = {
-      username: username as string,
-      email: email as string,
       oldPassword: oldPassword as string,
       newPassword: newPassword as string,
     };
@@ -169,7 +164,7 @@ export default function ProfileView() {
         }}
       >
         <Typography component="h1" variant="h5">
-          Hello User TODO
+          {findTime()}
         </Typography>
         <Button
           variant="text"
@@ -179,7 +174,7 @@ export default function ProfileView() {
           onClick={handleChangePasswordClick}
         >
           <ListItemText primary="Want to change password?" />
-          {openPanel === 'changePassword' ? <ExpandLess /> : <ExpandMore />}
+          {openPanel === 'changePasswordOpen' ? <ExpandLess /> : <ExpandMore />}
         </Button>
         <Box
           component="form"
@@ -188,32 +183,11 @@ export default function ProfileView() {
           sx={{ mt: 3 }}
         >
           <Collapse
-            in={openPanel === 'changePassword'}
+            in={openPanel === 'changePasswordOpen'}
             timeout="auto"
             unmountOnExit
           >
             <Stack spacing={2} width={500}>
-              <TextField
-                required
-                fullWidth
-                id="username"
-                label="User Name"
-                name="username"
-                autoComplete="username"
-              />
-              <TextField
-                required
-                fullWidth
-                id="email"
-                label="Email Address"
-                name="email"
-                autoComplete="email"
-                onChange={handleEmailFormat}
-                error={isEmailValid === false}
-                helperText={
-                  isEmailValid === false ? 'Invalid email address.' : ''
-                }
-              />
               <TextField
                 margin="normal"
                 required
@@ -273,7 +247,7 @@ export default function ProfileView() {
           onClick={handleEditProfileClick}
         >
           <ListItemText primary="Edit Profile" />
-          {openPanel === 'editProfile' ? <ExpandLess /> : <ExpandMore />}
+          {openPanel === 'editProfileOpen' ? <ExpandLess /> : <ExpandMore />}
         </Button>
         <Box
           component="form"
@@ -282,7 +256,7 @@ export default function ProfileView() {
           sx={{ mt: 3 }}
         >
           <Collapse
-            in={openPanel === 'editProfile'}
+            in={openPanel === 'editProfileOpen'}
             timeout="auto"
             unmountOnExit
           >

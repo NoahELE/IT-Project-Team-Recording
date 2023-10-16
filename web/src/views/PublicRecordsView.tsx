@@ -1,9 +1,9 @@
 import { Container, Stack } from '@mui/material';
 import PublicRecordsList from '../components/PublicRecordsList';
-import { Recording } from '../entity';
+import { PublicRecord } from '../entity';
 
 // HACK: mock data of the recordings
-const recordings: Recording[] = [
+const records: PublicRecord[] = [
   {
     id: '1',
     name: 'Recording 1',
@@ -22,7 +22,7 @@ export default function PublicRecordsView() {
   return (
     <Container sx={{ mt: 10 }}>
       <Stack spacing={5}>
-        <PublicRecordsList recordings={recordings} />
+        <PublicRecordsList records={records} />
       </Stack>
     </Container>
   );
