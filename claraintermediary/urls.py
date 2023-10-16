@@ -1,10 +1,10 @@
 from django.urls import path
-from .views import AddBatchJobView, DeleteJobsWithTaskIDView, ClearTaskIDView, ChangeUserOnTaskIDView, FilterUsersView
+from .views import AddBatchJobView, TaskView, ClearTaskIDView, UserTasksView, FilterUsersView
 
 urlpatterns = [
         path('add-batch-job', AddBatchJobView.as_view(), name='add-batch-job'),
-        path('delete-task', DeleteJobsWithTaskIDView.as_view(), name='delete-task'),
-        path('clear-task', ClearTaskIDView.as_view(), name='clear-task'),
-        path('change-user-task', ChangeUserOnTaskIDView.as_view(), name='change-user-task'),
-        path('get-users', FilterUsersView.as_view(), name='get-users')
+        path('task/<int:task_id>/<int:block_id>/', TaskView.as_view(), name='delete-task'),
+        path('data/<int:task_id>/<string:filepath>', TaskView.as_view(), name='submit-task'),
+        path('task/', FilterUsersView.as_view(), name='get-users')
+        path('data/<string:filepath>', )
 ]

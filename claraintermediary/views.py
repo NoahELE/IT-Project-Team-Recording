@@ -48,10 +48,10 @@ class AddBatchJobView(APIView):
         return Response(status=status.HTTP_200_OK)
     
 
-class DeleteJobsWithTaskIDView(APIView):
+class TaskView(APIView):
     permission_classes = [IsAuthenticated]
 
-    def post(self, request):
+    def delete(self, request):
         required_keys = ['task_id']
         check_required_keys(POST, required_keys, request)
 
@@ -71,7 +71,7 @@ class ClearTaskIDView(APIView):
         return Response(status=status.HTTP_200_OK)
     
     
-class ChangeUserOnTaskIDView(APIView):
+class UserTasksView(APIView):
     permissions_classes = [IsAuthenticated]
 
     def post(self, request):
@@ -87,5 +87,9 @@ class FilterUsersView(APIView):
     def get(self, request):
         required_keys = ['language']
         check_required_keys(GET, required_keys, request)
+
+
+
+        return Response(status=status.HTTP_200_OK)
 
         # UserManager function call to return usernames filtered on language
