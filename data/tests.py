@@ -1,3 +1,5 @@
+import os
+from bitstring import BitArray
 from django.test import TestCase
 from django.utils import timezone
 from data.models import TaskData, TaskMetaData
@@ -52,7 +54,6 @@ request3 = {
     "privacy": False,
 }
 
-
 class AudioDataManagerTest(TestCase):
     
     def setUp(self):
@@ -90,7 +91,7 @@ class AudioDataManagerTest(TestCase):
         self.assertEqual(data_result.count(), 3)
         self.assertEqual(metadata_result.count(), 1)
 
-        data_manager.delete_task(request)
+        data_manager.delete_task(request['task_id'])
 
         data_result = data_manager.filter(task_id = request['task_id'])
         metadata_result = metadata_manager.filter(task_id = request['task_id'])
@@ -99,6 +100,13 @@ class AudioDataManagerTest(TestCase):
         self.assertEqual(metadata_result.count(), 0)
 
     def test_get_users_tasks(self):
-        result = metadata_manager.filter(user = "user_example")
+        result = data_manager.get_users_tasks(request["user"])
 
-        self.assertEqual(result.count(), 2)
+        self.assertEqual(len(result), 2)
+
+    def test_get_audio(self):
+        filepath = "tests/test.mp3"
+
+        result = data_manager.get_audio(filepath)
+
+        self.assertEqual(result, None)

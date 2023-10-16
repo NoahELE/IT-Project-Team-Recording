@@ -68,7 +68,7 @@ class TaskView(APIView):
         if request.GET.get('task_id') is None or request.GET.get('block_id') is None:
             return Response(status=status.HTTP_404_NOT_FOUND)
         
-        TaskManager.submitTask(task_id=request.GET.get('task_id'), block_index=request.GET.get('block_id'), audiofile=request['binary'])
+        TaskManager.submit_task(task_id=request.GET.get('task_id'), block_index=request.GET.get('block_id'), audiofile=request['binary'])
         return Response(status=status.HTTP_200_OK)
 
     def delete(self, request):

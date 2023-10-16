@@ -58,7 +58,7 @@ class TaskManager(models.Manager):
 
         return data
 
-    def submitTask(self, task_id, block_index, audiofile):
+    def submit_task(self, task_id, block_index, audiofile):
         completed_task = TaskData.objects.filter(task_id = task_id, block_index = block_index).first()
         
         completed_task.completed = True
