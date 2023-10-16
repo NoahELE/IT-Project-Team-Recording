@@ -26,9 +26,17 @@ class TaskManager(models.Manager):
         metadata.privacy=False
         metadata.save()
 
-    def delete_task(self, request):
-        TaskMetaData.objects.filter(task_id = request['task_id']).delete()
-        TaskData.objects.filter(task_id = request['task_id']).delete()
+    def get_audio(self, filepath):
+        data = ""
+        with open(TaskData.objects.filter(file=filepath).first().file, 'r') as file:
+            for line in file:
+                data += line
+
+        return data
+
+    def delete_task(self, task_id):
+        TaskMetaData.objects.filter(task_id = task_id).delete()
+        TaskData.objects.filter(task_id = task_id).delete()
 
     
     def add_task(self, request):
@@ -43,7 +51,12 @@ class TaskManager(models.Manager):
             self.__add_audio_data__(job)
 
     def get_users_tasks(self, username):
-        return self.filter(user=username)
+        data = {}
+
+        for task in TaskMetaData.objects.filter(user=username):
+            data[task.task_id] = TaskData.objects.filter(task_id=task.task_id)
+
+        return data
 
     def submitTask(self, task_id, block_index, audiofile):
         completed_task = TaskData.objects.filter(task_id = task_id, block_index = block_index).first()
@@ -51,7 +64,6 @@ class TaskManager(models.Manager):
         completed_task.completed = True
         completed_task.save()
 
-        task_blocks = TaskData.objects.filter(task_id = task_id) 
         file_path = destination + completed_task.file
 
         with open(file_path, "wb") as file:

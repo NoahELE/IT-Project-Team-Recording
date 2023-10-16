@@ -2,6 +2,7 @@ from rest_framework import status
 from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
+from django.http import HttpResponse
 from data.models import TaskManager
 from data.serializer import NewMetaDataAudioSerializer, NewDataAudioSerializer, TaskUserSerializer
 from django.utils import timezone
@@ -23,6 +24,15 @@ def check_required_keys(type, required_keys, request):
         return Response({'error': message}, status=status.HTTP_400_BAD_REQUEST)
 
     return Response({'success': 'All required keys are present'}, status=status.HTTP_200_OK)
+
+class AudioView(APIView):
+
+    def get(self, request):
+        data = TaskManager.get_audio(filepath=request.GET.get('filepath'))
+
+        if data is "": return HttpResponse(status=status.HTTP_404_NOT_FOUND)
+
+        return HttpResponse(data, status=status.HTTP_200_OK)
 
 
 
@@ -51,11 +61,21 @@ class AddBatchJobView(APIView):
 class TaskView(APIView):
     permission_classes = [IsAuthenticated]
 
+    def post(self, request):
+        if request['binary'] is None:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+        
+        if request.GET.get('task_id') is None or request.GET.get('block_id') is None:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+        
+        TaskManager.submitTask(task_id=request.GET.get('task_id'), block_index=request.GET.get('block_id'), audiofile=request['binary'])
+        return Response(status=status.HTTP_200_OK)
+
     def delete(self, request):
         required_keys = ['task_id']
         check_required_keys(POST, required_keys, request)
 
-        TaskManager().delete_task(request) # might need a serializer, reduces input size
+        TaskManager().delete_task(task_id=request.get('task_id')) # might need a serializer, reduces input size
 
         return Response(status=status.HTTP_200_OK)
     
@@ -74,6 +94,10 @@ class ClearTaskIDView(APIView):
 class UserTasksView(APIView):
     permissions_classes = [IsAuthenticated]
 
+    def get(self, request):
+
+        return HttpResponse(TaskManager.get_users_tasks(username=request.GET.get('user')), status=status.HTTP_200_OK)
+
     def post(self, request):
         required_keys = ['task_id', 'user']
         check_required_keys(POST, required_keys, request)
@@ -87,7 +111,6 @@ class FilterUsersView(APIView):
     def get(self, request):
         required_keys = ['language']
         check_required_keys(GET, required_keys, request)
-
 
 
         return Response(status=status.HTTP_200_OK)
