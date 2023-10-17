@@ -1,7 +1,7 @@
 import axios from 'axios';
 import {
   ChangePasswordDto,
-  EditProfile,
+  EditProfileDto,
   TaskResponse,
   Token,
   User,
@@ -36,12 +36,14 @@ export async function changePassword(
   changePasswordDto: ChangePasswordDto,
 ): Promise<void> {
   setJwtToken();
-  await axios.post('/api/user/change-password', changePasswordDto);
+  await axios.put('/api/user/change-password', changePasswordDto);
 }
 
-export async function editProfile(editProfile: EditProfile): Promise<void> {
+export async function editProfile(
+  editProfileDto: EditProfileDto,
+): Promise<void> {
   setJwtToken();
-  await axios.post('/api/user/edit-profile', editProfile);
+  await axios.put('/api/user/edit-profile', editProfileDto);
 }
 
 /**

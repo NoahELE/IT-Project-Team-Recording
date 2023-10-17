@@ -28,7 +28,7 @@ export interface ChangePasswordDto {
   newPassword: string;
 }
 
-export interface EditProfile {
+export interface EditProfileDto {
   username: string;
   email: string;
 }
