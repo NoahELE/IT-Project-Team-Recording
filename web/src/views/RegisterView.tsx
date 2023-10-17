@@ -3,21 +3,21 @@ import {
   Button,
   Checkbox,
   Container,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
   FormControlLabel,
   Grid,
   Link,
   TextField,
   Typography,
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogActions,
 } from '@mui/material';
 import { ChangeEvent, FormEvent, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { termsAndConditionsContent } from '../T&D.ts';
 import { register } from '../api';
 import { useShowSnackbar } from '../utils';
-import { termsAndConditionsContent } from '../T&D.ts';
 
 const emailValidation = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const passwordValidation = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{6,}$/;
@@ -100,8 +100,8 @@ export default function RegisterView() {
           'success',
         );
         setTimeout(() => {
-          navigate('/');
-        }, 3000);
+          navigate('/login');
+        }, 1000);
       })
       .catch((error) => {
         showSnackbar(`Registration Failed - ${error}`);
