@@ -30,7 +30,7 @@ class AudioView(APIView):
     def get(self, request):
         data = TaskManager.get_audio(filepath=request.GET.get('filepath'))
 
-        if data is "": return HttpResponse(status=status.HTTP_404_NOT_FOUND)
+        if data == "": return HttpResponse("Audio not found", status=status.HTTP_404_NOT_FOUND)
 
         return HttpResponse(data, status=status.HTTP_200_OK)
 
@@ -62,7 +62,7 @@ class TaskView(APIView):
     permission_classes = [IsAuthenticated]
 
     def post(self, request):
-        if request['binary'] is None:
+        if not request['binary']:
             return Response(status=status.HTTP_400_BAD_REQUEST)
         
         if request.GET.get('task_id') is None or request.GET.get('block_id') is None:

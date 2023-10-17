@@ -28,9 +28,14 @@ class TaskManager(models.Manager):
 
     def get_audio(self, filepath):
         data = ""
-        with open(TaskData.objects.filter(file=filepath).first().file, 'r') as file:
-            for line in file:
-                data += line
+
+        print("Getting audio...")
+        file = open(str(destination).replace('\\', '/') + filepath, 'rb')
+
+        data = file.read()
+        
+        file.close()
+
 
         return data
 
@@ -99,22 +104,10 @@ class TaskMetaData(models.Model):
     def __str__(self):
         return str(self.task_id)
 
-    class Tag(models.Model):
-        class Languages(models.TextChoices):
-            ENGLISH = "ENGLISH"
-            OTHER = "OTHER"
-
-        class Gender(models.TextChoices):
-            M = "MALE"
-            F = "FEMALE"
-
-        language = models.CharField(choices=Languages.choices, default=Languages.OTHER, max_length=100)
-        gender = models.CharField(choices=Gender.choices)
-
 class TaskData(models.Model):
     task_id = models.CharField(max_length=255)
     block_id = models.IntegerField()
-    text = models.TextField()
+    text = models.TextField(max_length=255)
     completed = models.BooleanField(default=False)
     file = models.CharField(unique=True, max_length=255)
 

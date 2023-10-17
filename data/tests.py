@@ -105,8 +105,8 @@ class AudioDataManagerTest(TestCase):
         self.assertEqual(len(result), 2)
 
     def test_get_audio(self):
-        filepath = "tests/test.mp3"
+        filepath = "test.mp3"
 
         result = data_manager.get_audio(filepath)
 
-        self.assertEqual(result, None)
+        self.assertEqual(result, b'0101010101')
