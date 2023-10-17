@@ -213,7 +213,7 @@ export default function ProfileView() {
                   isPasswordValid === false
                     ? 'Password must contain at' +
                       ' least one uppercase letter, one lowercase letter, one number,' +
-                      ' and be at least 6 characters long.'
+                      ' and be at least 8 characters long.'
                     : ''
                 }
               />
