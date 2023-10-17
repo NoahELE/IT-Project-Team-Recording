@@ -24,8 +24,8 @@ export interface User {
 }
 
 export interface ChangePasswordDto {
-  oldPassword: string;
-  newPassword: string;
+  current_password: string;
+  new_password: string;
 }
 
 export interface EditProfileDto {

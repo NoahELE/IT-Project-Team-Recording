@@ -107,8 +107,8 @@ export default function ProfileView() {
     }
 
     const userData = {
-      oldPassword: oldPassword as string,
-      newPassword: newPassword as string,
+      current_password: oldPassword as string,
+      new_password: newPassword as string,
     };
     console.log(JSON.stringify(userData, null, 2));
 
