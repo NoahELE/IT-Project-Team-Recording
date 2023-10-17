@@ -20,7 +20,7 @@ import { register } from '../api';
 import { useShowSnackbar } from '../utils';
 
 const emailValidation = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-const passwordValidation = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{6,}$/;
+const passwordValidation = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$/;
 
 export default function RegisterView() {
   const [isChecked, setIsChecked] = useState(false);

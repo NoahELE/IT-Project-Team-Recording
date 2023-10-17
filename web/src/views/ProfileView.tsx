@@ -16,7 +16,7 @@ import { changePassword, editProfile } from '../api';
 import { useShowSnackbar } from '../utils.tsx';
 
 const emailValidation = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-const passwordValidation = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{6,}$/;
+const passwordValidation = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$/;
 
 export default function ProfileView() {
   const [snackbar, showSnackbar] = useShowSnackbar();
@@ -95,7 +95,7 @@ export default function ProfileView() {
       showSnackbar(
         'Password must contain at least one uppercase letter, ' +
           'one lowercase letter, one number, ' +
-          'and be at least 6 characters long.',
+          'and be at least 8 characters long.',
       );
       return;
     }
