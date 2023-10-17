@@ -44,7 +44,7 @@ export default function LoginView() {
         showSnackbar('Login success - Redirecting to Home Page', 'success');
         setTimeout(() => {
           navigate('/');
-        }, 3000);
+        }, 1000);
       })
       .catch((error) => {
         showSnackbar(`Login Failed - ${error}`);
