@@ -40,8 +40,20 @@ class TaskManager(models.Manager):
         return data
 
     def delete_task(self, task_id):
+
+        for data in TaskData.objects.filter(task_id = task_id):
+            abs_path = str(destination) + data.file
+            if os.path.exists(abs_path):
+                os.remove(abs_path)
+
         TaskMetaData.objects.filter(task_id = task_id).delete()
         TaskData.objects.filter(task_id = task_id).delete()
+
+    def clear_task(self, task_id, block_id):
+        sub_task = TaskData.objects.filter(task_id = task_id, block_id = block_id).first()
+        abs_path = destination + sub_task.file
+        if os.path.exists(abs_path):
+            os.remove(abs_path)
 
     
     def add_task(self, request):
@@ -60,7 +72,6 @@ class TaskManager(models.Manager):
 
         for task in TaskMetaData.objects.filter(user=username):
             data[task.task_id] = TaskData.objects.filter(task_id=task.task_id)
-
 
         return data
 

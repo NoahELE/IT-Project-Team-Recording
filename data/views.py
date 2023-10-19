@@ -73,11 +73,11 @@ class TaskView(APIView):
 
     def put(self, request):
         task_manager = TaskManager()
-        if task_manager.filter(request['task_id']).count == 0:
-            task_manager.add_task(request)  # Pass the entire request object
-            return Response(status=status.HTTP_200_OK)
+
+        task_manager.add_task(request)  # Pass the entire request object
+        return Response(status=status.HTTP_200_OK)
         
-        return Response("The task_id already exists.", status=status.HTTP_400_BAD_REQUEST)
+        # return Response("The task_id already exists.", status=status.HTTP_400_BAD_REQUEST)
 
     def post(self, request):
         if not request['binary']:
@@ -93,7 +93,7 @@ class TaskView(APIView):
         required_keys = ['task_id']
         check_required_keys(POST, required_keys, request)
 
-        TaskManager().delete_task(task_id=request.get('task_id')) # might need a serializer, reduces input size
+        TaskManager().delete_task(task_id=request['task_id']) # might need a serializer, reduces input size
 
         return Response(status=status.HTTP_200_OK)
     
@@ -119,9 +119,11 @@ class UserTasksView(APIView):
         serialized_data = []
         for task_id, queryset in tasks.items():
             serializer = NewDataAudioSerializer(queryset, many=True)
-            serialized_data.extend(serializer.data)
+            serialized_data.append(serializer.data)
 
         return Response(serialized_data, status=status.HTTP_200_OK)
+    
+    
     def post(self, request):
         required_keys = ['task_id', 'user']
         check_required_keys(POST, required_keys, request)

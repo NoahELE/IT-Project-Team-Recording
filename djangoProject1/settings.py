@@ -91,9 +91,9 @@ WSGI_APPLICATION = 'djangoProject1.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': "PostgreSQL 15",
+        'NAME': "testing",
         'USER': 'postgres',
-        'PASSWORD': '123456',
+        'PASSWORD': 'postgres1',
         'HOST': 'localhost',
         'PORT': '5432',
     }
