@@ -14,7 +14,7 @@ class TaskManager(models.Manager):
         data.task_id = request['task_id']
         data.block_id = request['block_id']
         data.text = request['text']
-        data.file = request['file']
+        data.file = request['task_id'] + " " + request['block_id']
         data.save()
 
     def __add_audio_metadata__(self, request):

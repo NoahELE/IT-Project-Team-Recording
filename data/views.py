@@ -113,6 +113,9 @@ class UserTasksView(APIView):
     def post(self, request):
         required_keys = ['task_id', 'user']
         check_required_keys(POST, required_keys, request)
+
+        if TaskManager.filter(request.get('task_id')).count() == 0 :
+            return Response(status=status.HTTP_404_NOT_FOUND)
         
         TaskManager.change_task_user(TaskUserSerializer(request))
         return Response(status=status.HTTP_200_OK)
