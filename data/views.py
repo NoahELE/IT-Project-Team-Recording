@@ -73,8 +73,11 @@ class TaskView(APIView):
 
     def put(self, request):
         task_manager = TaskManager()
-        task_manager.add_task(request)  # Pass the entire request object
-        return Response(status=status.HTTP_200_OK)
+        if task_manager.filter(request['task_id']).count == 0:
+            task_manager.add_task(request)  # Pass the entire request object
+            return Response(status=status.HTTP_200_OK)
+        
+        return Response("The task_id already exists.", status=status.HTTP_400_BAD_REQUEST)
 
     def post(self, request):
         if not request['binary']:
