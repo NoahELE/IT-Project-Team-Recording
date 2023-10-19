@@ -67,33 +67,9 @@ export function setJwtToken(): void {
  * @returns the recording tasks of current user
  */
 export async function getAllTasks(): Promise<TaskResponse> {
-  // setJwtToken();
-  // const response = await axios.get<TaskResponse>('/api/task');
-  // return response.data;
-  await new Promise((resolve) => setTimeout(resolve, 1000));
-  return {
-    task_id: 'test_task_id',
-    data: [
-      {
-        id: '1',
-        text: 'test text 1',
-        file: 'test_audio_1',
-        has_existing: false,
-      },
-      {
-        id: '2',
-        text: 'test text 2',
-        file: 'test_audio_2',
-        has_existing: false,
-      },
-      {
-        id: '3',
-        text: 'test text 3',
-        file: 'test_audio_3',
-        has_existing: true,
-      },
-    ],
-  };
+  setJwtToken();
+  const response = await axios.get<TaskResponse>('/api/task');
+  return response.data;
 }
 
 /**
@@ -102,14 +78,11 @@ export async function getAllTasks(): Promise<TaskResponse> {
  * @returns
  */
 export async function getAudioUrl(file: string): Promise<string> {
-  // setJwtToken();
-  // const response = await axios.get<Blob>(`/api/data/${encodeURI(file)}`, {
-  //   responseType: 'blob',
-  // });
-  // return URL.createObjectURL(response.data);
-  await new Promise((resolve) => setTimeout(resolve, 1000));
-  console.log(file);
-  return 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3';
+  setJwtToken();
+  const response = await axios.get<Blob>(`/api/data/${encodeURI(file)}`, {
+    responseType: 'blob',
+  });
+  return URL.createObjectURL(response.data);
 }
 
 /**
@@ -123,12 +96,10 @@ export async function postTask(
   blockId: string,
   blob: Blob,
 ): Promise<void> {
-  // setJwtToken();
-  // await axios.post(`/api/task/${taskId}/${blockId}`, blob, {
-  //   headers: { 'Content-Type': blob.type },
-  // });
-  await new Promise((resolve) => setTimeout(resolve, 1000));
-  console.log(taskId, blockId, blob);
+  setJwtToken();
+  await axios.post(`/api/task/${taskId}/${blockId}`, blob, {
+    headers: { 'Content-Type': blob.type },
+  });
 }
 
 /**
@@ -140,8 +111,6 @@ export async function deleteTask(
   taskId: string,
   blockId: number,
 ): Promise<void> {
-  // setJwtToken();
-  // await axios.delete(`/api/task/${taskId}/${blockId}`);
-  await new Promise((resolve) => setTimeout(resolve, 1000));
-  console.log(taskId, blockId);
+  setJwtToken();
+  await axios.delete(`/api/task/${taskId}/${blockId}`);
 }
