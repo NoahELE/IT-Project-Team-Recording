@@ -6,11 +6,10 @@ import { Task } from '../entity';
 import { useShowSnackbar } from '../utils';
 
 interface Props {
-  taskId: string;
   task: Task;
 }
 
-export default function Recorder({ taskId, task }: Props) {
+export default function Recorder({ task }: Props) {
   const { mediaBlobUrl, status, startRecording, stopRecording } =
     useReactMediaRecorder({ audio: true });
   const [recordedTime, setRecordedTime] = useState(0.0);
@@ -36,7 +35,7 @@ export default function Recorder({ taskId, task }: Props) {
     if (mediaBlobUrl !== undefined) {
       fetch(mediaBlobUrl)
         .then((res) => res.blob())
-        .then((blob) => postTask(taskId, task.id, blob))
+        .then((blob) => postTask(task.task_id, task.block_id, blob))
         .catch((err) => {
           showSnackbar(`Failed to upload task - ${err}`);
         });
@@ -45,7 +44,7 @@ export default function Recorder({ taskId, task }: Props) {
 
   return (
     <>
-      <Typography variant="h5">Recording Task {task.id}</Typography>
+      <Typography variant="h5">Recording Task {task.block_id}</Typography>
       <Stack direction="row" spacing={5}>
         <Stack spacing={3} flexGrow={1}>
           <Box width={500}>

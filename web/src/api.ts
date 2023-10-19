@@ -2,7 +2,7 @@ import axios from 'axios';
 import {
   ChangePasswordDto,
   EditProfileDto,
-  TaskResponse,
+  Task,
   Token,
   User,
   UserLogin,
@@ -66,9 +66,9 @@ export function setJwtToken(): void {
  * Get all recording tasks of current user.
  * @returns the recording tasks of current user
  */
-export async function getAllTasks(): Promise<TaskResponse> {
+export async function getAllTasks(): Promise<Task[]> {
   setJwtToken();
-  const response = await axios.get<TaskResponse>('/api/task');
+  const response = await axios.get<Task[]>('/api/task');
   return response.data;
 }
 
@@ -109,7 +109,7 @@ export async function postTask(
  */
 export async function deleteTask(
   taskId: string,
-  blockId: number,
+  blockId: string,
 ): Promise<void> {
   setJwtToken();
   await axios.delete(`/api/task/${taskId}/${blockId}`);

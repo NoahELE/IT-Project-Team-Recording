@@ -7,7 +7,7 @@ import Recorder from '../components/Recorder';
 import TaskList from '../components/TaskList';
 import { Task } from '../entity';
 import { useCurrentTaskStore } from '../store';
-import { useShowSnackbar } from '../utils';
+import { getTaskUniqueId, useShowSnackbar } from '../utils';
 
 export default function RecordingView() {
   const navigate = useNavigate();
@@ -15,12 +15,10 @@ export default function RecordingView() {
   const [snackbar, showSnackbar] = useShowSnackbar();
 
   const [tasks, setTasks] = useState<Task[]>([]);
-  const [taskId, setTaskId] = useState('');
   useEffect(() => {
     getAllTasks()
-      .then((taskResponse) => {
-        setTasks(taskResponse.data);
-        setTaskId(taskResponse.task_id);
+      .then((tasks) => {
+        setTasks(tasks);
       })
       .catch((error) => {
         showSnackbar(`Failed to fetch tasks - ${error}`);
@@ -36,7 +34,7 @@ export default function RecordingView() {
     <Container sx={{ mt: 10 }}>
       <Stack spacing={5}>
         {currentTask !== null ? (
-          <Recorder taskId={taskId} task={currentTask} />
+          <Recorder task={currentTask} />
         ) : (
           <Typography variant="body1">
             You haven't selected a task yet.
@@ -55,11 +53,15 @@ export default function RecordingView() {
           <Button
             onClick={() => {
               rowSelectionModel.forEach((id) => {
-                if (typeof id !== 'number') {
-                  throw new Error('Expected id to be number');
+                if (typeof id !== 'string') {
+                  throw new Error('Expected id to be string');
+                }
+                const task = tasks.find((task) => getTaskUniqueId(task) === id);
+                if (task === undefined) {
+                  throw new Error(`Expected task with id ${id} to exist`);
                 }
 
-                deleteTask(taskId, id).catch((error) => {
+                deleteTask(task.task_id, task.block_id).catch((error) => {
                   showSnackbar(
                     `Failed to delete recording with id ${id} - ${error}`,
                   );

@@ -1,13 +1,9 @@
 export interface Task {
-  id: string;
+  task_id: string;
+  block_id: string;
   text: string;
   file: string;
   has_existing: boolean;
-}
-
-export interface TaskResponse {
-  task_id: string;
-  data: Task[];
 }
 
 export interface PublicRecord {

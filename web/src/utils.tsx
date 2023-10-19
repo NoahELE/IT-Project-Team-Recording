@@ -1,6 +1,7 @@
 import CloseIcon from '@mui/icons-material/Close';
 import { Alert, IconButton, Snackbar } from '@mui/material';
 import { ReactElement, useCallback, useMemo, useState } from 'react';
+import { Task } from './entity';
 
 type Severity = 'error' | 'warning' | 'info' | 'success';
 type ShowSnackbarCallback = (message: string, severity?: Severity) => void;
@@ -58,4 +59,8 @@ export function isLoggedIn(): boolean {
     return false;
   }
   return true;
+}
+
+export function getTaskUniqueId(task: Task): string {
+  return `${task.task_id}-${task.block_id}`;
 }

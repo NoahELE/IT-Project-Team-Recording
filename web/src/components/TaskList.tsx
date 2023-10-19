@@ -9,7 +9,7 @@ import { memo, useEffect, useRef, useState } from 'react';
 import { getAudioUrl } from '../api';
 import { Task } from '../entity';
 import { useCurrentTaskStore } from '../store';
-import { useShowSnackbar } from '../utils';
+import { getTaskUniqueId, useShowSnackbar } from '../utils';
 
 function isOverflown(element: Element): boolean {
   return (
@@ -149,7 +149,8 @@ const SelectButton = memo(({ task }: { task: Task }) => {
 });
 
 const columns: GridColDef[] = [
-  { field: 'id', headerName: 'ID', width: 100 },
+  { field: 'task_id', headerName: 'Task ID', width: 100 },
+  { field: 'block_id', headerName: 'Block ID', width: 100 },
   {
     field: 'file',
     headerName: 'Audio File',
@@ -196,8 +197,8 @@ const columns: GridColDef[] = [
 
 interface Props {
   tasks: Task[];
-  rowSelectionModel?: GridRowSelectionModel;
-  setRowSelectionModel?: (rowSelectionModel: GridRowSelectionModel) => void;
+  rowSelectionModel: GridRowSelectionModel;
+  setRowSelectionModel: (rowSelectionModel: GridRowSelectionModel) => void;
 }
 
 export default function TaskList({
@@ -219,10 +220,9 @@ export default function TaskList({
       getRowHeight={() => 'auto'}
       rowSelectionModel={rowSelectionModel}
       onRowSelectionModelChange={(newRowSelectionModel) => {
-        if (setRowSelectionModel !== undefined) {
-          setRowSelectionModel(newRowSelectionModel);
-        }
+        setRowSelectionModel(newRowSelectionModel);
       }}
+      getRowId={(task: Task) => getTaskUniqueId(task)}
     />
   );
 }
