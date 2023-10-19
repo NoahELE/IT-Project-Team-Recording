@@ -24,12 +24,14 @@ class RegisterViewTests(APITestCase):
 class EditProfileViewTests(APITestCase):
 
     def setUp(self):
-        self.user = UserData.objects.create_user(username='testuser', email='testuser@example.com',
-                                                 password='testpassword')
-        self.client.login(username='testuser', password='testpassword')
+        self.user = UserData.objects.create_user(username='testuser2', email='testuser2@example.com',
+                                                 password='testpassword2')
+        self.client.login(username='testuser2', password='testpassword2')
+        self.client.force_authenticate(user=self.user)
 
     def test_edit_profile_with_valid_data(self):
-        data = {'username': 'updateduser'}
+        data = {'username': 'updateduser',
+                'email': 'testuser12312@gmail.com'}
         response = self.client.put(reverse('edit-profile'), data)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
@@ -45,18 +47,19 @@ class EditProfileViewTests(APITestCase):
 class ChangePasswordViewTests(APITestCase):
 
     def setUp(self):
-        self.user = UserData.objects.create_user(username='testuser', email='testuser@example.com',
-                                                 password='testpassword')
-        self.client.login(username='testuser', password='testpassword')
+        self.user = UserData.objects.create_user(username='testuser1', email='testuser1@example.com',
+                                                 password='testpassword1')
+        self.client.login(username='testuser1', password='testpassword1')
+        self.client.force_authenticate(user=self.user)
 
     def test_change_password_with_valid_data(self):
-        data = {'old_password': 'testpassword', 'new_password': 'newpassword'}
+        data = {'current_password': 'testpassword1', 'new_password': 'newpassword123154124'}
         response = self.client.put(reverse('change-password'), data)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
     def test_change_password_with_invalid_data(self):
         # Example: incorrect old password
-        data = {'old_password': 'wrongpassword', 'new_password': 'newpassword'}
+        data = {'current_password': 'wrongpassword', 'new_password': 'newpassword'}
         response = self.client.put(reverse('change-password'), data)
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
@@ -71,7 +74,7 @@ class UnauthenticatedUserTests(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
     def test_change_password_unauthenticated(self):
-        data = {'old_password': 'testpassword', 'new_password': 'newpassword'}
+        data = {'current_password': 'testpassword', 'new_password': 'newpassword'}
         response = self.client.put(reverse('change-password'), data)
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
@@ -103,6 +106,7 @@ class AdditionalNegativeTests(APITestCase):
         self.user = UserData.objects.create_user(username='testuser', email='testuser@example.com',
                                                  password='testpassword')
         self.client.login(username='testuser', password='testpassword')
+        self.client.force_authenticate(user=self.user)
         # Try changing password with a new password that's too short
         data = {'old_password': 'testpassword', 'new_password': 'short'}
         response = self.client.put(reverse('change-password'), data)
