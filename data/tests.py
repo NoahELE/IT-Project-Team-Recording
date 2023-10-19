@@ -1,5 +1,4 @@
 import os
-from bitstring import BitArray
 from django.test import TestCase
 from django.utils import timezone
 from data.models import TaskData, TaskMetaData

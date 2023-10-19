@@ -70,8 +70,10 @@ class AddBatchJobView(APIView):
 class TaskView(APIView):
     permission_classes = [IsAuthenticated]
 
+
     def put(self, request):
-        TaskManager.add_task(request)
+        task_manager = TaskManager()
+        task_manager.add_task(request)  # Pass the entire request object
         return Response(status=status.HTTP_200_OK)
 
     def post(self, request):
@@ -105,11 +107,18 @@ class ClearTaskIDView(APIView):
     
     
 class UserTasksView(APIView):
-    permissions_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated]
 
     def get(self, request):
-        return HttpResponse(TaskManager.get_users_tasks(self = self, username=request.GET.get('user')), status=status.HTTP_200_OK)
+        task_manager = TaskManager()
+        username = request.user.username
+        tasks = task_manager.get_users_tasks(username=username)
+        serialized_data = []
+        for task_id, queryset in tasks.items():
+            serializer = NewDataAudioSerializer(queryset, many=True)
+            serialized_data.extend(serializer.data)
 
+        return Response(serialized_data, status=status.HTTP_200_OK)
     def post(self, request):
         required_keys = ['task_id', 'user']
         check_required_keys(POST, required_keys, request)

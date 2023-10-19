@@ -19,10 +19,10 @@ class TaskManager(models.Manager):
 
     def __add_audio_metadata__(self, request):
         metadata = TaskMetaData()
-        metadata.task_id=request['task_id']
-        metadata.user=request['user']
-        metadata.tag_id=request['tag_id']
-        metadata.upload_time=request['upload_time']
+        metadata.task_id=request.data.get('task_id')
+        metadata.user=request.data.get('user')
+        metadata.tag_id=request.data.get('tag_id')
+        metadata.upload_time=request.data.get('upload_time')
         metadata.privacy=False
         metadata.save()
 
@@ -48,8 +48,8 @@ class TaskManager(models.Manager):
         self.__add_audio_metadata__(request)
 
         block_id = 1
-        for job in request.get('data'):
-            job['task_id'] = request['task_id']
+        for job in request.data.get('data'):
+            job['task_id'] = request.data.get('task_id')
             job['block_id'] = block_id
             block_id += 1
 
@@ -61,7 +61,9 @@ class TaskManager(models.Manager):
         for task in TaskMetaData.objects.filter(user=username):
             data[task.task_id] = TaskData.objects.filter(task_id=task.task_id)
 
+
         return data
+
 
     def submit_task(self, task_id, block_index, audiofile):
         completed_task = TaskData.objects.filter(task_id = task_id, block_index = block_index).first()
