@@ -5,8 +5,6 @@ from rest_framework.response import Response
 from django.http import JsonResponse
 from .models import TaskManager
 
-import requests
-
 from rest_framework import status
 from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated
@@ -15,7 +13,8 @@ from django.http import HttpResponse
 from data.models import TaskManager
 from data.serializer import NewMetaDataAudioSerializer, NewDataAudioSerializer, TaskUserSerializer
 from django.utils import timezone
-from user.models import UserManager
+
+import base64
 
 POST = "POST"
 GET = "GET"
@@ -77,21 +76,26 @@ class TaskView(APIView):
             TaskManager().add_task(request)
             return Response("Added task successfully.", status=status.HTTP_200_OK)
 
-    def post(self, request):
-        if not request['binary']:
-            return Response(status=status.HTTP_400_BAD_REQUEST)
+    def post(self, request, task_id, block_id):
+        # if request.data['binary'] is None:
+        #     return Response("Attempted to submit empty/null file.", status=status.HTTP_400_BAD_REQUEST)
         
-        if request.GET.get('task_id') is None or request.GET.get('block_id') is None:
-            return Response(status=status.HTTP_404_NOT_FOUND)
+        if task_id is None or block_id is None:
+            return Response("Task_id/Block_id is none.", status=status.HTTP_404_NOT_FOUND)
         
-        TaskManager.submit_task(task_id=request.GET.get('task_id'), block_index=request.GET.get('block_id'), audiofile=request['binary'])
+        print("yes")
+        print(request.data)
+        print("no")
+        
+        TaskManager.submit_task(task_id=task_id, block_index=block_id, audiofile=base64.b64decode(request))
         return Response(status=status.HTTP_200_OK)
 
-    def delete(self, request):
-        required_keys = ['task_id']
-        check_required_keys(POST, required_keys, request)
+    def delete(self, request, task_id):
 
-        TaskManager().delete_task(task_id=request.get('task_id')) # might need a serializer, reduces input size
+        if task_id is None:
+            return Response("Missing task_id value.", status=status.HTTP_400_BAD_REQUEST)
+
+        TaskManager().delete_task(task_id) # might need a serializer, reduces input size
 
         return Response(status=status.HTTP_200_OK)
     

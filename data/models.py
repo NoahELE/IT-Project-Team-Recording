@@ -1,7 +1,7 @@
 from django.db import models
 from django.utils import timezone
 
-import os
+import os, shutil
 
 FILES_LOCATION = "/data/tests" if os.environ["localpath"] is None else os.environ["localpath"]
 
@@ -47,6 +47,7 @@ class TaskManager(models.Manager):
     def delete_task(self, task_id):
         TaskMetaData.objects.filter(task_id = task_id).delete()
         TaskData.objects.filter(task_id = task_id).delete()
+        shutil.rmtree(FILES_LOCATION + "/" + task_id)
 
     
     def add_task(self, request):
