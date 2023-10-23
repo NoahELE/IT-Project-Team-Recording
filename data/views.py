@@ -111,8 +111,7 @@ class UserTasksView(APIView):
     permissions_classes = [IsAuthenticated]
 
     def get(self, request):
-        print(request.user.username)
-        return HttpResponse(TaskManager.get_users_tasks(self = self, username=request.user.username), status=status.HTTP_200_OK)
+        return Response(TaskManager.get_users_tasks(self = self, username=request.user.username), status=status.HTTP_200_OK)
 
     def post(self, request):
         required_keys = ['task_id', 'user']

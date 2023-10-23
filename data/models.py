@@ -67,14 +67,15 @@ class TaskManager(models.Manager):
 
     def get_users_tasks(self, username):
         data = {}
-
-        print("Number of tasks: " + str(TaskMetaData.objects.count()))
-
-        print("Number of tasks for:" + username + " is: " + str(TaskMetaData.objects.filter(user=username).count()))
-
         for task in TaskMetaData.objects.filter(user=username):
-            data[task.task_id] = TaskData.objects.filter(task_id=task.task_id)
-
+            data[task.task_id] = {}
+            for block in TaskData.objects.filter(task_id=task.task_id):
+                data[task.task_id][block.block_id] = {
+                    "text": block.text,
+                    "file": block.file,
+                    "has_existing": block.completed,
+                }
+        print(data)
         return data
 
     def submit_task(self, task_id, block_index, audiofile):
