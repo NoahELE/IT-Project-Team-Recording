@@ -1,7 +1,9 @@
 from django.db import models
+from django.utils import timezone
+
 import os
 
-destination = os.environ["localpath"]
+FILES_LOCATION = "/data/tests" if os.environ["localpath"] is None else os.environ["localpath"]
 
 class TaskManager(models.Manager):
     use_in_migrations = True
@@ -14,18 +16,18 @@ class TaskManager(models.Manager):
         data.task_id = request['task_id']
         data.block_id = request['block_id']
         data.text = request['text']
-        data.file = request['task_id'] + " " + request['block_id']
-        if not os.path.exists(request.data.get('task_id')):
-            os.mkdir(destination)
+        data.file = request['task_id'] + " " + str(request['block_id'])
+        if not os.path.exists(FILES_LOCATION + "/" + request['task_id']):
+            os.mkdir(FILES_LOCATION + "/" + request['task_id'])
 
         data.save()
 
     def __add_audio_metadata__(self, request):
         metadata = TaskMetaData()
-        metadata.task_id=request.data.get('task_id')
-        metadata.user=request.data.get('user')
-        metadata.tag_id=request.data.get('tag_id')
-        metadata.upload_time=request.data.get('upload_time')
+        metadata.task_id=request.data['task_id']
+        metadata.user=request.data['user']
+        metadata.tag_id=request.data['tag_id']
+        metadata.upload_time= timezone.now()
         metadata.privacy=False
         metadata.save()
 
@@ -33,7 +35,7 @@ class TaskManager(models.Manager):
         data = ""
 
         print("Getting audio...")
-        file = open(str(destination).replace('\\', '/') + filepath, 'rb')
+        file = open(str(FILES_LOCATION).replace('\\', '/') + filepath, 'rb')
 
         data = file.read()
         
@@ -51,15 +53,24 @@ class TaskManager(models.Manager):
         self.__add_audio_metadata__(request)
 
         block_id = 1
-        for job in request.get('data'):
-            job['task_id'] = request['task_id']
-            job['block_id'] = block_id
+        for job in request.data['data']:
+            task={}
+            task['task_id'] = request.data['task_id']
+            task['block_id'] = block_id
+            task['text'] = job
             block_id += 1
 
-            self.__add_audio_data__(job)
+            self.__add_audio_data__(task)
+
+    def contains_task_id(self, task_id):
+        return TaskMetaData.objects.filter(task_id = task_id).count() > 0
 
     def get_users_tasks(self, username):
         data = {}
+
+        print("Number of tasks: " + str(TaskMetaData.objects.count()))
+
+        print("Number of tasks for:" + username + " is: " + str(TaskMetaData.objects.filter(user=username).count()))
 
         for task in TaskMetaData.objects.filter(user=username):
             data[task.task_id] = TaskData.objects.filter(task_id=task.task_id)
@@ -72,7 +83,7 @@ class TaskManager(models.Manager):
         completed_task.completed = True
         completed_task.save()
 
-        file_path = destination + completed_task.file
+        file_path = FILES_LOCATION + completed_task.file
 
         with open(file_path, "wb") as file:
             file.write(audiofile)

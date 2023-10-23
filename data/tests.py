@@ -1,5 +1,3 @@
-import os
-from bitstring import BitArray
 from django.test import TestCase
 from django.utils import timezone
 from data.models import TaskData, TaskMetaData
@@ -14,7 +12,6 @@ request = {
     "data": ["Once upon a time there lived a girl called Alice",
              "She lives in a Wonderland","where she falls into a rabbit hole.",
     ],
-    "upload_time": timezone.now(),
 }
 
 request2 = {
@@ -24,7 +21,6 @@ request2 = {
     "data": ["Once upon a time there lived a bear called Pooh",
              "who lives in a 1000 Acre Forest",
     ],
-    "upload_time": timezone.now(),
     "privacy": False,
 }
 

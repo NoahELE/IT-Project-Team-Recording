@@ -71,8 +71,11 @@ class TaskView(APIView):
     permission_classes = [IsAuthenticated]
 
     def put(self, request):
-        TaskManager.add_task(request)
-        return Response(status=status.HTTP_200_OK)
+        if TaskManager().contains_task_id(request.data['task_id']):
+            return Response("Task ID already exists within the database.", status=status.HTTP_400_BAD_REQUEST)
+        else:
+            TaskManager().add_task(request)
+            return Response("Added task successfully.", status=status.HTTP_200_OK)
 
     def post(self, request):
         if not request['binary']:
@@ -108,7 +111,8 @@ class UserTasksView(APIView):
     permissions_classes = [IsAuthenticated]
 
     def get(self, request):
-        return HttpResponse(TaskManager.get_users_tasks(self = self, username=request.GET.get('user')), status=status.HTTP_200_OK)
+        print(request.user.username)
+        return HttpResponse(TaskManager.get_users_tasks(self = self, username=request.user.username), status=status.HTTP_200_OK)
 
     def post(self, request):
         required_keys = ['task_id', 'user']
