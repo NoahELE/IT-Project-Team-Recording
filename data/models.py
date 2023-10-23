@@ -15,14 +15,17 @@ class TaskManager(models.Manager):
         data.block_id = request['block_id']
         data.text = request['text']
         data.file = request['task_id'] + " " + request['block_id']
+        if not os.path.exists(request.data.get('task_id')):
+            os.mkdir(destination)
+
         data.save()
 
     def __add_audio_metadata__(self, request):
         metadata = TaskMetaData()
-        metadata.task_id=request['task_id']
-        metadata.user=request['user']
-        metadata.tag_id=request['tag_id']
-        metadata.upload_time=request['upload_time']
+        metadata.task_id=request.data.get('task_id')
+        metadata.user=request.data.get('user')
+        metadata.tag_id=request.data.get('tag_id')
+        metadata.upload_time=request.data.get('upload_time')
         metadata.privacy=False
         metadata.save()
 
