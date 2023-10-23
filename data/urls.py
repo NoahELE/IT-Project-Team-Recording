@@ -6,5 +6,5 @@ urlpatterns = [
         path('task/<str:task_id>', TaskView.as_view(), name='delete-task'),
         path('task', TaskView.as_view(), name='add-task'),
         path('data/<str:task_id>/<int:block_id>', TaskView.as_view(), name='submit-task'),
-        path('data/<str:filepath>', AudioView.as_view(), name='get-audio')
+        path('audio/<str:task_id>/<int:block_id>', AudioView.as_view(), name='get-audio')
 ]

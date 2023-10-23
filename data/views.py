@@ -35,10 +35,10 @@ def check_required_keys(type, required_keys, request):
 
 class AudioView(APIView):
 
-    def get(self, request):
-        data = TaskManager.get_audio(filepath=request.GET.get('filepath'))
+    def get(self, request, task_id, block_id):
+        data = TaskManager().get_audio(task_id=task_id, block_id=block_id)
 
-        if data == "": return HttpResponse("Audio not found", status=status.HTTP_404_NOT_FOUND)
+        if data is None: return HttpResponse("Audio file not found", status=status.HTTP_404_NOT_FOUND)
 
         return HttpResponse(data, status=status.HTTP_200_OK)
 
@@ -77,25 +77,23 @@ class TaskView(APIView):
             return Response("Added task successfully.", status=status.HTTP_200_OK)
 
     def post(self, request, task_id, block_id):
-        # if request.data['binary'] is None:
-        #     return Response("Attempted to submit empty/null file.", status=status.HTTP_400_BAD_REQUEST)
+        binary_data = request.data.get('binary')
+
+        if binary_data is None:
+            return Response("Attempted to submit empty/null file.", status=status.HTTP_400_BAD_REQUEST)
         
-        if task_id is None or block_id is None:
+        if task_id is not None and block_id is not None:
+            TaskManager().submit_task(task_id=task_id, block_id=block_id, audiofile=binary_data.read())
+            return Response(status=status.HTTP_200_OK)
+        else:
             return Response("Task_id/Block_id is none.", status=status.HTTP_404_NOT_FOUND)
-        
-        print("yes")
-        print(request.data)
-        print("no")
-        
-        TaskManager.submit_task(task_id=task_id, block_index=block_id, audiofile=base64.b64decode(request))
-        return Response(status=status.HTTP_200_OK)
 
     def delete(self, request, task_id):
 
         if task_id is None:
             return Response("Missing task_id value.", status=status.HTTP_400_BAD_REQUEST)
 
-        TaskManager().delete_task(task_id) # might need a serializer, reduces input size
+        TaskManager().delete_task(task_id)
 
         return Response(status=status.HTTP_200_OK)
     

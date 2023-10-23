@@ -8,8 +8,8 @@ FILES_LOCATION = "/data/tests" if os.environ["localpath"] is None else os.enviro
 class TaskManager(models.Manager):
     use_in_migrations = True
 
-    def __check_task_completed__(self, request):
-        return TaskData.objects.filter(task_id = request['task_id'], completed = True).exists()
+    def __check_task_completed__(self, task_id):
+        return TaskData.objects.filter(task_id = task_id, completed = True).exists()
     
     def __add_audio_data__(self, request):
         data = TaskData()
@@ -31,16 +31,17 @@ class TaskManager(models.Manager):
         metadata.privacy=False
         metadata.save()
 
-    def get_audio(self, filepath):
-        data = ""
+    def get_audio(self, task_id, block_id):
+        results = TaskData.objects.filter(task_id = task_id, block_id = block_id)
 
-        print("Getting audio...")
-        file = open(str(FILES_LOCATION).replace('\\', '/') + filepath, 'rb')
+        if results.count() == 0:
+            return None
+        
+        filepath = FILES_LOCATION + "/" + task_id + "/" + results.first().file + ".bin"
+        file = open(filepath, 'r')
 
         data = file.read()
-        
         file.close()
-
 
         return data
 
@@ -76,16 +77,15 @@ class TaskManager(models.Manager):
                     "file": block.file,
                     "has_existing": block.completed,
                 }
-        print(data)
         return data
 
-    def submit_task(self, task_id, block_index, audiofile):
-        completed_task = TaskData.objects.filter(task_id = task_id, block_index = block_index).first()
+    def submit_task(self, task_id, block_id, audiofile):
+        completed_task = TaskData.objects.filter(task_id = task_id, block_id = block_id).first()
         
         completed_task.completed = True
         completed_task.save()
 
-        file_path = FILES_LOCATION + completed_task.file
+        file_path = FILES_LOCATION + "/" + task_id + "/" + completed_task.file + ".bin"
 
         with open(file_path, "wb") as file:
             file.write(audiofile)
