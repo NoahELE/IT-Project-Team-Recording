@@ -54,14 +54,16 @@ export default function RecordingView() {
             onClick={() => {
               rowSelectionModel.forEach((id) => {
                 if (typeof id !== 'string') {
-                  throw new Error('Expected id to be string');
+                  showSnackbar('Expected id to be string');
+                  return;
                 }
                 const task = tasks.find((task) => getTaskUniqueId(task) === id);
                 if (task === undefined) {
-                  throw new Error(`Expected task with id ${id} to exist`);
+                  showSnackbar(`Task with id ${id} does not exist`);
+                  return;
                 }
 
-                deleteTask(task.task_id, task.block_id).catch((error) => {
+                deleteTask(task.task_id).catch((error) => {
                   showSnackbar(
                     `Failed to delete recording with id ${id} - ${error}`,
                   );

@@ -74,12 +74,16 @@ export async function getAllTasks(): Promise<Task[]> {
 
 /**
  *  Get the audio url of a recording task.
- * @param file the file name of the audio
- * @returns
+ * @param taskId the task id
+ * @param blockId the block id
+ * @returns the audio url
  */
-export async function getAudioUrl(file: string): Promise<string> {
+export async function getAudioUrl(
+  taskId: string,
+  blockId: number,
+): Promise<string> {
   setJwtToken();
-  const response = await axios.get<Blob>(`/api/data/${encodeURI(file)}`, {
+  const response = await axios.get<Blob>(`/api/audio/${taskId}/${blockId}`, {
     responseType: 'blob',
   });
   return URL.createObjectURL(response.data);
@@ -91,13 +95,13 @@ export async function getAudioUrl(file: string): Promise<string> {
  * @param file the file name of the audio
  * @param blob the blob of the audio
  */
-export async function postTask(
+export async function submitTask(
   taskId: string,
-  blockId: string,
+  blockId: number,
   blob: Blob,
 ): Promise<void> {
   setJwtToken();
-  await axios.post(`/api/task/${taskId}/${blockId}`, blob, {
+  await axios.post(`/api/task/submit/${taskId}/${blockId}`, blob, {
     headers: { 'Content-Type': blob.type },
   });
 }
@@ -107,10 +111,7 @@ export async function postTask(
  * @param taskId the task id
  * @param blockId the block id
  */
-export async function deleteTask(
-  taskId: string,
-  blockId: string,
-): Promise<void> {
+export async function deleteTask(taskId: string): Promise<void> {
   setJwtToken();
-  await axios.delete(`/api/task/${taskId}/${blockId}`);
+  await axios.delete(`/api/task/${taskId}`);
 }
