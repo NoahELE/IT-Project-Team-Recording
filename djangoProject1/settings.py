@@ -34,8 +34,6 @@ if IS_HEROKU_APP:
 else:
     ALLOWED_HOSTS = []
 
-FILES_LOCATION = "/data/tests" if "localpath" not in os.environ.keys() else os.environ["localpath"]
-
 # Application definition
 
 INSTALLED_APPS = [
