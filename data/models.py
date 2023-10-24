@@ -16,7 +16,7 @@ class TaskManager(models.Manager):
         data.task_id = request['task_id']
         data.block_id = request['block_id']
         data.text = request['text']
-        data.file = request['task_id'] + " " + str(request['block_id'])
+        data.file = request['task_id'] + " " + str(request['block_id']) + ".bin"
         if not os.path.exists(FILES_LOCATION + "/" + request['task_id']):
             os.mkdir(FILES_LOCATION + "/" + request['task_id'])
 
