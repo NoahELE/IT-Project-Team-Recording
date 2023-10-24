@@ -111,25 +111,27 @@ const GridCellExpand = memo(
   },
 );
 
-const AudioPlayer = memo(({ file }: { file: string }) => {
-  const [audioSrc, setAudioSrc] = useState('');
-  const [snackbar, showSnackbar] = useShowSnackbar();
-  useEffect(() => {
-    getAudioUrl(file)
-      .then((url) => setAudioSrc(url))
-      .catch((err) => {
-        showSnackbar(`Failed to fetch audio - ${err}`);
-      });
-  }, [file, showSnackbar]);
-  return audioSrc === '' ? (
-    'Loading'
-  ) : (
-    <>
-      <audio src={audioSrc} controls preload="metadata" />
-      {snackbar}
-    </>
-  );
-});
+const AudioPlayer = memo(
+  ({ taskId, blockId }: { taskId: string; blockId: number }) => {
+    const [audioSrc, setAudioSrc] = useState('');
+    const [snackbar, showSnackbar] = useShowSnackbar();
+    useEffect(() => {
+      getAudioUrl(taskId, blockId)
+        .then((url) => setAudioSrc(url))
+        .catch((err) => {
+          showSnackbar(`Failed to fetch audio - ${err}`);
+        });
+    }, [blockId, showSnackbar, taskId]);
+    return audioSrc === '' ? (
+      'Loading'
+    ) : (
+      <>
+        <audio src={audioSrc} controls preload="metadata" />
+        {snackbar}
+      </>
+    );
+  },
+);
 
 const SelectButton = memo(({ task }: { task: Task }) => {
   const setCurrentTask = useCurrentTaskStore((state) => state.setCurrentTask);
@@ -161,7 +163,10 @@ const columns: GridColDef[] = [
       if (params.row.has_existing) {
         return (
           <Box m={1}>
-            <AudioPlayer file={params.row.file} />
+            <AudioPlayer
+              taskId={params.row.task_id}
+              blockId={params.row.block_id}
+            />
           </Box>
         );
       } else {

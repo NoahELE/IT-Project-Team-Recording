@@ -1,7 +1,7 @@
 import { Box, Button, Stack, Typography } from '@mui/material';
 import { useEffect, useState } from 'react';
 import { useReactMediaRecorder } from 'react-media-recorder';
-import { postTask } from '../api';
+import { submitTask } from '../api';
 import { Task } from '../entity';
 import { useShowSnackbar } from '../utils';
 
@@ -11,7 +11,10 @@ interface Props {
 
 export default function Recorder({ task }: Props) {
   const { mediaBlobUrl, status, startRecording, stopRecording } =
-    useReactMediaRecorder({ audio: true });
+    useReactMediaRecorder({
+      audio: true,
+      blobPropertyBag: { type: 'audio/wav' },
+    });
   const [recordedTime, setRecordedTime] = useState(0.0);
   const isRecording = status === 'recording';
 
@@ -35,7 +38,7 @@ export default function Recorder({ task }: Props) {
     if (mediaBlobUrl !== undefined) {
       fetch(mediaBlobUrl)
         .then((res) => res.blob())
-        .then((blob) => postTask(task.task_id, task.block_id, blob))
+        .then((blob) => submitTask(task.task_id, task.block_id, blob))
         .catch((err) => {
           showSnackbar(`Failed to upload task - ${err}`);
         });
