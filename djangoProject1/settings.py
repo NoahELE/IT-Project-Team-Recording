@@ -32,9 +32,9 @@ if IS_HEROKU_APP:
 if IS_HEROKU_APP:
     ALLOWED_HOSTS = ["*"]
 else:
-    ALLOWED_HOSTS = ["*"]
+    ALLOWED_HOSTS = []
 
-FILES_LOCATION = "/data/tests" if os.environ["localpath"] is None else os.environ["localpath"]
+FILES_LOCATION = "/data/tests" if "localpath" not in os.environ.keys() else os.environ["localpath"]
 
 # Application definition
 
