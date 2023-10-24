@@ -3,7 +3,7 @@ from django.utils import timezone
 
 import os, shutil
 
-FILES_LOCATION = "/data/tests" if os.environ["localpath"] is None else os.environ["localpath"]
+FILES_LOCATION = "/data/tests" if not os.environ["localpath"] else os.environ["localpath"]
 
 class TaskManager(models.Manager):
     use_in_migrations = True
@@ -68,16 +68,17 @@ class TaskManager(models.Manager):
         return TaskMetaData.objects.filter(task_id = task_id).count() > 0
 
     def get_users_tasks(self, username):
-        data = {}
+        response = []
         for task in TaskMetaData.objects.filter(user=username):
-            data[task.task_id] = {}
             for block in TaskData.objects.filter(task_id=task.task_id):
-                data[task.task_id][block.block_id] = {
+                response.append({
+                    "task_id": block.task_id,
+                    "block_id": block.block_id,
                     "text": block.text,
                     "file": block.file,
                     "has_existing": block.completed,
-                }
-        return data
+                })
+        return response
 
     def submit_task(self, task_id, block_id, audiofile):
         completed_task = TaskData.objects.filter(task_id = task_id, block_id = block_id).first()
@@ -103,9 +104,18 @@ class TaskManager(models.Manager):
         task.completed = True
         task.save()
 
-    def clear_task(self, request):
-        # remove existing audio file code required
-        task = TaskMetaData.objects.user
+    def clear_task(self, task_id, block_id):
+        tasks = TaskData.objects.filter(task_id = task_id, block_id = block_id)
+
+        if tasks.count() > 0:
+            task = tasks.first()
+            file_path = FILES_LOCATION + "/" + task_id + "/" + task.file + ".bin"
+            os.remove(file_path)
+            task.completed = False
+            task.save()
+            metadata = TaskMetaData.objects.filter(task_id = task_id).first()
+            metadata.completed = False
+            metadata.save()
 
 class TaskMetaData(models.Model):
     task_id = models.CharField(unique=True, max_length=255)

@@ -100,13 +100,13 @@ class TaskView(APIView):
 class ClearTaskIDView(APIView):
     permission_classes = [IsAuthenticated]
 
-    def post(self, request):
-        required_keys = ['task_id']
-        check_required_keys(POST, required_keys, request)
+    def post(self, request, task_id, block_id):
 
-        TaskManager().clear_task(request) # might need a serializer, reduces input size
-
-        return Response(status=status.HTTP_200_OK)
+        if TaskManager().contains_task_id(task_id):
+            TaskManager().clear_task(task_id, block_id)
+            return Response("Task cleared.", status=status.HTTP_200_OK)
+        
+        return Response("Task_id does not exist.", status=status.HTTP_400_BAD_REQUEST)
     
     
 class UserTasksView(APIView):
