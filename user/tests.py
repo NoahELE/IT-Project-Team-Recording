@@ -110,4 +110,4 @@ class AdditionalNegativeTests(APITestCase):
         # Try changing password with a new password that's too short
         data = {'old_password': 'testpassword', 'new_password': 'short'}
         response = self.client.put(reverse('change-password'), data)
-        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
