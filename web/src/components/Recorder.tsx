@@ -11,7 +11,10 @@ interface Props {
 
 export default function Recorder({ task }: Props) {
   const { mediaBlobUrl, status, startRecording, stopRecording } =
-    useReactMediaRecorder({ audio: true });
+    useReactMediaRecorder({
+      audio: true,
+      blobPropertyBag: { type: 'audio/wav' },
+    });
   const [recordedTime, setRecordedTime] = useState(0.0);
   const isRecording = status === 'recording';
 

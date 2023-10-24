@@ -101,9 +101,9 @@ export async function submitTask(
   blob: Blob,
 ): Promise<void> {
   setJwtToken();
-  await axios.post(`/api/task/submit/${taskId}/${blockId}`, blob, {
-    headers: { 'Content-Type': blob.type },
-  });
+  const formData = new FormData();
+  formData.append('binary', blob);
+  await axios.post(`/api/task/submit/${taskId}/${blockId}`, blob);
 }
 
 /**
