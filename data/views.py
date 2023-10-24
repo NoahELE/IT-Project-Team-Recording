@@ -2,14 +2,14 @@ from rest_framework import status
 from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
-from django.http import JsonResponse
+from django import forms
 from .models import TaskManager
 
 from rest_framework import status
 from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
-from django.http import HttpResponse
+from django.http import HttpResponse, FileResponse
 from data.models import TaskManager
 from data.serializer import NewMetaDataAudioSerializer, NewDataAudioSerializer, TaskUserSerializer
 from django.utils import timezone
@@ -36,13 +36,13 @@ def check_required_keys(type, required_keys, request):
 class AudioView(APIView):
 
     def get(self, request, task_id, block_id):
-        data = TaskManager().get_audio(task_id=task_id, block_id=block_id)
+        filepath = TaskManager().get_file_path(task_id=task_id, block_id=block_id)
 
-        if data is None: return HttpResponse("Audio file not found", status=status.HTTP_404_NOT_FOUND)
+        if filepath is None: return HttpResponse("Audio file not found", status=status.HTTP_404_NOT_FOUND)
 
-        return HttpResponse(data, status=status.HTTP_200_OK)
-
-
+        response = FileResponse(open(filepath, 'rb'), status=status.HTTP_200_OK)
+        response['Content-Type'] = 'application/octet-stream'
+        return response
 
 class AddBatchJobView(APIView):
     permission_classes = [IsAuthenticated]
@@ -65,8 +65,11 @@ class AddBatchJobView(APIView):
         TaskManager().add_task(NewMetaDataAudioSerializer(serialized_data))
         return Response(status=status.HTTP_200_OK)
     
-
 class TaskView(APIView):
+
+    class AudioUploadForm(forms.Form):
+        audio_file = forms.FileField()
+
     permission_classes = [IsAuthenticated]
 
     def put(self, request):
@@ -77,16 +80,16 @@ class TaskView(APIView):
             return Response("Added task successfully.", status=status.HTTP_200_OK)
 
     def post(self, request, task_id, block_id):
-        binary_data = request.data.get('binary')
 
-        if binary_data is None:
-            return Response("Attempted to submit empty/null file.", status=status.HTTP_400_BAD_REQUEST)
-        
+        if TaskManager().contains_existing_file(task_id, block_id):
+            return Response("File already exists, clear task first.", status=status.HTTP_400_BAD_REQUEST)
+
         if task_id is not None and block_id is not None:
-            TaskManager().submit_task(task_id=task_id, block_id=block_id, audiofile=binary_data.read())
+            TaskManager().submit_task(task_id=task_id, block_id=block_id, audiofile=request.FILES.get('binary'))
             return Response(status=status.HTTP_200_OK)
         else:
             return Response("Task_id/Block_id is none.", status=status.HTTP_404_NOT_FOUND)
+        
 
     def delete(self, request, task_id):
 
@@ -107,7 +110,6 @@ class ClearTaskIDView(APIView):
             return Response("Task cleared.", status=status.HTTP_200_OK)
         
         return Response("Task_id does not exist.", status=status.HTTP_400_BAD_REQUEST)
-    
     
 class UserTasksView(APIView):
     permissions_classes = [IsAuthenticated]
@@ -134,5 +136,3 @@ class FilterUsersView(APIView):
 
 
         return Response(status=status.HTTP_200_OK)
-
-        # UserManager function call to return usernames filtered on language

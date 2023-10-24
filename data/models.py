@@ -3,7 +3,8 @@ from django.utils import timezone
 
 import os, shutil
 
-FILES_LOCATION = "/data/tests" if not os.environ["localpath"] else os.environ["localpath"]
+FILES_LOCATION = "/data/tests" if "localpath" not in os.environ.keys() else os.environ["localpath"]
+FILE_FORMAT = ".wav"
 
 class TaskManager(models.Manager):
     use_in_migrations = True
@@ -12,13 +13,14 @@ class TaskManager(models.Manager):
         return TaskData.objects.filter(task_id = task_id, completed = True).exists()
     
     def __add_audio_data__(self, request):
+        filepath = FILES_LOCATION + "/" + request['task_id']
+        if not os.path.exists(filepath):
+            os.mkdir(filepath)
+        
         data = TaskData()
         data.task_id = request['task_id']
         data.block_id = request['block_id']
         data.text = request['text']
-        data.file = request['task_id'] + " " + str(request['block_id']) + ".bin"
-        if not os.path.exists(FILES_LOCATION + "/" + request['task_id']):
-            os.mkdir(FILES_LOCATION + "/" + request['task_id'])
 
         data.save()
 
@@ -31,19 +33,14 @@ class TaskManager(models.Manager):
         metadata.privacy=False
         metadata.save()
 
-    def get_audio(self, task_id, block_id):
-        results = TaskData.objects.filter(task_id = task_id, block_id = block_id)
+    def get_file_path(self, task_id, block_id):
+        results = TaskData.objects.filter(task_id = task_id, block_id = block_id, completed = True)
 
         if results.count() == 0:
             return None
         
-        filepath = FILES_LOCATION + "/" + task_id + "/" + results.first().file + ".bin"
-        file = open(filepath, 'r')
-
-        data = file.read()
-        file.close()
-
-        return data
+        filepath = FILES_LOCATION + "/" + task_id + "/" + str(block_id) + FILE_FORMAT
+        return filepath
 
     def delete_task(self, task_id):
         TaskMetaData.objects.filter(task_id = task_id).delete()
@@ -66,6 +63,9 @@ class TaskManager(models.Manager):
 
     def contains_task_id(self, task_id):
         return TaskMetaData.objects.filter(task_id = task_id).count() > 0
+    
+    def contains_existing_file(self, task_id, block_id):
+        return TaskData.objects.filter(task_id = task_id, block_id = block_id).first().completed
 
     def get_users_tasks(self, username):
         response = []
@@ -75,7 +75,6 @@ class TaskManager(models.Manager):
                     "task_id": block.task_id,
                     "block_id": block.block_id,
                     "text": block.text,
-                    "file": block.file,
                     "has_existing": block.completed,
                 })
         return response
@@ -86,10 +85,11 @@ class TaskManager(models.Manager):
         completed_task.completed = True
         completed_task.save()
 
-        file_path = FILES_LOCATION + "/" + task_id + "/" + completed_task.file + ".bin"
+        file_path = FILES_LOCATION + "/" + task_id + "/" + str(block_id) + FILE_FORMAT
 
         with open(file_path, "wb") as file:
-            file.write(audiofile)
+            for chunk in audiofile.chunks():
+                file.write(chunk)
 
         file.close()
 
@@ -101,7 +101,6 @@ class TaskManager(models.Manager):
     def change_task_user(self, request):
         task = TaskMetaData.objects.filter(task_id = request.task_id).first()
         task.user = request['user']
-        task.completed = True
         task.save()
 
     def clear_task(self, task_id, block_id):
@@ -135,6 +134,5 @@ class TaskData(models.Model):
     block_id = models.IntegerField()
     text = models.TextField(max_length=255)
     completed = models.BooleanField(default=False)
-    file = models.CharField(unique=True, max_length=255)
 
     objects = TaskManager()
