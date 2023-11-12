@@ -10,10 +10,14 @@ interface Props {
 }
 
 export default function Recorder({ task }: Props) {
+  const type = task.file.split('.').pop();
+  if (type === undefined) {
+    throw new Error('The file should have an extension');
+  }
   const { mediaBlobUrl, status, startRecording, stopRecording } =
     useReactMediaRecorder({
       audio: true,
-      blobPropertyBag: { type: 'audio/wav' },
+      blobPropertyBag: { type: `audio/${type}` },
     });
   const [recordedTime, setRecordedTime] = useState(0.0);
   const isRecording = status === 'recording';

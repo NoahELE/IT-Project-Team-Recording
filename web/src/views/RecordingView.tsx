@@ -63,7 +63,7 @@ export default function RecordingView() {
                   return;
                 }
 
-                deleteTask(task.task_id).catch((error) => {
+                deleteTask(task.task_id, task.block_id).catch((error) => {
                   showSnackbar(
                     `Failed to delete recording with id ${id} - ${error}`,
                   );

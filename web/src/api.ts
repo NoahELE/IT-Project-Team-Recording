@@ -68,7 +68,7 @@ export function setJwtToken(): void {
  */
 export async function getAllTasks(): Promise<Task[]> {
   setJwtToken();
-  const response = await axios.get<Task[]>('/api/task');
+  const response = await axios.get<Task[]>('/api/task/user');
   return response.data;
 }
 
@@ -111,7 +111,10 @@ export async function submitTask(
  * @param taskId the task id
  * @param blockId the block id
  */
-export async function deleteTask(taskId: string): Promise<void> {
+export async function deleteTask(
+  taskId: string,
+  blockId: number,
+): Promise<void> {
   setJwtToken();
-  await axios.delete(`/api/task/${taskId}`);
+  await axios.post(`/api/task/clear/${taskId}/${blockId}`);
 }
