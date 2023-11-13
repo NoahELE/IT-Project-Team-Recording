@@ -2,7 +2,6 @@ export interface Task {
   task_id: string;
   block_id: number;
   text: string;
-  file: string;
   has_existing: boolean;
 }
 
