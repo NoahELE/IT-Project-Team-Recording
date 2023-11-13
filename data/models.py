@@ -3,7 +3,7 @@ from django.utils import timezone
 
 import os, shutil
 
-FILES_LOCATION = "/data/tests" if "localpath" not in os.environ.keys() else os.environ["localpath"]
+FILES_LOCATION = "data/tests" if "localpath" not in os.environ.keys() else os.environ["localpath"]
 FILE_FORMAT = ".wav"
 
 class TaskManager(models.Manager):
